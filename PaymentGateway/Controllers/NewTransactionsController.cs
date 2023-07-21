@@ -10,20 +10,16 @@ using PaymentGateway.Models;
 
 namespace PaymentGateway.Controllers
 {
-    public class TransactionsController : Controller
+    public class NewTransactionsController : Controller
     {
         private readonly PaymentGatewayContext _context;
 
-        public TransactionsController(PaymentGatewayContext context)
+        public NewTransactionsController(PaymentGatewayContext context)
         {
             _context = context;
         }
-    
 
-
-
-
-        // GET: Transactions
+        // GET: NewTransactions
         public async Task<IActionResult> Index()
         {
               return _context.Transaction != null ? 
@@ -31,7 +27,7 @@ namespace PaymentGateway.Controllers
                           Problem("Entity set 'PaymentGatewayContext.Transaction'  is null.");
         }
 
-        // GET: Transactions/Details/5
+        // GET: NewTransactions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Transaction == null)
@@ -49,22 +45,21 @@ namespace PaymentGateway.Controllers
             return View(transaction);
         }
 
-        // GET: Transactions/Create
-        public IActionResult Transaction()
+        // GET: NewTransactions/Create
+        public IActionResult Create()
         {
-            return View(new Transaction());
+            return View();
         }
 
-        // POST: Transactions/Transacton
+        // POST: NewTransactions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Transaction([Bind("Id,SenderName,SenderIDNO,SenderPhoneNo,SenderAccount,ReceiverName,ReceiverIDNO,ReceiverPhoneNo,ReceiverAccount,Amount,Date")] Transaction transaction)
+        public async Task<IActionResult> Create([Bind("Id,SenderName,SenderIDNO,SenderPhoneNo,SenderAccount,ReceiverName,ReceiverIDNO,ReceiverPhoneNo,ReceiverAccount,Amount,Date")] Transaction transaction)
         {
             if (ModelState.IsValid)
             {
-                transaction.Date = DateTime.Now;
                 _context.Add(transaction);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -72,7 +67,7 @@ namespace PaymentGateway.Controllers
             return View(transaction);
         }
 
-        // GET: Transactions/Edit/5
+        // GET: NewTransactions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Transaction == null)
@@ -88,7 +83,7 @@ namespace PaymentGateway.Controllers
             return View(transaction);
         }
 
-        // POST: Transactions/Edit/5
+        // POST: NewTransactions/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -123,7 +118,7 @@ namespace PaymentGateway.Controllers
             return View(transaction);
         }
 
-        // GET: Transactions/Delete/5
+        // GET: NewTransactions/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Transaction == null)
@@ -141,7 +136,7 @@ namespace PaymentGateway.Controllers
             return View(transaction);
         }
 
-        // POST: Transactions/Delete/5
+        // POST: NewTransactions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

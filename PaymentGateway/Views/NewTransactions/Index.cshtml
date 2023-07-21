@@ -1,0 +1,89 @@
+﻿@model IEnumerable<PaymentGateway.Models.Transaction>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SenderName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SenderIDNO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SenderPhoneNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SenderAccount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceiverName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceiverIDNO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceiverPhoneNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceiverAccount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SenderName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SenderIDNO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SenderPhoneNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SenderAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceiverName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceiverIDNO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceiverPhoneNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceiverAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

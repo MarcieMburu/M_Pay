@@ -1,16 +1,16 @@
 ﻿@model PaymentGateway.Models.Transaction
 
 @{
-    ViewData["Title"] = "New Transaction";
+    ViewData["Title"] = "Transaction";
 }
 
-<h1>New</h1>
+<h1>Transact</h1>
 
-<h4>Transaction</h4>
+<h4>Today</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="NewTransaction">
+        <form asp-action="Transaction">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="SenderName" class="control-label"></label>
@@ -63,14 +63,14 @@
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="NewTransaction" class="btn btn-primary" />
+                <input type="submit" value="Transact" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Home/Index">Back to List</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

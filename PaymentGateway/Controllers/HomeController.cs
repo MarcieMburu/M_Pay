@@ -26,6 +26,10 @@ namespace PaymentGateway.Controllers
         {
             return View();
         }
+        public IActionResult NewTransaction()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

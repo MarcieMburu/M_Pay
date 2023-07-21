@@ -53,10 +53,6 @@ namespace PaymentGateway.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SenderPhoneNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SenderAccount")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -69,6 +65,10 @@ namespace PaymentGateway.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("SenderPhoneNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

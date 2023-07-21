@@ -15,6 +15,7 @@ var app = builder.Build();
 //DI for DbContext
 
 
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -32,6 +33,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Transactions}/{action=Transaction}/{id?}");
 
 app.Run();
