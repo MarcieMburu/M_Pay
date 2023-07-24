@@ -28,30 +28,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Paul/source/repos/Pay/PaymentGateway/PaymentGateway/Views/Home/Transaction.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxUcmFuc2FjdGlvbi5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Paul/source/repos/Pay/PaymentGateway/PaymentGateway/Views/NewTransactions/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmV3VHJhbnNhY3Rpb25zXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Paul/source/repos/Pay/PaymentGateway/PaymentGateway/Views/NewTransactions/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmV3VHJhbnNhY3Rpb25zXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Paul/source/repos/Pay/PaymentGateway/PaymentGateway/Views/NewTransactions/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmV3VHJhbnNhY3Rpb25zXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Paul/source/repos/Pay/PaymentGateway/PaymentGateway/Views/NewTransactions/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmV3VHJhbnNhY3Rpb25zXEVkaXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Paul/source/repos/Pay/PaymentGateway/PaymentGateway/Views/NewTransactions/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTmV3VHJhbnNhY3Rpb25zXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Paul/source/repos/Pay/PaymentGateway/PaymentGateway/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

@@ -43,7 +43,7 @@ internal class Program
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Transactions}/{action=Transaction}/{id?}");
+            pattern: "{controller=Transactions}/{action=transaction}/{id?}");
 
         app.Run();
     }

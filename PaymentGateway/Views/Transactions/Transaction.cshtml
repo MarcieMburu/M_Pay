@@ -1,4 +1,4 @@
-﻿@model PaymentGateway.Models.Transaction
+﻿@model PaymentGateway.Models.TransactionViewModel
 
 @{
     ViewData["Title"] = "Transaction";
@@ -10,6 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
+     
         <form asp-action="Transaction">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -18,39 +19,40 @@
                 <span asp-validation-for="SenderName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SenderIDNO" class="control-label"></label>
-                <input asp-for="SenderIDNO" class="form-control" />
-                <span asp-validation-for="SenderIDNO" class="text-danger"></span>
+                <label asp-for="SenderID_NO" class="control-label"></label>
+                <input asp-for="SenderID_NO" class="form-control" />
+                <span asp-validation-for="SenderID_NO" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SenderPhoneNo" class="control-label"></label>
-                <input asp-for="SenderPhoneNo" class="form-control" />
-                <span asp-validation-for="SenderPhoneNo" class="text-danger"></span>
+                <label asp-for="SenderPhone_No" class="control-label"></label>
+                <input asp-for="SenderPhone_No" class="form-control" />
+                <span asp-validation-for="SenderPhone_No" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SenderAccount" class="control-label"></label>
-                <input asp-for="SenderAccount" class="form-control" />
-                <span asp-validation-for="SenderAccount" class="text-danger"></span>
+                <label asp-for="SenderSrc_Account" class="control-label"></label>
+                <input asp-for="SenderSrc_Account" class="form-control" />
+                <span asp-validation-for="SenderSrc_Account" class="text-danger"></span>
             </div>
+          
             <div class="form-group">
                 <label asp-for="ReceiverName" class="control-label"></label>
                 <input asp-for="ReceiverName" class="form-control" />
                 <span asp-validation-for="ReceiverName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ReceiverIDNO" class="control-label"></label>
-                <input asp-for="ReceiverIDNO" class="form-control" />
-                <span asp-validation-for="ReceiverIDNO" class="text-danger"></span>
+                <label asp-for="ReceiverID_NO" class="control-label"></label>
+                <input asp-for="ReceiverID_NO" class="form-control" />
+                <span asp-validation-for="ReceiverID_NO" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ReceiverPhoneNo" class="control-label"></label>
-                <input asp-for="ReceiverPhoneNo" class="form-control" />
-                <span asp-validation-for="ReceiverPhoneNo" class="text-danger"></span>
+                <label asp-for="ReceiverPhone_No" class="control-label"></label>
+                <input asp-for="ReceiverPhone_No" class="form-control" />
+                <span asp-validation-for="ReceiverPhone_No" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ReceiverAccount" class="control-label"></label>
-                <input asp-for="ReceiverAccount" class="form-control" />
-                <span asp-validation-for="ReceiverAccount" class="text-danger"></span>
+                <label asp-for="ReceiverDst_Account" class="control-label"></label>
+                <input asp-for="ReceiverDst_Account" class="form-control" />
+                <span asp-validation-for="ReceiverDst_Account" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>

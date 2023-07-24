@@ -16,3 +16,18 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Custom styles for the columns */
+.col-md-4 {
+    background-color: #f2f2f2;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjust the style for different screen sizes */
+@media (max-width: 767px) {
+    .col-md-4 {
+        margin-bottom: 20px;
+    }
+}

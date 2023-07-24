@@ -16,14 +16,31 @@ namespace PaymentGateway.Controllers
         private readonly PaymentGatewayContext _context;
         private readonly IMapper _mapper;
 
+       
+
         public TransactionsController(PaymentGatewayContext context, IMapper mapper)
         {
             _context = context;
             this._mapper = mapper;
         }
-    
 
+        [HttpGet]
 
+        public async Task<IActionResult> GetData(int id)
+        {
+            // Fetch the Transaction from the database
+            Transaction transaction = await _context.Transaction.FindAsync(1);
+
+            if (transaction == null)
+            {
+                return NotFound(); // Handle the case where the Transaction is not found.
+            }
+
+            // Convert the Transaction to TransactionViewModel using the mapper.
+            TransactionViewModel transactionViewModel = _mapper.Map<TransactionViewModel>(transaction);
+
+            return View(transactionViewModel);
+        }
 
 
         // GET: Transactions
@@ -55,7 +72,7 @@ namespace PaymentGateway.Controllers
         // GET: Transactions/Create
         public IActionResult Transaction()
         {
-            return View(new Transaction());
+            return View(new TransactionViewModel());
         }
 
         // POST: Transactions/Transacton
@@ -63,21 +80,19 @@ namespace PaymentGateway.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-       // public async Task<IActionResult> Transaction([Bind("Id,SenderName,SenderIDNO,SenderPhoneNo,SenderAccount,ReceiverName,ReceiverIDNO,ReceiverPhoneNo,ReceiverAccount,Amount,Date")] Transaction transaction)
-        
-        public async Task<TransactionViewModel> Transaction(int Id)
-            {
 
-            //if (ModelState.IsValid)
-            // {
-            //    transaction.Date = DateTime.Now;
-            //     _context.Add(transaction);
-            //   await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //     }
-            //  return View(transaction);
-            var transactions = await _context.Transaction.FindAsync(Id);
-            return _mapper.Map<TransactionViewModel>(transactions);
+        public async Task<IActionResult> Transaction(TransactionViewModel transactionViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                Transaction transaction = _mapper.Map<Transaction>(transactionViewModel); 
+
+                transaction.Date = DateTime.Now;
+                _context.Add(transaction);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(transactionViewModel);      
         }
 
         // GET: Transactions/Edit/5
