@@ -24,11 +24,11 @@ namespace PaymentGateway.Controllers
             this._mapper = mapper;
         }
 
+        // Fetch the Transaction from the database
         [HttpGet]
-
         public async Task<IActionResult> GetData()
         {
-            // Fetch the Transaction from the database
+           
             Transaction transaction = await _context.Transaction.FindAsync(1);
 
             if (transaction == null)
@@ -43,32 +43,11 @@ namespace PaymentGateway.Controllers
         }
 
 
-        // GET: Transactions
-        public async Task<IActionResult> Index()
-        {
-              return _context.Transaction != null ? 
-                          View(await _context.Transaction.ToListAsync()) :
-                          Problem("Entity set 'PaymentGatewayContext.Transaction'  is null.");
-        }
+        
 
-        // GET: Transactions/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Transaction == null)
-            {
-                return NotFound();
-            }
+       
 
-            var transaction = await _context.Transaction.FindAsync(id);
-            if (transaction == null)
-            {
-                return NotFound();
-            }
-
-            return View(transaction);
-        }
-
-        // GET: Transactions/Create
+        // GET: Transactions/transaction
         public IActionResult Transaction()
         {
             return View(new TransactionViewModel());
@@ -98,6 +77,7 @@ namespace PaymentGateway.Controllers
         {
             return View();
         }
+        //Post data to jquery datatable
         public JsonResult GetDataForDataTable()
         {
            List<Transaction> transactions = new List<Transaction>();
@@ -106,97 +86,9 @@ namespace PaymentGateway.Controllers
 
             return Json(transactions); // Return data as JSON to the view
         }
-        // GET: Transactions/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Transaction == null)
-            {
-                return NotFound();
-            }
 
-            var transaction = await _context.Transaction.FindAsync(id);
-            if (transaction == null)
-            {
-                return NotFound();
-            }
-            return View(transaction);
-        }
 
-        // POST: Transactions/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SenderName,SenderIDNO,SenderPhoneNo,SenderAccount,ReceiverName,ReceiverIDNO,ReceiverPhoneNo,ReceiverAccount,Amount,Date")] Transaction transaction)
-        {
-            if (id != transaction.Id)
-            {
-                return NotFound();
-            }
+     
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(transaction);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TransactionExists(transaction.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(transaction);
-        }
-
-        // GET: Transactions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Transaction == null)
-            {
-                return NotFound();
-            }
-
-            var transaction = await _context.Transaction
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (transaction == null)
-            {
-                return NotFound();
-            }
-
-            return View(transaction);
-        }
-
-        // POST: Transactions/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Transaction == null)
-            {
-                return Problem("Entity set 'PaymentGatewayContext.Transaction'  is null.");
-            }
-            var transaction = await _context.Transaction.FindAsync(id);
-            if (transaction != null)
-            {
-                _context.Transaction.Remove(transaction);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool TransactionExists(int id)
-        {
-          return (_context.Transaction?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }
