@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-     
+
         <form asp-action="Transaction">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -33,12 +33,10 @@
                 <input asp-for="SenderSrc_Account" class="form-control" />
                 <span asp-validation-for="SenderSrc_Account" class="text-danger"></span>
             </div>
-          
-            <div class="form-group">
-                <label asp-for="ReceiverName" class="control-label"></label>
-                <input asp-for="ReceiverName" class="form-control" />
-                <span asp-validation-for="ReceiverName" class="text-danger"></span>
-            </div>
+          <div class ="form-group"
+            <label asp-for="ReceiverName" class="control-label"></label>
+            <input asp-for="ReceiverName" class="form-control" />
+            <span asp-validation-for="ReceiverName" class="text-danger"></span>
             <div class="form-group">
                 <label asp-for="ReceiverID_NO" class="control-label"></label>
                 <input asp-for="ReceiverID_NO" class="form-control" />
@@ -70,7 +68,6 @@
         </form>
     </div>
 </div>
-
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

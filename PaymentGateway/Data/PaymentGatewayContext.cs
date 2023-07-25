@@ -26,5 +26,6 @@ namespace PaymentGateway.Data
             builder.OwnsOne(p => p.Sender);
             builder.OwnsOne(p => p.Receiver);
         }
+     
     }
 }

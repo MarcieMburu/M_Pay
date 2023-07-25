@@ -26,7 +26,7 @@ namespace PaymentGateway.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> GetData(int id)
+        public async Task<IActionResult> GetData()
         {
             // Fetch the Transaction from the database
             Transaction transaction = await _context.Transaction.FindAsync(1);
@@ -59,8 +59,7 @@ namespace PaymentGateway.Controllers
                 return NotFound();
             }
 
-            var transaction = await _context.Transaction
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var transaction = await _context.Transaction.FindAsync(id);
             if (transaction == null)
             {
                 return NotFound();
@@ -90,11 +89,23 @@ namespace PaymentGateway.Controllers
                 transaction.Date = DateTime.Now;
                 _context.Add(transaction);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(DisplayData));
             }
             return View(transactionViewModel);      
         }
 
+        public IActionResult DisplayData()
+        {
+            return View();
+        }
+        public JsonResult GetDataForDataTable()
+        {
+           List<Transaction> transactions = new List<Transaction>();
+            
+            transactions = _context.Transaction.ToList<Transaction>(); // Retrieve data from the database
+
+            return Json(transactions); // Return data as JSON to the view
+        }
         // GET: Transactions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

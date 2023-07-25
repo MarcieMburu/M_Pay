@@ -75,6 +75,32 @@
           }
         }
       },
+      "DataTables.AspNet.Core/2.0.2": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1"
+        },
+        "compile": {
+          "lib/netstandard1.1/DataTables.AspNet.Core.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.1/DataTables.AspNet.Core.dll": {}
+        }
+      },
+      "DataTables.AspNet.Mvc5/2.0.2": {
+        "type": "package",
+        "dependencies": {
+          "DataTables.AspNet.Core": "2.0.2",
+          "Microsoft.AspNet.Mvc": "5.2.3",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/net45/DataTables.AspNet.Mvc5.dll": {}
+        },
+        "runtime": {
+          "lib/net45/DataTables.AspNet.Mvc5.dll": {}
+        }
+      },
       "Humanizer/2.14.1": {
         "type": "package",
         "dependencies": {
@@ -669,6 +695,15 @@
           }
         }
       },
+      "jQuery/1.7.0": {
+        "type": "package"
+      },
+      "jquery.datatables/1.10.15": {
+        "type": "package",
+        "dependencies": {
+          "jQuery": "1.7.0"
+        }
+      },
       "MessagePack/2.1.152": {
         "type": "package",
         "dependencies": {
@@ -706,6 +741,71 @@
       },
       "MessagePackAnalyzer/2.1.152": {
         "type": "package"
+      },
+      "Microsoft.AspNet.Mvc/5.2.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNet.Razor": "[3.2.3, 3.3.0)",
+          "Microsoft.AspNet.WebPages": "[3.2.3, 3.3.0)"
+        },
+        "compile": {
+          "lib/net45/System.Web.Mvc.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net45/System.Web.Mvc.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNet.Razor/3.2.3": {
+        "type": "package",
+        "compile": {
+          "lib/net45/System.Web.Razor.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net45/System.Web.Razor.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNet.WebPages/3.2.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNet.Razor": "[3.2.3, 3.3.0)",
+          "Microsoft.Web.Infrastructure": "1.0.0"
+        },
+        "compile": {
+          "lib/net45/System.Web.Helpers.dll": {
+            "related": ".xml"
+          },
+          "lib/net45/System.Web.WebPages.Deployment.dll": {
+            "related": ".xml"
+          },
+          "lib/net45/System.Web.WebPages.Razor.dll": {
+            "related": ".xml"
+          },
+          "lib/net45/System.Web.WebPages.dll": {
+            "related": ".Deployment.xml;.Razor.xml;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net45/System.Web.Helpers.dll": {
+            "related": ".xml"
+          },
+          "lib/net45/System.Web.WebPages.Deployment.dll": {
+            "related": ".xml"
+          },
+          "lib/net45/System.Web.WebPages.Razor.dll": {
+            "related": ".xml"
+          },
+          "lib/net45/System.Web.WebPages.dll": {
+            "related": ".Deployment.xml;.Razor.xml;.xml"
+          }
+        }
       },
       "Microsoft.AspNetCore.Razor.Language/6.0.0": {
         "type": "package",
@@ -1962,6 +2062,15 @@
           }
         }
       },
+      "Microsoft.Web.Infrastructure/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/Microsoft.Web.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Microsoft.Web.Infrastructure.dll": {}
+        }
+      },
       "Microsoft.Win32.Primitives/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -2280,6 +2389,14 @@
           "lib/netstandard1.0/_._": {}
         }
       },
+      "runtime.native.System.Data.SqlClient.sni/4.7.0": {
+        "type": "package",
+        "dependencies": {
+          "runtime.win-arm64.runtime.native.System.Data.SqlClient.sni": "4.4.0",
+          "runtime.win-x64.runtime.native.System.Data.SqlClient.sni": "4.4.0",
+          "runtime.win-x86.runtime.native.System.Data.SqlClient.sni": "4.4.0"
+        }
+      },
       "runtime.native.System.IO.Compression/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -2408,6 +2525,33 @@
           "runtimes/ubuntu.16.10-x64/native/System.Security.Cryptography.Native.OpenSsl.so": {
             "assetType": "native",
             "rid": "ubuntu.16.10-x64"
+          }
+        }
+      },
+      "runtime.win-arm64.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/win-arm64/native/sni.dll": {
+            "assetType": "native",
+            "rid": "win-arm64"
+          }
+        }
+      },
+      "runtime.win-x64.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/win-x64/native/sni.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          }
+        }
+      },
+      "runtime.win-x86.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/win-x86/native/sni.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
           }
         }
       },
@@ -2646,6 +2790,34 @@
         "compile": {
           "ref/netstandard1.3/System.Console.dll": {
             "related": ".xml"
+          }
+        }
+      },
+      "System.Data.SqlClient/4.8.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Win32.Registry": "4.7.0",
+          "System.Security.Principal.Windows": "4.7.0",
+          "runtime.native.System.Data.SqlClient.sni": "4.7.0"
+        },
+        "compile": {
+          "ref/netcoreapp2.1/System.Data.SqlClient.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netcoreapp2.1/System.Data.SqlClient.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll": {
+            "assetType": "runtime",
+            "rid": "unix"
+          },
+          "runtimes/win/lib/netcoreapp2.1/System.Data.SqlClient.dll": {
+            "assetType": "runtime",
+            "rid": "win"
           }
         }
       },
@@ -4031,6 +4203,31 @@
         "lib/netstandard2.0/Azure.Identity.xml"
       ]
     },
+    "DataTables.AspNet.Core/2.0.2": {
+      "sha512": "ZRZoewp8OfbdGMNmz+GaAUugdQ20SaL38PbSsu95cRXeOLOZ2cu9ttft5rgCEbWXhny1Wy9WEW2AP6oZVFAR3A==",
+      "type": "package",
+      "path": "datatables.aspnet.core/2.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "datatables.aspnet.core.2.0.2.nupkg.sha512",
+        "datatables.aspnet.core.nuspec",
+        "lib/net45/DataTables.AspNet.Core.dll",
+        "lib/netstandard1.1/DataTables.AspNet.Core.dll"
+      ]
+    },
+    "DataTables.AspNet.Mvc5/2.0.2": {
+      "sha512": "Gg6I/aVPCbvwqQexrJp8Nd9Z+6x4fTe4qSnMAeIFXVC1iIsXBDAjWEs1JgxQmdnspchYT/c05XdHkTrm9RFADA==",
+      "type": "package",
+      "path": "datatables.aspnet.mvc5/2.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "datatables.aspnet.mvc5.2.0.2.nupkg.sha512",
+        "datatables.aspnet.mvc5.nuspec",
+        "lib/net45/DataTables.AspNet.Mvc5.dll"
+      ]
+    },
     "Humanizer/2.14.1": {
       "sha512": "/FUTD3cEceAAmJSCPN9+J+VhGwmL/C12jvwlyM1DFXShEMsBzvLzLqSrJ2rb+k/W2znKw7JyflZgZpyE+tI7lA==",
       "type": "package",
@@ -4777,6 +4974,271 @@
         "logo.png"
       ]
     },
+    "jQuery/1.7.0": {
+      "sha512": "UEZuBreHZNLao3z9zNPeSadyoPwKDP/5kFh+Mn1Pm9ZS0czk7bv0O6RreloGSIMAfTLZCiigNkuPb2bXKtUM+g==",
+      "type": "package",
+      "path": "jquery/1.7.0",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Content/Scripts/jquery-1.7-vsdoc.js",
+        "Content/Scripts/jquery-1.7.js",
+        "Content/Scripts/jquery-1.7.min.js",
+        "Tools/install.ps1",
+        "Tools/jquery-1.7-vsdoc-para.js",
+        "Tools/uninstall.ps1",
+        "jquery.1.7.0.nupkg.sha512",
+        "jquery.nuspec"
+      ]
+    },
+    "jquery.datatables/1.10.15": {
+      "sha512": "9zRZ5zYafJHOwLU6sWoTM/agRx/dlu0HGQpGD/hEvqSEUJhSQjqJNTq77I97B+LCbh4eJrmNDS9PENiYY+0Isg==",
+      "type": "package",
+      "path": "jquery.datatables/1.10.15",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Content/Content/DataTables/css/autoFill.bootstrap.css",
+        "Content/Content/DataTables/css/autoFill.bootstrap.min.css",
+        "Content/Content/DataTables/css/autoFill.bootstrap4.css",
+        "Content/Content/DataTables/css/autoFill.bootstrap4.min.css",
+        "Content/Content/DataTables/css/autoFill.dataTables.css",
+        "Content/Content/DataTables/css/autoFill.dataTables.min.css",
+        "Content/Content/DataTables/css/autoFill.foundation.css",
+        "Content/Content/DataTables/css/autoFill.foundation.min.css",
+        "Content/Content/DataTables/css/autoFill.jqueryui.css",
+        "Content/Content/DataTables/css/autoFill.jqueryui.min.css",
+        "Content/Content/DataTables/css/autoFill.semanticui.css",
+        "Content/Content/DataTables/css/autoFill.semanticui.min.css",
+        "Content/Content/DataTables/css/buttons.bootstrap.css",
+        "Content/Content/DataTables/css/buttons.bootstrap.min.css",
+        "Content/Content/DataTables/css/buttons.bootstrap4.css",
+        "Content/Content/DataTables/css/buttons.bootstrap4.min.css",
+        "Content/Content/DataTables/css/buttons.dataTables.css",
+        "Content/Content/DataTables/css/buttons.dataTables.min.css",
+        "Content/Content/DataTables/css/buttons.foundation.css",
+        "Content/Content/DataTables/css/buttons.foundation.min.css",
+        "Content/Content/DataTables/css/buttons.jqueryui.css",
+        "Content/Content/DataTables/css/buttons.jqueryui.min.css",
+        "Content/Content/DataTables/css/buttons.semanticui.css",
+        "Content/Content/DataTables/css/buttons.semanticui.min.css",
+        "Content/Content/DataTables/css/colReorder.bootstrap.css",
+        "Content/Content/DataTables/css/colReorder.bootstrap.min.css",
+        "Content/Content/DataTables/css/colReorder.bootstrap4.css",
+        "Content/Content/DataTables/css/colReorder.bootstrap4.min.css",
+        "Content/Content/DataTables/css/colReorder.dataTables.css",
+        "Content/Content/DataTables/css/colReorder.dataTables.min.css",
+        "Content/Content/DataTables/css/colReorder.foundation.css",
+        "Content/Content/DataTables/css/colReorder.foundation.min.css",
+        "Content/Content/DataTables/css/colReorder.jqueryui.css",
+        "Content/Content/DataTables/css/colReorder.jqueryui.min.css",
+        "Content/Content/DataTables/css/colReorder.semanticui.css",
+        "Content/Content/DataTables/css/colReorder.semanticui.min.css",
+        "Content/Content/DataTables/css/common.scss",
+        "Content/Content/DataTables/css/dataTables.bootstrap.css",
+        "Content/Content/DataTables/css/dataTables.bootstrap.min.css",
+        "Content/Content/DataTables/css/dataTables.bootstrap4.css",
+        "Content/Content/DataTables/css/dataTables.bootstrap4.min.css",
+        "Content/Content/DataTables/css/dataTables.foundation.css",
+        "Content/Content/DataTables/css/dataTables.foundation.min.css",
+        "Content/Content/DataTables/css/dataTables.jqueryui.css",
+        "Content/Content/DataTables/css/dataTables.jqueryui.min.css",
+        "Content/Content/DataTables/css/dataTables.material.css",
+        "Content/Content/DataTables/css/dataTables.material.min.css",
+        "Content/Content/DataTables/css/dataTables.semanticui.css",
+        "Content/Content/DataTables/css/dataTables.semanticui.min.css",
+        "Content/Content/DataTables/css/dataTables.uikit.css",
+        "Content/Content/DataTables/css/dataTables.uikit.min.css",
+        "Content/Content/DataTables/css/fixedColumns.bootstrap.css",
+        "Content/Content/DataTables/css/fixedColumns.bootstrap.min.css",
+        "Content/Content/DataTables/css/fixedColumns.bootstrap4.css",
+        "Content/Content/DataTables/css/fixedColumns.bootstrap4.min.css",
+        "Content/Content/DataTables/css/fixedColumns.dataTables.css",
+        "Content/Content/DataTables/css/fixedColumns.dataTables.min.css",
+        "Content/Content/DataTables/css/fixedColumns.foundation.css",
+        "Content/Content/DataTables/css/fixedColumns.foundation.min.css",
+        "Content/Content/DataTables/css/fixedColumns.jqueryui.css",
+        "Content/Content/DataTables/css/fixedColumns.jqueryui.min.css",
+        "Content/Content/DataTables/css/fixedColumns.semanticui.css",
+        "Content/Content/DataTables/css/fixedColumns.semanticui.min.css",
+        "Content/Content/DataTables/css/fixedHeader.bootstrap.css",
+        "Content/Content/DataTables/css/fixedHeader.bootstrap.min.css",
+        "Content/Content/DataTables/css/fixedHeader.bootstrap4.css",
+        "Content/Content/DataTables/css/fixedHeader.bootstrap4.min.css",
+        "Content/Content/DataTables/css/fixedHeader.dataTables.css",
+        "Content/Content/DataTables/css/fixedHeader.dataTables.min.css",
+        "Content/Content/DataTables/css/fixedHeader.foundation.css",
+        "Content/Content/DataTables/css/fixedHeader.foundation.min.css",
+        "Content/Content/DataTables/css/fixedHeader.jqueryui.css",
+        "Content/Content/DataTables/css/fixedHeader.jqueryui.min.css",
+        "Content/Content/DataTables/css/fixedHeader.semanticui.css",
+        "Content/Content/DataTables/css/fixedHeader.semanticui.min.css",
+        "Content/Content/DataTables/css/jquery.dataTables.css",
+        "Content/Content/DataTables/css/jquery.dataTables.min.css",
+        "Content/Content/DataTables/css/jquery.dataTables_themeroller.css",
+        "Content/Content/DataTables/css/keyTable.bootstrap.css",
+        "Content/Content/DataTables/css/keyTable.bootstrap.min.css",
+        "Content/Content/DataTables/css/keyTable.bootstrap4.css",
+        "Content/Content/DataTables/css/keyTable.bootstrap4.min.css",
+        "Content/Content/DataTables/css/keyTable.dataTables.css",
+        "Content/Content/DataTables/css/keyTable.dataTables.min.css",
+        "Content/Content/DataTables/css/keyTable.foundation.css",
+        "Content/Content/DataTables/css/keyTable.foundation.min.css",
+        "Content/Content/DataTables/css/keyTable.jqueryui.css",
+        "Content/Content/DataTables/css/keyTable.jqueryui.min.css",
+        "Content/Content/DataTables/css/keyTable.semanticui.css",
+        "Content/Content/DataTables/css/keyTable.semanticui.min.css",
+        "Content/Content/DataTables/css/mixins.scss",
+        "Content/Content/DataTables/css/responsive.bootstrap.css",
+        "Content/Content/DataTables/css/responsive.bootstrap.min.css",
+        "Content/Content/DataTables/css/responsive.bootstrap4.css",
+        "Content/Content/DataTables/css/responsive.bootstrap4.min.css",
+        "Content/Content/DataTables/css/responsive.dataTables.css",
+        "Content/Content/DataTables/css/responsive.dataTables.min.css",
+        "Content/Content/DataTables/css/responsive.foundation.css",
+        "Content/Content/DataTables/css/responsive.foundation.min.css",
+        "Content/Content/DataTables/css/responsive.jqueryui.css",
+        "Content/Content/DataTables/css/responsive.jqueryui.min.css",
+        "Content/Content/DataTables/css/responsive.semanticui.css",
+        "Content/Content/DataTables/css/responsive.semanticui.min.css",
+        "Content/Content/DataTables/css/rowGroup.bootstrap.css",
+        "Content/Content/DataTables/css/rowGroup.bootstrap.min.css",
+        "Content/Content/DataTables/css/rowGroup.bootstrap4.css",
+        "Content/Content/DataTables/css/rowGroup.bootstrap4.min.css",
+        "Content/Content/DataTables/css/rowGroup.dataTables.css",
+        "Content/Content/DataTables/css/rowGroup.dataTables.min.css",
+        "Content/Content/DataTables/css/rowGroup.foundation.css",
+        "Content/Content/DataTables/css/rowGroup.foundation.min.css",
+        "Content/Content/DataTables/css/rowGroup.jqueryui.css",
+        "Content/Content/DataTables/css/rowGroup.jqueryui.min.css",
+        "Content/Content/DataTables/css/rowGroup.semanticui.css",
+        "Content/Content/DataTables/css/rowGroup.semanticui.min.css",
+        "Content/Content/DataTables/css/rowReorder.bootstrap.css",
+        "Content/Content/DataTables/css/rowReorder.bootstrap.min.css",
+        "Content/Content/DataTables/css/rowReorder.bootstrap4.css",
+        "Content/Content/DataTables/css/rowReorder.bootstrap4.min.css",
+        "Content/Content/DataTables/css/rowReorder.dataTables.css",
+        "Content/Content/DataTables/css/rowReorder.dataTables.min.css",
+        "Content/Content/DataTables/css/rowReorder.foundation.css",
+        "Content/Content/DataTables/css/rowReorder.foundation.min.css",
+        "Content/Content/DataTables/css/rowReorder.jqueryui.css",
+        "Content/Content/DataTables/css/rowReorder.jqueryui.min.css",
+        "Content/Content/DataTables/css/rowReorder.semanticui.css",
+        "Content/Content/DataTables/css/rowReorder.semanticui.min.css",
+        "Content/Content/DataTables/css/scroller.bootstrap.css",
+        "Content/Content/DataTables/css/scroller.bootstrap.min.css",
+        "Content/Content/DataTables/css/scroller.bootstrap4.css",
+        "Content/Content/DataTables/css/scroller.bootstrap4.min.css",
+        "Content/Content/DataTables/css/scroller.dataTables.css",
+        "Content/Content/DataTables/css/scroller.dataTables.min.css",
+        "Content/Content/DataTables/css/scroller.foundation.css",
+        "Content/Content/DataTables/css/scroller.foundation.min.css",
+        "Content/Content/DataTables/css/scroller.jqueryui.css",
+        "Content/Content/DataTables/css/scroller.jqueryui.min.css",
+        "Content/Content/DataTables/css/scroller.semanticui.css",
+        "Content/Content/DataTables/css/scroller.semanticui.min.css",
+        "Content/Content/DataTables/css/select.bootstrap.css",
+        "Content/Content/DataTables/css/select.bootstrap.min.css",
+        "Content/Content/DataTables/css/select.bootstrap4.css",
+        "Content/Content/DataTables/css/select.bootstrap4.min.css",
+        "Content/Content/DataTables/css/select.dataTables.css",
+        "Content/Content/DataTables/css/select.dataTables.min.css",
+        "Content/Content/DataTables/css/select.foundation.css",
+        "Content/Content/DataTables/css/select.foundation.min.css",
+        "Content/Content/DataTables/css/select.jqueryui.css",
+        "Content/Content/DataTables/css/select.jqueryui.min.css",
+        "Content/Content/DataTables/css/select.semanticui.css",
+        "Content/Content/DataTables/css/select.semanticui.min.css",
+        "Content/Content/DataTables/css/semanticui.scss",
+        "Content/Content/DataTables/images/details_close.png",
+        "Content/Content/DataTables/images/details_open.png",
+        "Content/Content/DataTables/images/sort_asc.png",
+        "Content/Content/DataTables/images/sort_asc_disabled.png",
+        "Content/Content/DataTables/images/sort_both.png",
+        "Content/Content/DataTables/images/sort_desc.png",
+        "Content/Content/DataTables/images/sort_desc_disabled.png",
+        "Content/Content/DataTables/swf/flashExport.swf",
+        "Content/Scripts/DataTables/autoFill.bootstrap.js",
+        "Content/Scripts/DataTables/autoFill.bootstrap.min.js",
+        "Content/Scripts/DataTables/autoFill.bootstrap4.js",
+        "Content/Scripts/DataTables/autoFill.bootstrap4.min.js",
+        "Content/Scripts/DataTables/autoFill.foundation.js",
+        "Content/Scripts/DataTables/autoFill.foundation.min.js",
+        "Content/Scripts/DataTables/autoFill.jqueryui.js",
+        "Content/Scripts/DataTables/autoFill.jqueryui.min.js",
+        "Content/Scripts/DataTables/autoFill.semanticui.js",
+        "Content/Scripts/DataTables/autoFill.semanticui.min.js",
+        "Content/Scripts/DataTables/buttons.bootstrap.js",
+        "Content/Scripts/DataTables/buttons.bootstrap.min.js",
+        "Content/Scripts/DataTables/buttons.bootstrap4.js",
+        "Content/Scripts/DataTables/buttons.bootstrap4.min.js",
+        "Content/Scripts/DataTables/buttons.colVis.js",
+        "Content/Scripts/DataTables/buttons.colVis.min.js",
+        "Content/Scripts/DataTables/buttons.flash.js",
+        "Content/Scripts/DataTables/buttons.flash.min.js",
+        "Content/Scripts/DataTables/buttons.foundation.js",
+        "Content/Scripts/DataTables/buttons.foundation.min.js",
+        "Content/Scripts/DataTables/buttons.html5.js",
+        "Content/Scripts/DataTables/buttons.html5.min.js",
+        "Content/Scripts/DataTables/buttons.jqueryui.js",
+        "Content/Scripts/DataTables/buttons.jqueryui.min.js",
+        "Content/Scripts/DataTables/buttons.print.js",
+        "Content/Scripts/DataTables/buttons.print.min.js",
+        "Content/Scripts/DataTables/buttons.semanticui.js",
+        "Content/Scripts/DataTables/buttons.semanticui.min.js",
+        "Content/Scripts/DataTables/dataTables.autoFill.js",
+        "Content/Scripts/DataTables/dataTables.autoFill.min.js",
+        "Content/Scripts/DataTables/dataTables.bootstrap.js",
+        "Content/Scripts/DataTables/dataTables.bootstrap.min.js",
+        "Content/Scripts/DataTables/dataTables.bootstrap4.js",
+        "Content/Scripts/DataTables/dataTables.bootstrap4.min.js",
+        "Content/Scripts/DataTables/dataTables.buttons.js",
+        "Content/Scripts/DataTables/dataTables.buttons.min.js",
+        "Content/Scripts/DataTables/dataTables.colReorder.js",
+        "Content/Scripts/DataTables/dataTables.colReorder.min.js",
+        "Content/Scripts/DataTables/dataTables.fixedColumns.js",
+        "Content/Scripts/DataTables/dataTables.fixedColumns.min.js",
+        "Content/Scripts/DataTables/dataTables.fixedHeader.js",
+        "Content/Scripts/DataTables/dataTables.fixedHeader.min.js",
+        "Content/Scripts/DataTables/dataTables.foundation.js",
+        "Content/Scripts/DataTables/dataTables.foundation.min.js",
+        "Content/Scripts/DataTables/dataTables.jqueryui.js",
+        "Content/Scripts/DataTables/dataTables.jqueryui.min.js",
+        "Content/Scripts/DataTables/dataTables.keyTable.js",
+        "Content/Scripts/DataTables/dataTables.keyTable.min.js",
+        "Content/Scripts/DataTables/dataTables.material.js",
+        "Content/Scripts/DataTables/dataTables.material.min.js",
+        "Content/Scripts/DataTables/dataTables.responsive.js",
+        "Content/Scripts/DataTables/dataTables.responsive.min.js",
+        "Content/Scripts/DataTables/dataTables.rowGroup.js",
+        "Content/Scripts/DataTables/dataTables.rowGroup.min.js",
+        "Content/Scripts/DataTables/dataTables.rowReorder.js",
+        "Content/Scripts/DataTables/dataTables.rowReorder.min.js",
+        "Content/Scripts/DataTables/dataTables.scroller.js",
+        "Content/Scripts/DataTables/dataTables.scroller.min.js",
+        "Content/Scripts/DataTables/dataTables.select.js",
+        "Content/Scripts/DataTables/dataTables.select.min.js",
+        "Content/Scripts/DataTables/dataTables.semanticui.js",
+        "Content/Scripts/DataTables/dataTables.semanticui.min.js",
+        "Content/Scripts/DataTables/dataTables.uikit.js",
+        "Content/Scripts/DataTables/dataTables.uikit.min.js",
+        "Content/Scripts/DataTables/jquery.dataTables.js",
+        "Content/Scripts/DataTables/jquery.dataTables.min.js",
+        "Content/Scripts/DataTables/responsive.bootstrap.js",
+        "Content/Scripts/DataTables/responsive.bootstrap.min.js",
+        "Content/Scripts/DataTables/responsive.bootstrap4.js",
+        "Content/Scripts/DataTables/responsive.bootstrap4.min.js",
+        "Content/Scripts/DataTables/responsive.foundation.js",
+        "Content/Scripts/DataTables/responsive.foundation.min.js",
+        "Content/Scripts/DataTables/responsive.jqueryui.js",
+        "Content/Scripts/DataTables/responsive.jqueryui.min.js",
+        "Content/Scripts/DataTables/responsive.semanticui.js",
+        "Content/Scripts/DataTables/responsive.semanticui.min.js",
+        "jquery.datatables.1.10.15.nupkg.sha512",
+        "jquery.datatables.nuspec"
+      ]
+    },
     "MessagePack/2.1.152": {
       "sha512": "PlJ31qf42uGuJfwc61x/Pt4hJi01xh1rrBofj1MJSLzEot/2UAIRdSgxEHN/8qou5CV8OBeDM9HXKPi1Oj8rpQ==",
       "type": "package",
@@ -4821,6 +5283,55 @@
         "messagepackanalyzer.nuspec",
         "tools/install.ps1",
         "tools/uninstall.ps1"
+      ]
+    },
+    "Microsoft.AspNet.Mvc/5.2.3": {
+      "sha512": "i8jZf5QrbcFmjiYWRD7o7qTak/oXKxV80MgP4cZ33A8GC0RBtBIdZ1VHaloGUg+qsHUz5rVkGpwenM+ugDz5PA==",
+      "type": "package",
+      "path": "microsoft.aspnet.mvc/5.2.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Content/Web.config.install.xdt",
+        "Content/Web.config.uninstall.xdt",
+        "lib/net45/System.Web.Mvc.dll",
+        "lib/net45/System.Web.Mvc.xml",
+        "microsoft.aspnet.mvc.5.2.3.nupkg.sha512",
+        "microsoft.aspnet.mvc.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.Razor/3.2.3": {
+      "sha512": "leta+Q73O7+pR8ThTqXmwaNMSqwZQQ3BHfpUHd8S1XaUWe1jRVLitMHqo1AmY7wPNLyankPA1beiUKEGj8Q3Dw==",
+      "type": "package",
+      "path": "microsoft.aspnet.razor/3.2.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/System.Web.Razor.dll",
+        "lib/net45/System.Web.Razor.xml",
+        "microsoft.aspnet.razor.3.2.3.nupkg.sha512",
+        "microsoft.aspnet.razor.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.WebPages/3.2.3": {
+      "sha512": "zbtxBERla5RE/mhftwbrXOzc0r6lh8WcnjpGW7QQe+PvSDDx1BgsTUGzfCXO/vJznHNpY5oCSYLt8Q5vUu7F0g==",
+      "type": "package",
+      "path": "microsoft.aspnet.webpages/3.2.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Content/Web.config.install.xdt",
+        "Content/Web.config.uninstall.xdt",
+        "lib/net45/System.Web.Helpers.dll",
+        "lib/net45/System.Web.Helpers.xml",
+        "lib/net45/System.Web.WebPages.Deployment.dll",
+        "lib/net45/System.Web.WebPages.Deployment.xml",
+        "lib/net45/System.Web.WebPages.Razor.dll",
+        "lib/net45/System.Web.WebPages.Razor.xml",
+        "lib/net45/System.Web.WebPages.dll",
+        "lib/net45/System.Web.WebPages.xml",
+        "microsoft.aspnet.webpages.3.2.3.nupkg.sha512",
+        "microsoft.aspnet.webpages.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Razor.Language/6.0.0": {
@@ -6806,6 +7317,18 @@
         "microsoft.visualstudio.web.codegenerators.mvc.nuspec"
       ]
     },
+    "Microsoft.Web.Infrastructure/1.0.0": {
+      "sha512": "FNmvLn5m2LTU/Rs2KWVo0SIIh9Ek+U0ojex7xeDaSHw/zgEP77A8vY5cVWgUtBGS8MJfDGNn8rpXJWEIQaPwTg==",
+      "type": "package",
+      "path": "microsoft.web.infrastructure/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/Microsoft.Web.Infrastructure.dll",
+        "microsoft.web.infrastructure.1.0.0.nupkg.sha512",
+        "microsoft.web.infrastructure.nuspec"
+      ]
+    },
     "Microsoft.Win32.Primitives/4.3.0": {
       "sha512": "9ZQKCWxH7Ijp9BfahvL2Zyf1cJIk8XYLF6Yjzr2yi0b2cOut/HQ31qf1ThHAgCc3WiZMdnWcfJCgN82/0UunxA==",
       "type": "package",
@@ -7187,6 +7710,21 @@
         "runtime.native.system.nuspec"
       ]
     },
+    "runtime.native.System.Data.SqlClient.sni/4.7.0": {
+      "sha512": "9kyFSIdN3T0qjDQ2R0HRXYIhS3l5psBzQi6qqhdLz+SzFyEy4sVxNOke+yyYv8Cu8rPER12c3RDjLT8wF3WBYQ==",
+      "type": "package",
+      "path": "runtime.native.system.data.sqlclient.sni/4.7.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "runtime.native.system.data.sqlclient.sni.4.7.0.nupkg.sha512",
+        "runtime.native.system.data.sqlclient.sni.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
     "runtime.native.System.IO.Compression/4.3.0": {
       "sha512": "INBPonS5QPEgn7naufQFXJEp3zX6L4bwHgJ/ZH78aBTpeNfQMtf7C6VrAFhlq2xxWBveIOWyFzQjJ8XzHMhdOQ==",
       "type": "package",
@@ -7353,6 +7891,54 @@
         "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
         "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.nuspec",
         "runtimes/ubuntu.16.10-x64/native/System.Security.Cryptography.Native.OpenSsl.so"
+      ]
+    },
+    "runtime.win-arm64.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+      "sha512": "LbrynESTp3bm5O/+jGL8v0Qg5SJlTV08lpIpFesXjF6uGNMWqFnUQbYBJwZTeua6E/Y7FIM1C54Ey1btLWupdg==",
+      "type": "package",
+      "path": "runtime.win-arm64.runtime.native.system.data.sqlclient.sni/4.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+        "runtime.win-arm64.runtime.native.system.data.sqlclient.sni.nuspec",
+        "runtimes/win-arm64/native/sni.dll",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "runtime.win-x64.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+      "sha512": "38ugOfkYJqJoX9g6EYRlZB5U2ZJH51UP8ptxZgdpS07FgOEToV+lS11ouNK2PM12Pr6X/PpT5jK82G3DwH/SxQ==",
+      "type": "package",
+      "path": "runtime.win-x64.runtime.native.system.data.sqlclient.sni/4.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "runtime.win-x64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+        "runtime.win-x64.runtime.native.system.data.sqlclient.sni.nuspec",
+        "runtimes/win-x64/native/sni.dll",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "runtime.win-x86.runtime.native.System.Data.SqlClient.sni/4.4.0": {
+      "sha512": "YhEdSQUsTx+C8m8Bw7ar5/VesXvCFMItyZF7G1AUY+OM0VPZUOeAVpJ4Wl6fydBGUYZxojTDR3I6Bj/+BPkJNA==",
+      "type": "package",
+      "path": "runtime.win-x86.runtime.native.system.data.sqlclient.sni/4.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+        "runtime.win-x86.runtime.native.system.data.sqlclient.sni.nuspec",
+        "runtimes/win-x86/native/sni.dll",
+        "useSharedDesignerContext.txt",
+        "version.txt"
       ]
     },
     "System.AppContext/4.3.0": {
@@ -7770,6 +8356,92 @@
         "ref/xamarinwatchos10/_._",
         "system.console.4.3.0.nupkg.sha512",
         "system.console.nuspec"
+      ]
+    },
+    "System.Data.SqlClient/4.8.5": {
+      "sha512": "fRqxut4lrndPHrXD+ht1XRmCL3obuKldm4XjCRYS9p5f7FSR7shBxAwTkDrpFMsHC9BhNgjjmUtiIjvehn5zkg==",
+      "type": "package",
+      "path": "system.data.sqlclient/4.8.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net451/System.Data.SqlClient.dll",
+        "lib/net46/System.Data.SqlClient.dll",
+        "lib/net461/System.Data.SqlClient.dll",
+        "lib/net461/System.Data.SqlClient.xml",
+        "lib/netcoreapp2.1/System.Data.SqlClient.dll",
+        "lib/netcoreapp2.1/System.Data.SqlClient.xml",
+        "lib/netstandard1.2/System.Data.SqlClient.dll",
+        "lib/netstandard1.2/System.Data.SqlClient.xml",
+        "lib/netstandard1.3/System.Data.SqlClient.dll",
+        "lib/netstandard1.3/System.Data.SqlClient.xml",
+        "lib/netstandard2.0/System.Data.SqlClient.dll",
+        "lib/netstandard2.0/System.Data.SqlClient.xml",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net451/System.Data.SqlClient.dll",
+        "ref/net46/System.Data.SqlClient.dll",
+        "ref/net461/System.Data.SqlClient.dll",
+        "ref/net461/System.Data.SqlClient.xml",
+        "ref/netcoreapp2.1/System.Data.SqlClient.dll",
+        "ref/netcoreapp2.1/System.Data.SqlClient.xml",
+        "ref/netstandard1.2/System.Data.SqlClient.dll",
+        "ref/netstandard1.2/System.Data.SqlClient.xml",
+        "ref/netstandard1.2/de/System.Data.SqlClient.xml",
+        "ref/netstandard1.2/es/System.Data.SqlClient.xml",
+        "ref/netstandard1.2/fr/System.Data.SqlClient.xml",
+        "ref/netstandard1.2/it/System.Data.SqlClient.xml",
+        "ref/netstandard1.2/ja/System.Data.SqlClient.xml",
+        "ref/netstandard1.2/ko/System.Data.SqlClient.xml",
+        "ref/netstandard1.2/ru/System.Data.SqlClient.xml",
+        "ref/netstandard1.2/zh-hans/System.Data.SqlClient.xml",
+        "ref/netstandard1.2/zh-hant/System.Data.SqlClient.xml",
+        "ref/netstandard1.3/System.Data.SqlClient.dll",
+        "ref/netstandard1.3/System.Data.SqlClient.xml",
+        "ref/netstandard1.3/de/System.Data.SqlClient.xml",
+        "ref/netstandard1.3/es/System.Data.SqlClient.xml",
+        "ref/netstandard1.3/fr/System.Data.SqlClient.xml",
+        "ref/netstandard1.3/it/System.Data.SqlClient.xml",
+        "ref/netstandard1.3/ja/System.Data.SqlClient.xml",
+        "ref/netstandard1.3/ko/System.Data.SqlClient.xml",
+        "ref/netstandard1.3/ru/System.Data.SqlClient.xml",
+        "ref/netstandard1.3/zh-hans/System.Data.SqlClient.xml",
+        "ref/netstandard1.3/zh-hant/System.Data.SqlClient.xml",
+        "ref/netstandard2.0/System.Data.SqlClient.dll",
+        "ref/netstandard2.0/System.Data.SqlClient.xml",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll",
+        "runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.xml",
+        "runtimes/unix/lib/netstandard1.3/System.Data.SqlClient.dll",
+        "runtimes/unix/lib/netstandard2.0/System.Data.SqlClient.dll",
+        "runtimes/unix/lib/netstandard2.0/System.Data.SqlClient.xml",
+        "runtimes/win/lib/net451/System.Data.SqlClient.dll",
+        "runtimes/win/lib/net46/System.Data.SqlClient.dll",
+        "runtimes/win/lib/net461/System.Data.SqlClient.dll",
+        "runtimes/win/lib/net461/System.Data.SqlClient.xml",
+        "runtimes/win/lib/netcoreapp2.1/System.Data.SqlClient.dll",
+        "runtimes/win/lib/netcoreapp2.1/System.Data.SqlClient.xml",
+        "runtimes/win/lib/netstandard1.3/System.Data.SqlClient.dll",
+        "runtimes/win/lib/netstandard2.0/System.Data.SqlClient.dll",
+        "runtimes/win/lib/netstandard2.0/System.Data.SqlClient.xml",
+        "runtimes/win/lib/uap10.0.16299/System.Data.SqlClient.dll",
+        "runtimes/win/lib/uap10.0.16299/System.Data.SqlClient.xml",
+        "system.data.sqlclient.4.8.5.nupkg.sha512",
+        "system.data.sqlclient.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
       ]
     },
     "System.Diagnostics.Debug/4.3.0": {
@@ -11291,10 +11963,13 @@
     "net6.0": [
       "AutoMapper >= 12.0.1",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.1",
+      "DataTables.AspNet.Mvc5 >= 2.0.2",
       "Microsoft.EntityFrameworkCore >= 7.0.9",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.9",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.9",
-      "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 6.0.15"
+      "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 6.0.15",
+      "System.Data.SqlClient >= 4.8.5",
+      "jquery.datatables >= 1.10.15"
     ]
   },
   "packageFolders": {
@@ -11351,6 +12026,10 @@
             "target": "Package",
             "version": "[12.0.1, )"
           },
+          "DataTables.AspNet.Mvc5": {
+            "target": "Package",
+            "version": "[2.0.2, )"
+          },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
             "version": "[7.0.9, )"
@@ -11368,6 +12047,14 @@
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",
             "version": "[6.0.15, )"
+          },
+          "System.Data.SqlClient": {
+            "target": "Package",
+            "version": "[4.8.5, )"
+          },
+          "jquery.datatables": {
+            "target": "Package",
+            "version": "[1.10.15, )"
           }
         },
         "imports": [
@@ -11392,5 +12079,57 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'DataTables.AspNet.Mvc5 2.0.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "DataTables.AspNet.Mvc5",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.AspNet.Mvc 5.2.3' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.AspNet.Mvc",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.AspNet.Razor 3.2.3' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.AspNet.Razor",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.AspNet.WebPages 3.2.3' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.AspNet.WebPages",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.Web.Infrastructure 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.Web.Infrastructure",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }
