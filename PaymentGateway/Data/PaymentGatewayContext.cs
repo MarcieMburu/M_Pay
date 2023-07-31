@@ -10,6 +10,10 @@ namespace PaymentGateway.Data
 {
     public class PaymentGatewayContext : DbContext
     {
+        public PaymentGatewayContext()
+        {
+        }
+
         public PaymentGatewayContext (DbContextOptions<PaymentGatewayContext> options)
             : base(options)
         {

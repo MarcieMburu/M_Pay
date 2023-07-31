@@ -8,7 +8,6 @@
     ViewBag.Title = "Data Table";
 }
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
   $("#transaction").on("keyup", function() {
@@ -21,6 +20,7 @@ $(document).ready(function(){
 </script>
 <h2>Data Table </h2>
 <table id="dataTable" class="table table-bordered table-striped"> </table>
+<a class="btn btn-success" style="margin-bottom:10px" onclick="PopupForm('@Url.Action("AddOrEdit","Transaction")')"><i class="fa fa-plus"></i> Add New</a>
 
 @section scripts {
     <script>
@@ -45,10 +45,19 @@ $(document).ready(function(){
                     { data: 'receiver.phone_No', title: 'Receiver Phone NO' },
                     { data: 'receiver.dst_Account', title: 'Receiver Destination Account' },
                     { data: 'amount', title: 'Amount' },
-                    { data: 'date', title: 'Transaction Date' }
+                    { data: 'date', title: 'Transaction Date' },
+                    {
+                        "render": function (data, type, full, meta) { return '<a class="btn btn-info" href="AddTransaction' + full.id + '">Edit</a>'; }
+                    },
+                    {
+                        data: null, render: function (data, type, row) {
+                            return "<a href='#' class='btn btn-danger' onclick=DeleteData('" + row.id + "'); >Delete</a>";
+                        }
+                    },
                 ]
             });
         });
+
     </script>
-   
+    
 }
