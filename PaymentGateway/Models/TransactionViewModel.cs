@@ -22,8 +22,13 @@ namespace PaymentGateway.Models
         public string ReceiverID_NO { get; set; }
         public string ReceiverPhone_No { get; set; }
         public string ReceiverDst_Account { get; set; }
-       
-           
+        
+        public int SelectedRouteId { get; set; }
+        public int SelectedCategoryId { get; set; }
+        public int SelectedChannelTypeId { get; set; }
+        public List<Route> TransactionRoutes { get; set; }
+        public List<SelectListItem> Categories { get; set; }
+        public List<SelectListItem> ChannelTypes { get; set; }
         public string Amount { get; set; }
         public DateTime Date { get; set; }
 

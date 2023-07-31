@@ -4,6 +4,13 @@
     {
         public int channelType { get; set; }
         public string channelDescription { get; set; }
+        public string Value { get; internal set; }
+        public string Text { get; internal set; }
+
+        internal void Add(ChannelType channelType)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class TransactionRoute

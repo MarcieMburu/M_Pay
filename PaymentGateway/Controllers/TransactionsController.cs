@@ -5,9 +5,12 @@ using PaymentGateway.Models;
 using System.Linq.Dynamic.Core;
 using Newtonsoft.Json;
 using PaymentGateway.DTOs;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+
+
 
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace PaymentGateway.Controllers
 {
@@ -20,8 +23,6 @@ namespace PaymentGateway.Controllers
         public string clientId = "rahab";
         public string clientSecret = "rahab";
         public string credentials = "client_credentials";
-        
-
         private AccessToken _accessToken;
 
         public TransactionsController(PaymentGatewayContext context, IMapper mapper, HttpClient httpClient)
@@ -30,51 +31,10 @@ namespace PaymentGateway.Controllers
             this._mapper = mapper;
             _httpClient = httpClient;
             _serverString = "https://auth.zamupay.com/connect/token";
-
-
-           
         }
-        /*       public async Task<IActionResult> PostToken()
-        {
-            try
-            {
-              
-                var clientId = "rahab";
-                var clientSecret = "rahab";
-
-                AccessToken accessToken = await GetBearerToken(clientId, clientSecret, _serverString);
-
-
-
-                if (accessToken != null)
-                {
-                  
-                    string tokenValue = accessToken.access_token;
-                    int expiresIn = accessToken.expires_in;
-
-                   
-                }
-                else
-                {
-                    
-                    return BadRequest("Failed to get access token from the API.");
-                }
-            }
-            catch (Exception ex)
-            {
-                
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-
-          
-            return View();
-        }
-
-       */
 
         public async Task<string> GetBearerToken(string clientId, string clientSecret)
         {
-           
             var requestContent = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("client_id",clientId),
@@ -82,10 +42,6 @@ namespace PaymentGateway.Controllers
                  new KeyValuePair<string, string>("grant_type", "client_credentials"),
                  new KeyValuePair<string, string>("scope", "PyPay_api")
         });
-
-
-             //var base64Auth = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{clientId}:{clientSecret}"));
-            //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             try
             {
@@ -95,22 +51,19 @@ namespace PaymentGateway.Controllers
                 var accessToken = JsonConvert.DeserializeObject<AccessToken>(responseContent);
                 return accessToken.access_token;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
 
             return null;
-           
-           
-        
         }
 
-        public async Task<TransactionRoute> GetTransactionRoute()
+        public async Task<JsonResult> GetTransactionRoute()
         {
             var accessToken = await GetBearerToken(clientId, clientSecret);
 
-           
+
             var transactionRouteEndpoint = "https://sandboxapi.zamupay.com/v1/transaction-routes/assigned-routes";
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
@@ -118,132 +71,54 @@ namespace PaymentGateway.Controllers
             routeResponse.EnsureSuccessStatusCode();
             var routeResponseContent = await routeResponse.Content.ReadAsStringAsync();
             var transactionRoute = JsonConvert.DeserializeObject<TransactionRoute>(routeResponseContent);
-            return transactionRoute;
-        }
-        
 
+            List<SelectListItem> routeItems = new List<SelectListItem>();
 
+            var channelTypeItems = new List<ChannelTypeItemViewModel>();
 
-
-
-        /*
-        public async Task<TransactionViewModel> GetTransactionRoute()
-        {
-            try
+            foreach (var route in transactionRoute.routes)
             {
-                var clientId = "rahab";
-                var clientSecret = "rahab";
-
-                // Call the GetBearerToken method to get the access token
-                var accessToken = await GetBearerToken(clientId, clientSecret, _serverString);
-
-                // Store the access token in the _accessToken variable
-                _accessToken = new AccessToken { access_token = accessToken };
-
-                // Now, use the access token to call the API endpoint to get the transaction route
-                var availableRoutes = await GetAvailableTransactionRoutesFromApi();
-
-                var transactionViewModel = new TransactionViewModel
+                routeItems.Add(new SelectListItem
                 {
-                    // Initialize other properties of the TransactionViewModel as needed
-                    AvailableRoutes = new SelectList(availableRoutes)
-                };
+                    Value = route.id.ToString(),
+                    Text = route.categoryDescription
+                });
+                foreach (var channelType in route.channelTypes)
+                {
 
-                // Return the TransactionViewModel to the view
-                return transactionViewModel;
-            }
-            catch (Exception ex)
-            {
-                // Handle any exceptions that occurred during the API call or other errors
-                // For example, handle network errors, timeouts, etc.
-                return null; // Or handle the error appropriately
-            }
-        }
-        private async Task<string> GetTransactionRouteFromApi()
-        {
-            // Make sure the access token is available
-            if (_accessToken == null || string.IsNullOrEmpty(_accessToken.access_token))
-            {
-                throw new InvalidOperationException("Access token is not available.");
+                    channelTypeItems.Add(new ChannelTypeItemViewModel
+                    {
+                        Value = channelType.channelType.ToString(),
+                        Text = channelType.channelDescription
+                    });
+                }
             }
 
-            try
-            {
-                // Add the access token to the Authorization header
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken.access_token);
-
-                // Make the authenticated GET request to the API's transaction routes endpoint
-                var response = await _httpClient.GetAsync("https://sandboxapi.zamupay.com/v1/transaction-routes/assigned-routes");
-
-                // Check if the request was successful
-                response.EnsureSuccessStatusCode();
-
-                // Read the response content (transaction route) and return it
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return responseContent;
-            }
-            catch (Exception ex)
-            {
-                // Handle any exceptions that occurred during the API call
-                // For example, handle network errors, timeouts, etc.
-                throw ex;
-            }
+           
+            return Json(channelTypeItems);
         }
 
-        private async Task<List<string>> GetAvailableTransactionRoutesFromApi()
-        {
-            // Make sure the access token is available
-            if (_accessToken == null || string.IsNullOrEmpty(_accessToken.access_token))
-            {
-                throw new InvalidOperationException("Access token is not available.");
-            }
-
-            try
-            {
-                // Add the access token to the Authorization header
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken.access_token);
-
-                // Make the authenticated GET request to the API's transaction routes endpoint
-                var response = await _httpClient.GetAsync("https://sandboxapi.zamupay.com/v1/transaction-routes/assigned-routes");
-
-                // Check if the request was successful
-                response.EnsureSuccessStatusCode();
-
-                // Read the response content (transaction routes) and return it
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var routes = JsonConvert.DeserializeObject<List<string>>(responseContent);
-                return routes;
-            }
-            catch (Exception ex)
-            {
-                // Handle any exceptions that occurred during the API call
-                // For example, handle network errors, timeouts, etc.
-                throw ex;
-            }
-        }
-        */
-
-
-
-
+       
 
 
         public ActionResult accessToken()
         {
             return accessToken();
         }
-        public ActionResult tranactionRoute()
+        public ActionResult transactionRoute()
         {
-            return tranactionRoute(); 
+            return transactionRoute(); 
         }
     
             // GET: Transactions/transaction
             public async Task<IActionResult> Transaction()
         {
-             await GetTransactionRoute();
+            
+            await GetTransactionRoute();
 
             return (View(new TransactionViewModel()));
         }
+        
 
         // POST: Transactions/Transaction
         [HttpPost]
@@ -254,18 +129,20 @@ namespace PaymentGateway.Controllers
             if (ModelState.IsValid)
             {
                 Transaction transaction = _mapper.Map<Transaction>(transactionViewModel);
-
+                
                 transaction.Date = DateTime.Now;
                 _context.Add(transaction);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(DisplayData));
             }
-          // transactionViewModel.TransactionRoutes = await GetTransactionRoutesAsync();
+           
 
             return View(transactionViewModel);
           
 
         }
+        
+
         public IActionResult DisplayData()
         {
             return View();
@@ -291,7 +168,7 @@ namespace PaymentGateway.Controllers
             Transaction transaction = await _context.Transaction.FindAsync(1);
             if (transaction == null)
             {
-                return NotFound(); // Handle the case where the Transaction is not found.
+                return NotFound(); 
             } // Convert the Transaction to TransactionViewModel using the mapper.
             TransactionViewModel transactionViewModel = _mapper.Map<TransactionViewModel>(transaction);
             return View(transactionViewModel);
@@ -433,8 +310,13 @@ namespace PaymentGateway.Controllers
                 throw;
             }
         }
-      
-           
 
+        private class ChannelTypeItemViewModel
+        {
+            public string Value { get; set; }
+            public string Text { get; set; }
+
+            public string categoryDescription { get; set; }
+        }
     }
 }
