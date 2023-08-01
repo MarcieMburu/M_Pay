@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace PaymentGateway.Models
 {
-    public class Transaction
+    public class Transaction 
     {
         [Key]
         public int Id { get; set; }

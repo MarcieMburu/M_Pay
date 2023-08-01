@@ -29,6 +29,7 @@ namespace PaymentGateway.Models
         public List<Route> TransactionRoutes { get; set; }
         public List<SelectListItem> Categories { get; set; }
         public List<SelectListItem> ChannelTypes { get; set; }
+
         public string Amount { get; set; }
         public DateTime Date { get; set; }
 

@@ -58,12 +58,9 @@ namespace PaymentGateway.Controllers
 
             return null;
         }
-
-        public async Task<JsonResult> GetTransactionRoute()
+         public async Task<JsonResult> GetTransactionRoute()
         {
             var accessToken = await GetBearerToken(clientId, clientSecret);
-
-
             var transactionRouteEndpoint = "https://sandboxapi.zamupay.com/v1/transaction-routes/assigned-routes";
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
@@ -77,29 +74,64 @@ namespace PaymentGateway.Controllers
             var channelTypeItems = new List<ChannelTypeItemViewModel>();
 
             foreach (var route in transactionRoute.routes)
-            {
+            { 
+                //if (route.channelTypes != null && route.channelTypes.Any())
+                //{
                 routeItems.Add(new SelectListItem
                 {
                     Value = route.id.ToString(),
                     Text = route.categoryDescription
                 });
-                foreach (var channelType in route.channelTypes)
-                {
+               // foreach (var channelType in route.channelTypes)
+                //{
 
+                //    channelTypeItems.Add(new ChannelTypeItemViewModel
+                //    {
+                //        RouteId = route.id.ToString(),
+                //        Value = channelType.channelType.ToString(),
+                //        Text = channelType.channelDescription
+                //    });
+                //}
+                //routeItems.Add(channelTypeItems);
+           // }
+
+                }
+
+            //ViewBag.RouteItems = routeItems;
+
+            //var result = new { Routes = routeItems, ChannelTypes = channelTypeItems };
+            return Json(routeItems);
+        }
+
+        public async Task<JsonResult> GetChannelTypeByRouteId(string id)
+        {
+
+            var accessToken = await GetBearerToken(clientId, clientSecret);
+            var transactionRouteEndpoint = "https://sandboxapi.zamupay.com/v1/transaction-routes/assigned-routes";
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var routeResponse = await _httpClient.GetAsync(transactionRouteEndpoint);
+            routeResponse.EnsureSuccessStatusCode();
+            var routeResponseContent = await routeResponse.Content.ReadAsStringAsync();
+            var transactionRoute = JsonConvert.DeserializeObject<TransactionRoute>(routeResponseContent);
+
+            var channelTypeItems = new List<ChannelTypeItemViewModel>();
+
+            foreach (var route in transactionRoute.routes.Where(x => x.id == id))
+            {
+                foreach (var channelTypes in route.channelTypes)
+                {
                     channelTypeItems.Add(new ChannelTypeItemViewModel
                     {
-                        Value = channelType.channelType.ToString(),
-                        Text = channelType.channelDescription
+                        RouteId = route.id.ToString(),
+                        Value = channelTypes.channelType.ToString(),
+                        Text = channelTypes.channelDescription
                     });
                 }
             }
 
-           
             return Json(channelTypeItems);
-        }
-
-       
-
+    }
 
         public ActionResult accessToken()
         {
@@ -114,7 +146,7 @@ namespace PaymentGateway.Controllers
             public async Task<IActionResult> Transaction()
         {
             
-            await GetTransactionRoute();
+           // await GetTransactionRoute();
 
             return (View(new TransactionViewModel()));
         }
@@ -310,13 +342,18 @@ namespace PaymentGateway.Controllers
                 throw;
             }
         }
+      
 
-        private class ChannelTypeItemViewModel
+       
+
+        public class ChannelTypeItemViewModel : SelectListItem
         {
             public string Value { get; set; }
             public string Text { get; set; }
-
+            public string RouteId { get; set; }
             public string categoryDescription { get; set; }
         }
+     
+
     }
 }

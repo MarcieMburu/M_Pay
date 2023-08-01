@@ -1,7 +1,10 @@
 ﻿@model PaymentGateway.Models.TransactionViewModel
 
+
 @{
     ViewData["Title"] = "Transaction";
+
+    var routes = ViewBag.RouteItems as SelectListItem;
 }
 
 <h1>Transact</h1>
@@ -53,11 +56,20 @@
                 <input asp-for="ReceiverDst_Account" class="form-control" />
                 <span asp-validation-for="ReceiverDst_Account" class="text-danger"></span>
             </div>
-
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
                 <input asp-for="Amount" class="form-control" />
                 <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div>
+            <select id="categoryDropdown" onchange="">
+            </select>
+            </div>
+
+            <div>
+            <select id="channelTypeDropdown">
+                <option value="">Select Channel Type</option>
+            </select>
             </div>
            
             <div class="form-group">
@@ -74,9 +86,69 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            LoadRoutes();
+            $("#categoryDropdown").change(function () {
+                var selectedRouteId = $(this).val();
+                $.ajax({
+                    url: "/Transactions/GetChannelTypeByRouteId?id=" + selectedRouteId,
+                    type: "GET",
+                    success: function (data) {
+                        var channelTypeDropdown = $("#channelTypeDropdown");
+                        channelTypeDropdown.empty();
+                        channelTypeDropdown.append('<option value="">Select a Channel Type</option>');
+                        $.each(data, function (index, item) {
+                            channelTypeDropdown.append('<option value="' + item.value + '">' + item.text + '</option>');
+                        });
+                    },
+                    error: function () {
+                        console.error("Error occurred while loading channel types.");
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        function LoadRoutes() {
+            $.ajax({
+                url: '/transactions/gettransactionroute/',
+                type:'POST',
+                error: function (xhr) {
+                    console.log("An error occured: " + xhr.status + " " + xhr.statusText);
+                },
+                success: function (result) {
+                    if (result) {
+                        var select = $("#categoryDropdown");
 
-@section Scripts {
+                        select.empty();
+
+                        select.append($('<option/>',
+                            {
+                                value: "",
+                                text: "Select Route"
+                            }));
+
+                        $.each(result,
+                            function (index, itemData) {
+                                select.append($('<option/>',
+                                    {
+                                        value: itemData.value,
+                                        text: itemData.text,
+                                    }));
+
+                                   
+                            });
+                        console.log(result);
+                    }
+                }
+            });
+        }
+    </script>
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+   
 }
