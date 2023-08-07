@@ -1,10 +1,17 @@
-﻿namespace PaymentGateway.Models
+﻿using Nest;
+using System.ComponentModel.DataAnnotations;
+
+namespace PaymentGateway.Models
 {
     public class Sender : ValueObject
     {
+        
         public string Name { get; set; }
+     
         public string ID_NO { get; set; }
+
         public string Phone_No { get; set; }
+       
         public string Src_Account { get; set; }
 
         public Sender() { }

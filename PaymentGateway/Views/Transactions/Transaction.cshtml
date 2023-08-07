@@ -61,37 +61,51 @@
                 <input asp-for="Amount" class="form-control" />
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="reference" class="control-label"></label>
+                <input asp-for="reference" class="form-control" />
+                <span asp-validation-for="reference" class="text-danger"></span>
+            </div>
             <div>
-            <select id="categoryDropdown" onchange="">
+            <select id="categoryDropdown" asp-for ="RouteId" >
             </select>
             </div>
+            <input type="hidden" id="categoryDescriptionInput" asp-for="CategoryDescription" />
 
             <div>
-            <select id="channelTypeDropdown">
+            <select id="channelTypeDropdown" asp-for ="ChannelType">
                 <option value="">Select Channel Type</option>
             </select>
             </div>
-           
+            <input type="hidden" id="channelDescriptionInput" asp-for="ChannelDescription" />
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Transact" class="btn btn-primary" />
+                <input type="submit" value="Transact" class="btn btn-primary" id="submitBtn" />
             </div>
-        </form>
+            @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+            {
+                <div class="alert alert-success">
+                    @ViewBag.SuccessMessage
+                </div>
+            }
+
+                   </form>
     </div>
 </div>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 @section scripts{
     <script>
         $(document).ready(function () {
             LoadRoutes();
             $("#categoryDropdown").change(function () {
                 var selectedRouteId = $(this).val();
+                var selectedRouteDescription = $("#categoryDropdown option:selected").text();
+                $("#categoryDescriptionInput").val(selectedRouteDescription);
+               
                 $.ajax({
                     url: "/Transactions/GetChannelTypeByRouteId?id=" + selectedRouteId,
                     type: "GET",
@@ -107,8 +121,15 @@
                         console.error("Error occurred while loading channel types.");
                     }
                 });
+
             });
+            $("#channelTypeDropdown").change(function () {
+                var selectedChannelDescription = $("#channelTypeDropdown option:selected").text();
+                $("#channelDescriptionInput").val(selectedChannelDescription);
+            });
+         
         });
+       
     </script>
     <script>
         function LoadRoutes() {
@@ -141,11 +162,13 @@
                                    
                             });
                         console.log(result);
+
                     }
                 }
             });
         }
     </script>
+   
 
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace PaymentGateway.Models
 {
-    public class Transaction 
+    public class Transaction
     {
         [Key]
         public int Id { get; set; }
@@ -14,17 +14,17 @@ namespace PaymentGateway.Models
         [StringLength(100)]
         public Sender Sender { get; set; }
         public Receiver Receiver { get; set; }
-
-        public int SelectedRouteId { get; set; }
-        public int SelectedCategoryId { get; set; }
-        public int SelectedChannelTypeId { get; set; }
-        public List<Route> TransactionRoutes { get; set; }
-        public List<SelectListItem> Categories { get; set; }
-        public List<SelectListItem> ChannelTypes { get; set; }
-
-        public string Amount { get; set; }
+        public string RouteId { get; set; }
+        public string CategoryDescription { get; set; }
+        public int ChannelType { get; set; }
+        public string ChannelDescription { get; set; }
+        public string systemTraceAuditNumber { get; set; }
+        public string? systemConversationId { get; internal set; }
+        public string originatorConversationId { get; internal set; }
+        public string reference { get; set; }
+        public int Amount { get; set; }
         public DateTime Date { get; set; }
-
+        
     }
     
 }

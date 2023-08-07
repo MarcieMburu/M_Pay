@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaymentGateway.Data;
 
@@ -11,9 +12,11 @@ using PaymentGateway.Data;
 namespace PaymentGateway.Migrations
 {
     [DbContext(typeof(PaymentGatewayContext))]
-    partial class PaymentGatewayContextModelSnapshot : ModelSnapshot
+    [Migration("20230803054604_StringToInt")]
+    partial class StringToInt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,18 +55,9 @@ namespace PaymentGateway.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("originatorConversationId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("reference")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("systemConversationId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("systemTraceAuditNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -82,17 +76,15 @@ namespace PaymentGateway.Migrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<string>("ID_NO")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                            b1.Property<int>("ID_NO")
+                                .HasColumnType("int");
 
                             b1.Property<string>("Name")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<string>("Phone_No")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                            b1.Property<int>("Phone_No")
+                                .HasColumnType("int");
 
                             b1.HasKey("TransactionId");
 
@@ -107,17 +99,15 @@ namespace PaymentGateway.Migrations
                             b1.Property<int>("TransactionId")
                                 .HasColumnType("int");
 
-                            b1.Property<string>("ID_NO")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                            b1.Property<int>("ID_NO")
+                                .HasColumnType("int");
 
                             b1.Property<string>("Name")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<string>("Phone_No")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                            b1.Property<int>("Phone_No")
+                                .HasColumnType("int");
 
                             b1.Property<string>("Src_Account")
                                 .IsRequired()

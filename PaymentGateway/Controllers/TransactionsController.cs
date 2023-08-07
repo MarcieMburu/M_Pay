@@ -6,11 +6,13 @@ using System.Linq.Dynamic.Core;
 using Newtonsoft.Json;
 using PaymentGateway.DTOs;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
-
-
-
 using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Channels;
+using Nest;
+using System;
+using Microsoft.EntityFrameworkCore;
+using System.Net.Http;
 
 namespace PaymentGateway.Controllers
 {
@@ -19,19 +21,32 @@ namespace PaymentGateway.Controllers
         private readonly PaymentGatewayContext _context;
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient = new HttpClient();
-        private readonly string _serverString;
+        private readonly string base_token_url;
+        private readonly string base_api_url;
         public string clientId = "rahab";
         public string clientSecret = "rahab";
-        public string credentials = "client_credentials";
+       public string credentials = "client_credentials";
+       private readonly IHttpClientFactory _httpClientFactory;
         private AccessToken _accessToken;
 
-        public TransactionsController(PaymentGatewayContext context, IMapper mapper, HttpClient httpClient)
+        public TransactionsController(PaymentGatewayContext context, IMapper mapper, HttpClient httpClient, IHttpClientFactory httpClientFactory)
         {
             _context = context;
             this._mapper = mapper;
             _httpClient = httpClient;
-            _serverString = "https://auth.zamupay.com/connect/token";
+            base_token_url = "https://auth.zamupay.com";
+            base_api_url = "https://sandboxapi.zamupay.com";
+            _httpClientFactory = httpClientFactory;
         }
+
+
+
+        // GET: Transactions/transaction
+        public async Task<IActionResult> Transaction()
+        {
+            return (View(new TransactionViewModel()));
+        }
+
 
         public async Task<string> GetBearerToken(string clientId, string clientSecret)
         {
@@ -45,8 +60,8 @@ namespace PaymentGateway.Controllers
 
             try
             {
-                var response = await _httpClient.PostAsync(_serverString, requestContent);
-                response.EnsureSuccessStatusCode();
+                var response = await _httpClient.PostAsync("https://auth.zamupay.com/connect/token", requestContent);
+                //response.EnsureSuccessStatusCode();
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var accessToken = JsonConvert.DeserializeObject<AccessToken>(responseContent);
                 return accessToken.access_token;
@@ -63,44 +78,32 @@ namespace PaymentGateway.Controllers
             var accessToken = await GetBearerToken(clientId, clientSecret);
             var transactionRouteEndpoint = "https://sandboxapi.zamupay.com/v1/transaction-routes/assigned-routes";
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            
+                var routeResponse = await _httpClient.GetAsync(transactionRouteEndpoint);
+            try
+            {
+                //routeResponse.EnsureSuccessStatusCode();
+                var routeResponseContent = await routeResponse.Content.ReadAsStringAsync();
+                var transactionRoute = JsonConvert.DeserializeObject<TransactionRoute>(routeResponseContent);
 
-            var routeResponse = await _httpClient.GetAsync(transactionRouteEndpoint);
-            routeResponse.EnsureSuccessStatusCode();
-            var routeResponseContent = await routeResponse.Content.ReadAsStringAsync();
-            var transactionRoute = JsonConvert.DeserializeObject<TransactionRoute>(routeResponseContent);
+                List<SelectListItem> routeItems = new List<SelectListItem>();
 
-            List<SelectListItem> routeItems = new List<SelectListItem>();
+                var channelTypeItems = new List<ChannelTypeItemViewModel>();
 
-            var channelTypeItems = new List<ChannelTypeItemViewModel>();
-
-            foreach (var route in transactionRoute.routes)
-            { 
-                //if (route.channelTypes != null && route.channelTypes.Any())
-                //{
-                routeItems.Add(new SelectListItem
+                foreach (var route in transactionRoute.routes)
                 {
-                    Value = route.id.ToString(),
-                    Text = route.categoryDescription
-                });
-               // foreach (var channelType in route.channelTypes)
-                //{
 
-                //    channelTypeItems.Add(new ChannelTypeItemViewModel
-                //    {
-                //        RouteId = route.id.ToString(),
-                //        Value = channelType.channelType.ToString(),
-                //        Text = channelType.channelDescription
-                //    });
-                //}
-                //routeItems.Add(channelTypeItems);
-           // }
-
+                    routeItems.Add(new SelectListItem
+                    {
+                        Value = route.id.ToString(),
+                        Text = route.categoryDescription
+                    });
                 }
+                return Json(routeItems);
+            }
+            catch(Exception ex){ }
 
-            //ViewBag.RouteItems = routeItems;
-
-            //var result = new { Routes = routeItems, ChannelTypes = channelTypeItems };
-            return Json(routeItems);
+            return null;
         }
 
         public async Task<JsonResult> GetChannelTypeByRouteId(string id)
@@ -133,50 +136,42 @@ namespace PaymentGateway.Controllers
             return Json(channelTypeItems);
     }
 
-        public ActionResult accessToken()
-        {
-            return accessToken();
-        }
-        public ActionResult transactionRoute()
-        {
-            return transactionRoute(); 
-        }
-    
-            // GET: Transactions/transaction
-            public async Task<IActionResult> Transaction()
-        {
-            
-           // await GetTransactionRoute();
-
-            return (View(new TransactionViewModel()));
-        }
-        
 
         // POST: Transactions/Transaction
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Transaction(TransactionViewModel transactionViewModel)
         {
-          
+
             if (ModelState.IsValid)
             {
                 Transaction transaction = _mapper.Map<Transaction>(transactionViewModel);
-                
+             
                 transaction.Date = DateTime.Now;
+
+                transaction.originatorConversationId = Guid.NewGuid().ToString();
+                transaction.systemTraceAuditNumber = Guid.NewGuid().ToString();
+
                 _context.Add(transaction);
                 await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Transaction has been successfully saved to the database.";
+
+
                 return RedirectToAction(nameof(DisplayData));
             }
-           
 
             return View(transactionViewModel);
-          
 
         }
-        
+
+
 
         public IActionResult DisplayData()
         {
+            var successMessage = TempData["SuccessMessage"] as string;
+
+            ViewBag.SuccessMessage = successMessage;
             return View();
         }
         //Post data to jquery datatable
@@ -184,166 +179,215 @@ namespace PaymentGateway.Controllers
         {
             List<Transaction> transactions = new List<Transaction>();
 
-            transactions = _context.Transaction.ToList<Transaction>(); // Retrieve data from the database
+            transactions = _context.Transaction.ToList<Transaction>();
 
-            return Json(transactions); // Return data as JSON to the view
-        }
-        public IActionResult AddTransaction(Transaction transaction)
-        {
-            return View();
+            return Json(transactions);
         }
 
-        // Fetch the Transaction from the database
-        [HttpGet]
-        public async Task<IActionResult> GetData()
+
+        [HttpPost]
+        public async Task<ActionResult> PaymentOrderRequest(int id)
         {
-            Transaction transaction = await _context.Transaction.FindAsync(1);
+
+            var transaction = await _context.Transaction.FindAsync(id);
+
             if (transaction == null)
             {
-                return NotFound(); 
-            } // Convert the Transaction to TransactionViewModel using the mapper.
-            TransactionViewModel transactionViewModel = _mapper.Map<TransactionViewModel>(transaction);
-            return View(transactionViewModel);
-        }
 
-        [HttpGet]
-        public ActionResult AddOrEdit(int id = 0)
-        {
-            if (id == 0)
-                return View(new Transaction());
+                return NotFound();
+            }
+            var isPaymentOrderRequestSuccessful = await ProcessPaymentOrderAsync(transaction);
+
+            if (isPaymentOrderRequestSuccessful)
+            {
+
+
+                return Content("Payment successful!");
+            }
             else
             {
-                using (var db = new PaymentGatewayContext())
-                {
-                    return View(db.Transaction.Where(x => x.Id == id).FirstOrDefault<Transaction>());
-                }
+
+                return Ok(new { Message = "ERRor" });
             }
         }
 
 
-        [HttpPost]
-        public JsonResult AddOrEdit(Transaction transaction)
-        {
-            if (ModelState.IsValid)
-            {
-                using (var db = new PaymentGatewayContext())
-                {
-                    if (!db.Transaction.Any(x => x.Id == transaction.Id))
-                    {
-                        db.Transaction.Add(transaction);
-                        db.SaveChanges();
-                        return Json(transaction);
-                    }
-                }
-            }
 
-            return Json(new { success = false, message = "Invalid data or Transaction with the specified Id already exists." });
-        }
-
-     
-        [HttpPost]
-        public JsonResult DeleteTransaction(int id)
+        [HttpGet]//get transaction and sends to api
+        public async Task<bool> ProcessPaymentOrderAsync(Transaction transaction)
         {
+            var _httpClient = _httpClientFactory.CreateClient();
+            var accessToken = await GetBearerToken(clientId, clientSecret);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var paymentOrderRequest = "https://sandboxapi.zamupay.com/v1/payment-order/new-order";
+
             try
             {
-                using (var db = new PaymentGatewayContext())
+                ZamupayRequest orderRequest = new ZamupayRequest();
+
+                RecipientItem recipientItem = new RecipientItem();
+                RemitterItem remitterItem = new RemitterItem();
+                TransactionItem transactionItem = new TransactionItem();
+
+                remitterItem.name = transaction.Sender.Name;
+                remitterItem.idNumber = transaction.Sender.ID_NO;
+                remitterItem.phoneNumber = transaction.Sender.Phone_No;
+                remitterItem.address = "nyeri";
+                remitterItem.sourceOfFunds = transaction.Sender.Src_Account;
+                remitterItem.ccy = 404;
+                remitterItem.country = "Kenya";
+                remitterItem.nationality = "Kenyan";
+                remitterItem.principalActivity = "Business";
+                remitterItem.dateOfBirth = "01/01/2002";
+
+                recipientItem.mccmnc = "63902";
+                recipientItem.ccy = 404;
+                recipientItem.country = "KE";
+                recipientItem.name = transaction.Receiver.Name;
+                recipientItem.idNumber = transaction.Receiver.ID_NO;
+                recipientItem.primaryAccountNumber = transaction.Receiver.Phone_No;
+                recipientItem.financialInstitution = "Mpesa";
+                recipientItem.idType = "National ID";
+                recipientItem.purpose = "TEST";
+
+                transactionItem.amount = transaction.Amount;
+                transactionItem.ChannelType = transaction.ChannelType;
+                transactionItem.routeId = transaction.RouteId;
+                transactionItem.reference = transaction.reference;
+                transactionItem.systemTraceAuditNumber = transaction.systemTraceAuditNumber;
+
+                PaymentOrderLine paymentOrderLines = new PaymentOrderLine();
+
+                paymentOrderLines.remitter = remitterItem;
+                paymentOrderLines.recipient = recipientItem;
+                paymentOrderLines.transaction = transactionItem;
+
+                orderRequest.paymentOrderLines = new List<PaymentOrderLine>
+                 {
+                    paymentOrderLines
+                };
+
+                orderRequest.paymentNotes = "Transactions";
+
+                orderRequest.originatorConversationId = transaction.originatorConversationId;
+
+
+                var jsonPayload = JsonConvert.SerializeObject(orderRequest);
+                var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+
+                var response = await _httpClient.PostAsync(paymentOrderRequest, httpContent);
+                //response.EnsureSuccessStatusCode(); 
+
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+
+                var paymentResponse = JsonConvert.DeserializeObject<PaymentRequestResponse>(responseContent);
+
+                if (paymentResponse.message.originatorConversationId != transaction.originatorConversationId)
                 {
-                    Transaction transaction = db.Transaction.Where(x => x.Id == id).FirstOrDefault<Transaction>();
-                    if (transaction != null)
-                    {
-                        db.Transaction.Remove(transaction);
-                        db.SaveChanges();
-                        return Json(new { success = true, message = "Deleted Successfully" });
-                    }
-                    else
-                    {
-                        return Json(new { success = false, message = "Transaction not found" });
-                    }
+                    throw new InvalidOperationException("Received response with unexpected TransactionId.");
                 }
-            }
+
+               // var existingTransaction = await _context.Transaction.FindAsync(transaction.Id);
+               var existingTransaction = transaction;
+
+                if (existingTransaction == null)
+                {
+                    throw new InvalidOperationException("Transaction not found in the database.");
+                }
+                existingTransaction.systemConversationId = paymentResponse.message.systemConversationId;
+                existingTransaction.originatorConversationId = paymentResponse.message.originatorConversationId;
+
+               // transaction.systemConversationId = paymentResponse.message.systemConversationId;
+                //        transaction.originatorConversationId = paymentResponse.message.originatorConversationId;
+                        _context.Update(transaction);
+                        await _context.SaveChangesAsync();
+                    
+
+            return true;
+        }
             catch (Exception ex)
             {
-                // Handle the exception and return an error message
-                return Json(new { success = false, message = "An error occurred while deleting the Transaction." });
+               
+                return false; 
             }
         }
 
-       
-        public ActionResult LoadData()
-        {
-            try
-            {
-                var draw = Request.Form["draw"].FirstOrDefault();
-                var start = Request.Form["start"].FirstOrDefault();
-                var length = Request.Form["length"].FirstOrDefault();
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-                var sortColumnDir = Request.Form["order[0][dir]"].FirstOrDefault();
-                var searchValue = Request.Form["search[value]"].FirstOrDefault();
 
+        // fetch the payment order response from the API and updating the corresponding transaction in the database.
 
-                //Paging Size (10,20,50,100)    
-                int pageSize = length != null ? Convert.ToInt32(length) : 0;
-                int skip = start != null ? Convert.ToInt32(start) : 0;
-                int recordsTotal = 0;
+        //public async Task<bool> ProcessPaymentOrderResponseAsync(int id)
+        //{
+        //    try
+        //    {
+        //        var accessToken = await GetBearerToken(clientId, clientSecret);
+        //        var _httpClient = _httpClientFactory.CreateClient();
+        //        var paymentOrderResponseEndpoint = $"https://sandboxapi.zamupay.com/v1/payment-order/{id}/response";
 
-                // Getting all transaction data    
-                var transactionData = (from temptransaction in _context.Transaction
-                                    select temptransaction);
+        //        // Set authorization header with access token
+        //        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
+        //        // Send a GET request to the payment order response endpoint
+        //        var response = await _httpClient.GetAsync(paymentOrderResponseEndpoint);
                 
-                // Sorting
-                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
-                {
-                    transactionData = transactionData.OrderBy(sortColumn + " " + sortColumnDir);
-                }
-                //Search    
-                if (!string.IsNullOrEmpty(searchValue))
-                {
-                    transactionData = transactionData.Where(m => m.Sender.Name == searchValue);
-                }
+        //        response.EnsureSuccessStatusCode(); // Ensure successful response, else it will throw an exception
 
-                //total number of rows count     
-                recordsTotal = transactionData.Count();
-                //Paging     
-                var data = transactionData.Skip(skip).Take(pageSize).ToList();
-                //Returning Json Data    
-                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+        //        // Read the response content
+        //        var responseContent = await response.Content.ReadAsStringAsync();
 
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+        //        // Deserialize the response to get the paymentResponse object
+        //        var paymentResponse = JsonConvert.DeserializeObject<PaymentRequestResponse>(responseContent);
 
-        }
-        [HttpGet]
-        public ActionResult Edit(int? ID)
+        //        // Update the database with the received conversation IDs
+        //        var transaction = await _context.Transaction.FindAsync(id);
+        //        if (transaction == null)
+        //        {
+        //            return false; 
+        //        }
+
+        //        transaction.systemConversationId = paymentResponse.message.systemConversationId;
+        //        transaction.originatorConversationId = paymentResponse.message.originatorConversationId;
+
+        //        // Save the changes to the database
+        //        await _context.SaveChangesAsync();
+
+        //        // Return true to indicate that the update was successful
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle any exceptions that might occur during the process
+        //        // Log the exception or take appropriate action based on your application's requirements
+        //        return false; // Return false to indicate that the update failed
+        //    }
+        //}
+
+
+        //public IActionResult PaymentSuccess()
+        //{
+        //    return View();
+        //}
+        //public IActionResult PaymentFail() { return View(); }
+        //public ActionResult AccessToken()
+        //{
+        //    return AccessToken () ;
+        //}
+        public ActionResult TransactionRoute()
         {
-            try
-            {
-                using (var db = new PaymentGatewayContext())
-                {
-                    var transaction = (from t in db.Transaction
-                                       where t.Id == ID
-                                       select t).FirstOrDefault();
-
-                    if (transaction != null)
-                    {
-                        return View(transaction); 
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index"); 
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return TransactionRoute(); 
         }
-      
+    public async Task<ActionResult> FindPaymentOrderByOriginatorConversationId(string originatorConversationId)
+        {
+            var accessToken = await GetBearerToken(clientId, clientSecret);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var findPaymentOrderRequest = "{{base_api_url}}/v1/payment-order/check-status?Id=EDK9CFCCQV9B6ACCTGFK&IdType=OriginatorConversationId";
+            var response = await httpClient.GetAsync(findPaymentOrderRequest);
+            response.EnsureSuccessStatusCode();
+        }
 
+   
        
 
         public class ChannelTypeItemViewModel : SelectListItem
@@ -353,7 +397,71 @@ namespace PaymentGateway.Controllers
             public string RouteId { get; set; }
             public string categoryDescription { get; set; }
         }
-     
+
+       
+        public class PaymentOrderLine
+        {
+            public RecipientItem recipient { get; set; }
+            public TransactionItem transaction { get; set; }
+
+            public RemitterItem remitter { get; set; }
+        }
+
+        public class RecipientItem
+        {
+            public string name { get; set; }
+            public string address { get; set; }
+            public string emailAddress { get; set; }
+            public string phoneNumber { get; set; }
+            public string idType { get; set; }
+            public string idNumber { get; set; }
+            public string financialInstitution { get; set; }
+            public string primaryAccountNumber { get; set; }
+            public string mccmnc { get; set; }
+            public int ccy { get; set; }
+            public string country { get; set; }
+            public string purpose { get; set; }
+        }
+
+        public class RemitterItem
+        {
+            public string name { get; set; }
+            public string address { get; set; }
+            public string phoneNumber { get; set; }
+            public string idType { get; set; }
+            public string idIssuePlace { get; set; }
+            public string idNumber { get; set; }
+            public string idIssueDate { get; set; }
+            public string idExpireDate { get; set; }
+            public string nationality { get; set; }
+            public string country { get; set; }
+            public int ccy { get; set; }
+            public string financialInstitution { get; set; }
+            public string sourceOfFunds { get; set; }
+            public string principalActivity { get; set; }
+            public string dateOfBirth { get; set; }
+            public string state { get; set; }
+            public string city { get; set; }
+            public string postalCode { get; set; }
+        }
+
+
+        public class ZamupayRequest
+        {
+            public string originatorConversationId { get; set; }
+            public string paymentNotes { get; set; }
+            public List<PaymentOrderLine> paymentOrderLines { get; set; }
+        }
+
+        public class TransactionItem
+        {
+            public string routeId { get; set; }
+            public int ChannelType { get; set; }
+            public int amount { get; set; }
+            public string reference { get; set; }
+            public string systemTraceAuditNumber { get; set; }
+        }
+
 
     }
 }

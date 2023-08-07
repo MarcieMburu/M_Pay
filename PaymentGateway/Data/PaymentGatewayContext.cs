@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -19,7 +20,8 @@ namespace PaymentGateway.Data
         {
         }
 
-        public DbSet<PaymentGateway.Models.Transaction> Transaction { get; set; } = default!;
+        public DbSet<Transaction> Transaction { get; set; } = default!;
+      
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Transaction>(ConfigureProfile);
@@ -29,7 +31,10 @@ namespace PaymentGateway.Data
 
             builder.OwnsOne(p => p.Sender);
             builder.OwnsOne(p => p.Receiver);
+        
+
+
         }
-     
+
     }
 }

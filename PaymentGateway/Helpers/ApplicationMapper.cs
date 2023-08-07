@@ -10,7 +10,7 @@ namespace PaymentGateway.Helpers
     {
         public ApplicationMapper()
         {
-            CreateMap<Transaction, TransactionViewModel>().ReverseMap();
+            CreateMap<PaymentGateway.Models.Transaction, TransactionViewModel>().ReverseMap();
         }
     }
 }

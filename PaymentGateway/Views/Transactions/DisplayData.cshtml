@@ -20,10 +20,12 @@ $(document).ready(function(){
 </script>
 <h2>Data Table </h2>
 <table id="dataTable" class="table table-bordered table-striped"> </table>
-<a class="btn btn-success" style="margin-bottom:10px" onclick="PopupForm('@Url.Action("AddOrEdit","Transaction")')"><i class="fa fa-plus"></i> Add New</a>
+
+<a class="btn btn-success" style="margin-bottom:10px" href="/Transactions/Transaction"><i class="fa fa-plus"></i> Add New</a>
 
 @section scripts {
     <script>
+       
         $(document).ready(function () {
             // Initialize DataTable
             $('#dataTable').DataTable({
@@ -35,7 +37,6 @@ $(document).ready(function(){
                 },
                 //console.log(data);
                 "columns": [
-                    { data: 'id', title: 'Transaction ID' },
                     { data: 'sender.name', title: 'Sender Name' },
                     { data: 'sender.iD_NO', title: 'Sender ID NO' },
                     { data: 'sender.phone_No', title: 'Sender Phone NO' },
@@ -45,19 +46,57 @@ $(document).ready(function(){
                     { data: 'receiver.phone_No', title: 'Receiver Phone NO' },
                     { data: 'receiver.dst_Account', title: 'Receiver Destination Account' },
                     { data: 'amount', title: 'Amount' },
+                    { data: 'routeId', title: 'Category ID' },
+                    { data: 'categoryDescription', title: 'Category Description' },
+                    { data: 'channelType', title: 'Channel ID' },
+                    { data: 'channelDescription', title: 'Channel Description' },
+                    { data: 'systemConversationId', title: 'System Conversation Id' },
+                    { data: 'originatorConversationId', title: 'Originator Conversation ID' },
+                    { data: 'reference', title: 'Reference' },
                     { data: 'date', title: 'Transaction Date' },
-                    {
-                        "render": function (data, type, full, meta) { return '<a class="btn btn-info" href="AddTransaction' + full.id + '">Edit</a>'; }
-                    },
-                    {
-                        data: null, render: function (data, type, row) {
-                            return "<a href='#' class='btn btn-danger' onclick=DeleteData('" + row.id + "'); >Delete</a>";
-                        }
-                    },
-                ]
+                    { data: 'date', title: 'Status'},
+                    {data:'date',title: 'Action'}
+                ],
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                   
+                    var id = aData.id;
+                    var originatorConversationId = aData.originatorConversationId;
+                    var postButton = '<button class="btn btn-primary post-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">Post</button>';
+
+                    $(nRow).find('td:eq(17)').html(postButton).addClass('post-button-cell');
+                    return nRow;
+                }
+            });
+        
+
+         $('#dataTable').on('click', '.post-btn', function () {
+            var button = $(this);
+            var id = button.data('transaction-id');
+            var originatorConversationId = button.data('originator-conversation-id');
+
+          
+            $.ajax({
+                url: '/Transactions/PaymentOrderRequest', 
+                type: 'POST',
+                data: { id: id, originatorConversationId: originatorConversationId }, 
+                success: function (response) {
+                    button.prop('disabled', true).addClass('disabled');
+                    button.removeClass('btn-primary').addClass('btn-secondary');
+
+                    alert('Transaction posted successfully!');
+
+                  
+                    $('#dataTable').DataTable().ajax.reload();
+                },
+                error: function (error) {
+             
+                    alert('Failed to post the transaction. Please try again.');
+                }
             });
         });
-
-    </script>
+    
+    });
+    
+  </script>
     
 }
