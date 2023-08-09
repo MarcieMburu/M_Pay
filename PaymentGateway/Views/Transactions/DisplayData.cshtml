@@ -18,16 +18,47 @@ $(document).ready(function(){
   });
 });
 </script>
+<a class="btn btn-success" style="margin-bottom:10px" href="/Transactions/Transaction"><i class="fa fa-plus"></i> Add New</a>
 <h2>Data Table </h2>
 <table id="dataTable" class="table table-bordered table-striped"> </table>
 
-<a class="btn btn-success" style="margin-bottom:10px" href="/Transactions/Transaction"><i class="fa fa-plus"></i> Add New</a>
+<div class="modal fade" id="transactionDetailsModal" tabindex="-1" role="dialog" aria-labelledby="transactionDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="transactionDetailsModalLabel">Transaction Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="transactionDetailsContent">
+            
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="paymentDetailsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentDetailsModalLabel">Payment Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="paymentDetailsModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @section scripts {
     <script>
        
         $(document).ready(function () {
-            // Initialize DataTable
+           
             $('#dataTable').DataTable({
                 "ajax": {
                     url: '/Transactions/GetDataForDataTable',
@@ -35,8 +66,9 @@ $(document).ready(function(){
                     datatype: 'JSON',
                     dataSrc:""
                 },
-                //console.log(data);
+               
                 "columns": [
+                    { data: 'id', title: 'ID' },
                     { data: 'sender.name', title: 'Sender Name' },
                     { data: 'sender.iD_NO', title: 'Sender ID NO' },
                     { data: 'sender.phone_No', title: 'Sender Phone NO' },
@@ -50,51 +82,159 @@ $(document).ready(function(){
                     { data: 'categoryDescription', title: 'Category Description' },
                     { data: 'channelType', title: 'Channel ID' },
                     { data: 'channelDescription', title: 'Channel Description' },
-                    { data: 'systemConversationId', title: 'System Conversation Id' },
-                    { data: 'originatorConversationId', title: 'Originator Conversation ID' },
+                 
                     { data: 'reference', title: 'Reference' },
                     { data: 'date', title: 'Transaction Date' },
-                    { data: 'date', title: 'Status'},
-                    {data:'date',title: 'Action'}
+                    { data: 'date', title: 'Action'},
+                    {data:'date',title: 'Status'},
+                    { data: 'isPosted', title: 'Posted' }                  
                 ],
+               
+
+
+                       
+                "columnDefs": [
+                    { "targets": [0], "visible": false } 
+                ],
+                "order": [[0, "desc"]],
+
                 "fnRowCallback": function (nRow, aData, iDisplayIndex) {
                    
                     var id = aData.id;
                     var originatorConversationId = aData.originatorConversationId;
                     var postButton = '<button class="btn btn-primary post-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">Post</button>';
+                    var viewButton = '<button class="btn btn-info view-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">View</button>';
+                   
+                    var statusLink = '<a class="status-link" href="#" data-transaction-id="' + id + '" data-originator-conversation-id="' + originatorConversationId + '">Status</a>';
 
-                    $(nRow).find('td:eq(17)').html(postButton).addClass('post-button-cell');
+
+                    $(nRow).find('td:eq(15)').html(postButton + ' ' + viewButton);
+                    var dateParts = aData.date.split('T');
+                    var formattedDateTime = dateParts[0] + '<br>' + dateParts[1];
+                    var formattedAmount = parseFloat(aData.amount).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+
+                    $(nRow).find('td:eq(8)').text(formattedAmount);
+                    $(nRow).find('td:eq(14)').html(formattedDateTime);
+                    
+                    $(nRow).find('td:eq(16)').html(statusLink);
+
+                    var isPostedCell = $(nRow).find('td:eq(17)');
+                    if (aData.isPosted) {
+                        isPostedCell.text('Posted');
+                    } else {
+                        isPostedCell.text('Not posted'); 
+                    }
                     return nRow;
+                   
                 }
+               
             });
-        
 
-         $('#dataTable').on('click', '.post-btn', function () {
-            var button = $(this);
-            var id = button.data('transaction-id');
-            var originatorConversationId = button.data('originator-conversation-id');
+
+            $('#dataTable').on('click', '.post-btn', function () {
+                var postButton = $(this);
+                var id = postButton.data('transaction-id');
+                var originatorConversationId = postButton.data('originator-conversation-id');
+                var rowNode = postButton.closest('tr'); 
+
+                $.ajax({
+                    url: '/Transactions/PaymentOrderRequest',
+                    type: 'POST',
+                    data: { id: id, originatorConversationId: originatorConversationId },
+                    success: function (response) {
+                        if (response.isTransactionPosted) {
+                           
+
+                           
+                            postButton.prop('disabled', true);
+                            postButton.removeClass('btn-primary').addClass('btn-secondary');
+                            postButton.text('Post');
+                            postButton.css('background-color', 'yellow');
+                            console.log('Button class and text changed.');
+
+                           
+                            alert('Transaction already posted.');
+                        } else if (response.isPosted) {
+                          
+
+                            postButton.prop('disabled', true);
+                            postButton.removeClass('btn-primary').addClass('btn-secondary');
+                            postButton.text('Post');
+                            postButton.css('background-color', 'yellow');
+                            console.log('Button class and text changed.');
+                            alert('Transaction posted successfully!');
+                        } else {
+                            alert('Failed to post the transaction. Please try again.');
+                        }
+
+                       
+                        $('#dataTable').DataTable().ajax.reload();
+                    },
+                    error: function (error) {
+                        alert('Failed to post the transaction. Please try again.');
+                    }
+                });
+            });
+
+            $('#dataTable').on('click', '.view-btn', function () {
+              console.log('Button Clicked');
+                var viewButton = $(this);
+                var id = viewButton.data('transaction-id');
+
+                $.ajax({
+                    url: '/Transactions/ViewPaymentDetails',
+                    type: 'GET',
+                    dataSrc: "",
+                    data: { id: id },
+                    dataType: 'html',
+
+
+                    success: function (response) {
+                      
+                        $('#transactionDetailsContent').html(response);
+                        $('#transactionDetailsModal').modal('show');
+
+                        $('#closeButton').on('click', function () {
+                            $('#transactionDetailsModal').modal('hide');
+                        });
+
+                    },
+                    error: function (error) {
+                        alert('Failed to fetch transaction details. Please try again.');
+                    }
+                });
+            });
+
+            $('#dataTable').on('click', '.status-link', function () {
+               
+                var link = $(this);
+                var originatorConversationId = link.data('originator-conversation-id');
+
+                $.ajax({
+                    url: '/Transactions/GetPaymentDetailsByOriginatorConversationId',
+                    type: 'GET',
+                    dataSrc: "",
+                    dataType: 'HTML',
+                    data: { originatorConversationId: originatorConversationId },
+                    success: function (paymentDetails) {
+
+                        $('#paymentDetailsModalBody').html(paymentDetails);
+                        $('#paymentDetailsModal').modal('show');
+
+                        $('#closeButton').on('click', function () {
+                            $('#paymentDetailsModal').modal('hide');
+                        });
+                    },
+                    error: function (error) {
+                        alert('Failed to fetch payment details. Please try again.');
+                    }
+                });
+            });
 
           
-            $.ajax({
-                url: '/Transactions/PaymentOrderRequest', 
-                type: 'POST',
-                data: { id: id, originatorConversationId: originatorConversationId }, 
-                success: function (response) {
-                    button.prop('disabled', true).addClass('disabled');
-                    button.removeClass('btn-primary').addClass('btn-secondary');
-
-                    alert('Transaction posted successfully!');
-
-                  
-                    $('#dataTable').DataTable().ajax.reload();
-                },
-                error: function (error) {
-             
-                    alert('Failed to post the transaction. Please try again.');
-                }
-            });
-        });
-    
     });
     
   </script>

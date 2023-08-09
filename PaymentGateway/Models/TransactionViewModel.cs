@@ -30,15 +30,17 @@ namespace PaymentGateway.Models
         public string CategoryDescription { get; set; }
         public int ChannelType { get; set; }
         public string ChannelDescription { get; set; }
-
+       
+        [Display(Name = "Reference")]
         public string reference { get; set; }
         public string? systemConversationId { get; internal set; }
         public string? originatorConversationId { get; internal set; }
+
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Amount must be a positive number.")]
         public int Amount { get; set; }
         public DateTime Date { get; set; }
 
-       
+        public bool IsPosted { get; set; }
     }
 }

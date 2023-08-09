@@ -1,8 +1,12 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
+using PaymentGateway.Controllers;
 using PaymentGateway.Data;
 using PaymentGateway.DTOs;
 using System.Web.Mvc;
+using System.IO;
+using Microsoft.Extensions.Configuration;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PaymentGatewayContext>(options =>
@@ -13,12 +17,14 @@ builder.Services.AddDbContext<PaymentGatewayContext>(options =>
 builder.Services.AddControllersWithViews();
 
 
-
 builder.Services.AddHttpClient();
-// Program program = new Program();
+
+//var apiSettings = builder.Configuration.GetSection("ApiSettings").Get<ApiSettings>();
+//builder.Services.Configure<ApiSettings>(options => builder.Configuration.GetSection("ApiSettings").Bind(apiSettings));
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
 
-// Register AutoMapper here directly with IServiceCollection
+
 builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();

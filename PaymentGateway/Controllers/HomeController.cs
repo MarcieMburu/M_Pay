@@ -19,8 +19,11 @@ namespace PaymentGateway.Controllers
         {
             return View();
         }
-      
-       
+        public IActionResult PaymentOrderDetails()
+        {
+            return View();
+        }
+
 
         public IActionResult Privacy()
         {

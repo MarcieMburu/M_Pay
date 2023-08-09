@@ -9,6 +9,7 @@ namespace PaymentGateway.Models
     public class Transaction
     {
         [Key]
+        
         public int Id { get; set; }
         [Required]
         [StringLength(100)]
@@ -19,12 +20,13 @@ namespace PaymentGateway.Models
         public int ChannelType { get; set; }
         public string ChannelDescription { get; set; }
         public string systemTraceAuditNumber { get; set; }
+      
         public string? systemConversationId { get; internal set; }
         public string originatorConversationId { get; internal set; }
         public string reference { get; set; }
         public int Amount { get; set; }
         public DateTime Date { get; set; }
-        
+        public bool IsPosted { get; set; }
     }
     
 }

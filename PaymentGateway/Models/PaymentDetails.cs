@@ -1,4 +1,5 @@
-﻿
+﻿namespace PaymentGateway.Models
+{ 
 public class OrderLine
 {
     public Remitter remitter { get; set; }
@@ -51,7 +52,7 @@ public class Remitter
     public object postalCode { get; set; }
 }
 
-public class FindPaymentOrderResponse
+public class PaymentDetails
 {
     public string id { get; set; }
     public string conversationId { get; set; }
@@ -79,7 +80,7 @@ public class TransactionDetails
     public object customerAccountNo { get; set; }
     public string routeTransactionTypeId { get; set; }
     public object relationship { get; set; }
-    
+
 }
 
 public class TransactionOutcome
@@ -93,5 +94,7 @@ public class TransactionOutcome
     public object resultCode { get; set; }
     public object resultCodeDescription { get; set; }
     public ThirdPartyPayload thirdPartyPayload { get; set; }
+}
+
 }
 
