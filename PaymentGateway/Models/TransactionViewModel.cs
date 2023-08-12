@@ -13,16 +13,27 @@ namespace PaymentGateway.Models
         public int Id { get; set; }
         [Required]
         [StringLength(100)]
+        [Display(Name = "Name")]
         public string SenderName { get; set; }
+        [Display(Name = "Identification Number")]
         public string SenderID_NO { get; set; }
 
-        [Display(Name = "Sender Phone Number")]
+        [Display(Name = "Phone Number")]
        // [RegularExpression(@"^\+?254\d{9}$", ErrorMessage = "Invalid phone number format. Use format: +254XXXXXXXXX.")]
         public string SenderPhone_No { get; set; }
+        [Display(Name = "Source Of Funds")]
         public string SenderSrc_Account { get; set; }
+        [Display(Name = "Name")]
         public string ReceiverName { get; set; }
+
+        [Display(Name = "Identification Number")]
+
         public string ReceiverID_NO { get; set; }
+        [Display(Name = "Phone Number")]
+
         public string ReceiverPhone_No { get; set; }
+        [Display(Name = "Funds Destination")]
+
         public string ReceiverDst_Account { get; set; }
 
         public string RouteId { get; set; }

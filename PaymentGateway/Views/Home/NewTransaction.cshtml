@@ -27,7 +27,7 @@
             // Initialize DataTable
             $('#dataTable').DataTable({
                 ajax: {
-                    url: '@Url.Action("GetDataForDataTable", "Home")',
+                    url: '@Url.Action("DisplayDataToDataTable", "Home")',
                     type: 'GET',
                     dataType: 'json',
                 },

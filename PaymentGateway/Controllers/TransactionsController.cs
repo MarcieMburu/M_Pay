@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PaymentGateway.Data;
 using PaymentGateway.Models;
+using PaymentGateway.Helpers;
 using System.Linq.Dynamic.Core;
 using Newtonsoft.Json;
 using PaymentGateway.DTOs;
@@ -14,31 +15,33 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http;
 using Microsoft.Extensions.Options;
+using PaymentGateway.Helpers;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace PaymentGateway.Controllers
 {
     public class TransactionsController : Controller
     {
         private readonly PaymentGatewayContext _context;
+        private readonly TransactionsRepository _transactionsRepository;
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient = new HttpClient();
-        //private readonly string base_token_url;
-        //private readonly string base_api_url;
-        //public string clientId = "rahab";
-        //public string clientSecret = "rahab";
-        //public string credentials = "client_credentials";
         private ApiSettings _apiSettings;
         private readonly IHttpClientFactory _httpClientFactory;
         private AccessToken _accessToken;
+        private readonly IMemoryCache _memoryCache;
 
-        public TransactionsController(PaymentGatewayContext context, IMapper mapper, IOptions<ApiSettings> apiSettings, HttpClient httpClient, IHttpClientFactory httpClientFactory)
+        public TransactionsController(PaymentGatewayContext context, IMemoryCache memoryCache, TransactionsRepository transactionsRepository, 
+            IMapper mapper, IOptions<ApiSettings> apiSettings, HttpClient httpClient, IHttpClientFactory httpClientFactory)
         {
             _context = context;
+            _transactionsRepository = transactionsRepository;
             this._mapper = mapper;
+            _memoryCache = memoryCache;
             _httpClient = httpClient;
             _apiSettings = apiSettings.Value;
             _httpClientFactory = httpClientFactory;
-           
+
         }
 
 
@@ -52,6 +55,7 @@ namespace PaymentGateway.Controllers
 
         public async Task<string> GetBearerToken(string client_id, string client_secret)
         {
+            
             var requestContent = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("client_id",_apiSettings.client_id),
@@ -66,6 +70,8 @@ namespace PaymentGateway.Controllers
                 //response.EnsureSuccessStatusCode();
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var accessToken = JsonConvert.DeserializeObject<AccessToken>(responseContent);
+               
+
                 return accessToken.access_token;
             }
             catch (Exception ex)
@@ -75,42 +81,8 @@ namespace PaymentGateway.Controllers
 
             return null;
         }
-        public async Task<JsonResult> GetTransactionRoute()
+        private async Task<TransactionRoute> GetTransactionRouteAsync()
         {
-            var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
-            var transactionRouteEndpoint =$"{_apiSettings.base_api_url}/v1/transaction-routes/assigned-routes";
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-            var routeResponse = await _httpClient.GetAsync(transactionRouteEndpoint);
-            try
-            {
-                //routeResponse.EnsureSuccessStatusCode();
-                var routeResponseContent = await routeResponse.Content.ReadAsStringAsync();
-                var transactionRoute = JsonConvert.DeserializeObject<TransactionRoute>(routeResponseContent);
-
-                List<SelectListItem> routeItems = new List<SelectListItem>();
-
-                var channelTypeItems = new List<ChannelTypeItemViewModel>();
-
-                foreach (var route in transactionRoute.routes)
-                {
-
-                    routeItems.Add(new SelectListItem
-                    {
-                        Value = route.id.ToString(),
-                        Text = route.categoryDescription
-                    });
-                }
-                return Json(routeItems);
-            }
-            catch (Exception ex) { }
-
-            return null;
-        }
-
-        public async Task<JsonResult> GetChannelTypeByRouteId(string id)
-        {
-
             var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
             var transactionRouteEndpoint = $"{_apiSettings.base_api_url}/v1/transaction-routes/assigned-routes";
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -120,26 +92,66 @@ namespace PaymentGateway.Controllers
             var routeResponseContent = await routeResponse.Content.ReadAsStringAsync();
             var transactionRoute = JsonConvert.DeserializeObject<TransactionRoute>(routeResponseContent);
 
-            var channelTypeItems = new List<ChannelTypeItemViewModel>();
+            return transactionRoute;
+        }
 
-            foreach (var route in transactionRoute.routes.Where(x => x.id == id))
+        public async Task<JsonResult> GetTransactionRoute()
+        {
+            try
             {
-                foreach (var channelTypes in route.channelTypes)
+                var transactionRoute = await GetTransactionRouteAsync();
+
+                List<SelectListItem> routeItems = new List<SelectListItem>();
+
+                foreach (var route in transactionRoute.routes)
                 {
-                    channelTypeItems.Add(new ChannelTypeItemViewModel
+                    routeItems.Add(new SelectListItem
                     {
-                        RouteId = route.id.ToString(),
-                        Value = channelTypes.channelType.ToString(),
-                        Text = channelTypes.channelDescription
+                        Value = route.id.ToString(),
+                        Text = route.categoryDescription
                     });
                 }
-            }
 
-            return Json(channelTypeItems);
+                return Json(routeItems);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception if needed
+                return null;
+            }
+        }
+
+        public async Task<JsonResult> GetChannelTypeByRouteId(string id)
+        {
+            try
+            {
+                var transactionRoute = await GetTransactionRouteAsync();
+
+                var channelTypeItems = new List<ChannelTypeItemViewModel>();
+
+                foreach (var route in transactionRoute.routes.Where(x => x.id == id))
+                {
+                    foreach (var channelTypes in route.channelTypes)
+                    {
+                        channelTypeItems.Add(new ChannelTypeItemViewModel
+                        {
+                            RouteId = route.id.ToString(),
+                            Value = channelTypes.channelType.ToString(),
+                            Text = channelTypes.channelDescription
+                        });
+                    }
+                }
+
+                return Json(channelTypeItems);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception if needed
+                return null;
+            }
         }
 
 
-        // POST: Transactions/Transaction
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Transaction(TransactionViewModel transactionViewModel)
@@ -177,7 +189,7 @@ namespace PaymentGateway.Controllers
             return View();
         }
         //Post data to jquery datatable
-        public JsonResult GetDataForDataTable()
+        public JsonResult DisplayDataToDataTable()
         {
             List<Transaction> transactions = new List<Transaction>();
 
@@ -207,19 +219,29 @@ namespace PaymentGateway.Controllers
 
                 if (isPaymentOrderRequestSuccessful)
                 {
+                    var updateResult = await _transactionsRepository.UpdateEntityPropertiesAsync(
+                 transaction,
+                 entity =>
+                 {
+                     entity.IsPosted = true;
+                 }
+             );
 
-                    transaction.IsPosted = true;
-                    await _context.SaveChangesAsync();
-
-                    return Ok(new { isPosted = true });
+                    if (updateResult)
+                    {
+                        return Ok(new { isPosted = true });
+                    }
+                    else
+                    {
+                        return Ok(new { Message = "ERROR" });
+                    }
                 }
                 else
                 {
-                    return Ok(new { Message = "ERR" });
+                    return Ok(new { Message = "ERROR" });
                 }
             }
         }
-
 
 
         [HttpGet]//get transaction and sends to api
@@ -307,14 +329,25 @@ namespace PaymentGateway.Controllers
                 {
                     throw new InvalidOperationException("Transaction not found in the database.");
                 }
-                existingTransaction.systemConversationId = paymentResponse.message.systemConversationId;
-                existingTransaction.originatorConversationId = paymentResponse.message.originatorConversationId;
 
-                _context.Update(transaction);
-                await _context.SaveChangesAsync();
+                var updateResult = await _transactionsRepository.UpdateEntityPropertiesAsync(
+                          existingTransaction,
+                          entity =>
+                          {
 
+                              entity.systemConversationId = paymentResponse.message.systemConversationId;
+                              entity.originatorConversationId = paymentResponse.message.originatorConversationId;
 
-                return true;
+                          });
+
+                if (updateResult)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception ex)
             {
@@ -370,10 +403,6 @@ namespace PaymentGateway.Controllers
 
 
 
-        public IActionResult PaymentOrderDetails()
-        {
-            return View();
-        }
 
         public class ChannelTypeItemViewModel : SelectListItem
         {

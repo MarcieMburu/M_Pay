@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
 using PaymentGateway.Controllers;
 using PaymentGateway.Data;
-using PaymentGateway.DTOs;
+using PaymentGateway.Helpers;
 using System.Web.Mvc;
 using System.IO;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +22,7 @@ builder.Services.AddHttpClient();
 //var apiSettings = builder.Configuration.GetSection("ApiSettings").Get<ApiSettings>();
 //builder.Services.Configure<ApiSettings>(options => builder.Configuration.GetSection("ApiSettings").Bind(apiSettings));
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
-
+builder.Services.AddScoped<TransactionsRepository>();
 
 
 builder.Services.AddAutoMapper(typeof(Program));
