@@ -86,29 +86,9 @@ $(document).ready(function(){
                     { data: 'date', title: 'Transaction Date' },
                     { data: 'date', title: 'Action'},
                     {data:'date',title: 'Status'},
-                    { data: 'isPosted', title: 'Posted' },
-                    {
-                        "data": null,
-                        "title": "Status",
-                        "render": function (data, type, row) {
-                            if (type === 'display') {
-                                // Access the transaction status code
-                                var statusCode = row.orderLines[0].transactionOutcome.transactionStatus;
-                                var statusDescription = row.orderLines[0].transactionOutcome.transactionStatusDescription;
-
-                                // Modify the display based on the status code
-                                var statusClass = '';
-                                if (statusCode === 2) {
-                                    statusClass = 'status-submitted';
-                                } else if (statusCode === 4) {
-                                    statusClass = 'status-completed';
-                                } // Add more conditions for other status codes
-
-                                return '<span class="' + statusClass + '">' + statusDescription + '</span>';
-                            }
-                            return ''; // For other types or when data is not available
-                        }
-                    }
+                    { data: 'isPosted', title: 'Posted' }
+                    
+                    
                 ],
 
 
@@ -124,7 +104,7 @@ $(document).ready(function(){
                     var originatorConversationId = aData.originatorConversationId;
                     var postButton = '<button class="btn btn-primary post-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">Post</button>';
                     var viewButton = '<button class="btn btn-info view-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">View</button>';
-                    var statusDescription = aData.orderLines[0].transactionOutcome.transactionStatusDescription;
+                   // var statusDescription = aData.orderLines[0].transactionOutcome.transactionStatusDescription;
 
 
                     var statusLink = '<a class="status-link" href="#" data-transaction-id="' + id + '" data-originator-conversation-id="' + originatorConversationId + '">Status</a>';
@@ -140,7 +120,7 @@ $(document).ready(function(){
 
                     $(nRow).find('td:eq(8)').text(formattedAmount);
                     $(nRow).find('td:eq(14)').html(formattedDateTime);
-                    $(nRow).find('td:eq(18)').text(statusDescription);
+                   // $(nRow).find('td:eq(18)').text(statusDescription);
 
                     $(nRow).find('td:eq(16)').html(statusLink);
 
