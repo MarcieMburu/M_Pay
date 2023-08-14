@@ -1,25 +1,36 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+
 
 namespace PaymentGateway.Models
 {
     public class Transaction
     {
         [Key]
+        
         public int Id { get; set; }
         [Required]
         [StringLength(100)]
-        public string SenderName { get; set; }
-        public string SenderIDNO { get; set; }
-        public string SenderPhoneNo { get; set; }
-        public string SenderAccount { get; set; }
-        public string ReceiverName { get; set; }
-        public string ReceiverIDNO { get; set; }
-        public string ReceiverPhoneNo { get; set; }
-        public string ReceiverAccount { get; set; }
-        public string Amount { get; set; }
+        public Sender Sender { get; set; }
+        public Receiver Receiver { get; set; }
+        public string RouteId { get; set; }
+        public string CategoryDescription { get; set; }
+        public int ChannelType { get; set; }
+        public string ChannelDescription { get; set; }
+        public string systemTraceAuditNumber { get; set; }
+      
+        public string? systemConversationId { get; internal set; }
+        public string originatorConversationId { get; internal set; }
+        public string reference { get; set; }
+        public int Amount { get; set; }
+        public string? resultCode { get; set; }
+        public string? resultCodeDescription { get; set; }
         public DateTime Date { get; set; }
-
+        public bool IsPosted { get; set; }
     }
+    
 }
+
 

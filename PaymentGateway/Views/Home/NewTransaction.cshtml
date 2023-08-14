@@ -1,0 +1,44 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    ViewData["Title"] = "Data Table";
+}
+
+<h2>Data Table Example</h2>
+
+<table id="dataTable" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Sender Name</th>
+            <th>Receiver Name</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            $('#dataTable').DataTable({
+                ajax: {
+                    url: '@Url.Action("DisplayDataToDataTable", "Home")',
+                    type: 'GET',
+                    dataType: 'json',
+                },
+                columns: [
+                    { data: 'id' },
+                    { data: 'senderName' },
+                    { data: 'receiverName' },
+                    { data: 'amount' }
+                ]
+            });
+        });
+    </script>
+}
+
