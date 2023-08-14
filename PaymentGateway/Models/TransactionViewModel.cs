@@ -50,6 +50,8 @@ namespace PaymentGateway.Models
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Amount must be a positive number.")]
         public int Amount { get; set; }
+        public string? resultCode { get; set; }
+        public string? resultCodeDescription { get; set; }
         public DateTime Date { get; set; }
 
         public bool IsPosted { get; set; }

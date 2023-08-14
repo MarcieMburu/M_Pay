@@ -25,6 +25,8 @@ namespace PaymentGateway.Models
         public string originatorConversationId { get; internal set; }
         public string reference { get; set; }
         public int Amount { get; set; }
+        public string? resultCode { get; set; }
+        public string? resultCodeDescription { get; set; }
         public DateTime Date { get; set; }
         public bool IsPosted { get; set; }
     }

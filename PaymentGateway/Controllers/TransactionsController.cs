@@ -9,13 +9,7 @@ using PaymentGateway.DTOs;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Channels;
-using Nest;
-using System;
-using Microsoft.EntityFrameworkCore;
-using System.Net.Http;
 using Microsoft.Extensions.Options;
-using PaymentGateway.Helpers;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace PaymentGateway.Controllers
@@ -29,10 +23,11 @@ namespace PaymentGateway.Controllers
         private ApiSettings _apiSettings;
         private readonly IHttpClientFactory _httpClientFactory;
         private AccessToken _accessToken;
+        
         private readonly IMemoryCache _memoryCache;
 
         public TransactionsController(PaymentGatewayContext context, IMemoryCache memoryCache, TransactionsRepository transactionsRepository, 
-            IMapper mapper, IOptions<ApiSettings> apiSettings, HttpClient httpClient, IHttpClientFactory httpClientFactory)
+            IMapper mapper, IOptions<ApiSettings> apiSettings, HttpClient httpClient,IHttpClientFactory httpClientFactory)
         {
             _context = context;
             _transactionsRepository = transactionsRepository;
@@ -60,8 +55,8 @@ namespace PaymentGateway.Controllers
             {
                 new KeyValuePair<string, string>("client_id",_apiSettings.client_id),
                 new KeyValuePair<string, string>("client_secret",_apiSettings.client_secret),
-                 new KeyValuePair<string, string>("grant_type", "client_credentials"),
-                 new KeyValuePair<string, string>("scope", "PyPay_api")
+                 new KeyValuePair<string, string>("grant_type", _apiSettings.grant_type),
+                 new KeyValuePair<string, string>("scope",_apiSettings.scope)
         });
 
             try
@@ -190,6 +185,7 @@ namespace PaymentGateway.Controllers
         }
         //Post data to jquery datatable
         public JsonResult DisplayDataToDataTable()
+        
         {
             List<Transaction> transactions = new List<Transaction>();
 
@@ -400,8 +396,55 @@ namespace PaymentGateway.Controllers
                 return Json(new { error = "Failed to fetch payment details." });
             }
         }
+        public async Task<IActionResult> UpdateResultCodeByStatusId(string originatorConversationId)
+        {
+            try
+            {
+                var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
+                var apiUrl = $"{_apiSettings.base_api_url}/v1/payment-order/check-status?IdType=OriginatorConversationId&Id={originatorConversationId}";
+                var paymentOrderDetailsResponse = await _httpClient.GetAsync(apiUrl);
+                paymentOrderDetailsResponse.EnsureSuccessStatusCode();
 
+                var responseContent = await paymentOrderDetailsResponse.Content.ReadAsStringAsync();
+                var paymentDetails = JsonConvert.DeserializeObject<PaymentDetails>(responseContent);
+
+                // Check if transaction status ID is 4
+                if (paymentDetails?.orderLines?.FirstOrDefault()?.transactionOutcome?.transactionStatus == 4)
+                {
+                    var resultCode = paymentDetails.orderLines.First().transactionOutcome.resultCode;
+                    var transactionToUpdate = _context.Transaction.FirstOrDefault(t => t.originatorConversationId == originatorConversationId);
+                    if (transactionToUpdate != null)
+                    {
+                        var success = await _transactionsRepository.UpdateEntityPropertiesAsync(transactionToUpdate, entity =>
+                        {
+                            entity.resultCode = resultCode?.ToString();
+                            entity.resultCodeDescription = resultCode?.ToString();
+
+                        });
+
+                        if (success)
+                        {
+                            return Json(new { message = "Result code updated successfully." });
+                        }
+                        else
+                        {
+                            return Json(new { error = "Failed to update result code." });
+                        }
+                    }
+
+                    return Json(new { error = "Transaction not found." });
+                }
+
+                // Return a response or perform an action for other cases
+                return Json(new { message = "Transaction status is not 4." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = "Failed to fetch payment details or update result code." });
+            }
+        }
 
 
         public class ChannelTypeItemViewModel : SelectListItem
@@ -483,6 +526,10 @@ namespace PaymentGateway.Controllers
         public string client_id { get; set; }
 
         public string client_secret { get; set; }
+        public string grant_type { get; set; }
+
+        public string scope { get; set; }
+
         public string base_api_url { get; set; }
         public string base_token_url { get; set; }
 

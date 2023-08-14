@@ -62,6 +62,12 @@ namespace PaymentGateway.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("resultCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("resultCodeDescription")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("systemConversationId")
                         .HasColumnType("nvarchar(max)");
 
