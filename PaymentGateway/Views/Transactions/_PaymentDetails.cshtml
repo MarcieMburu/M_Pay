@@ -1,0 +1,21 @@
+﻿@model PaymentDetails
+<div>
+   
+   
+    <p><strong>Remarks:</strong> @Model.remarks</p>
+    <p><strong>Is Processed:</strong> @Model.isProcessed</p>
+
+    @foreach (var orderLine in Model.orderLines)
+    {
+        <div class="order-line">
+            <h4>Order Line</h4>
+            <p><strong>Remitter Name:</strong> @orderLine.remitter.name</p>
+            <p><strong>Recipient Name:</strong> @orderLine.recipient.name</p>
+         
+            <p><strong>Transaction Amount:</strong> @orderLine.transaction.amount</p>
+          
+            <p><strong>Transaction Status:</strong> @orderLine.transactionOutcome.transactionStatusDescription</p>
+        </div>
+    }
+</div>
+<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PaymentGateway.Models;
 using System.Diagnostics;
 
@@ -7,6 +8,7 @@ namespace PaymentGateway.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private object _context;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -17,6 +19,11 @@ namespace PaymentGateway.Controllers
         {
             return View();
         }
+        public IActionResult PaymentOrderDetails()
+        {
+            return View();
+        }
+
 
         public IActionResult Privacy()
         {
@@ -26,7 +33,15 @@ namespace PaymentGateway.Controllers
         {
             return View();
         }
-
+        public IActionResult NewTransaction()
+        {
+            return View();
+        }
+        public IActionResult DisplayData()
+        {
+            return View();
+        }
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

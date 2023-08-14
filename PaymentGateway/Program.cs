@@ -1,19 +1,35 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
-using PaymentGateway.Models;
-using Microsoft.Extensions.DependencyInjection;
+using PaymentGateway.Controllers;
 using PaymentGateway.Data;
+using PaymentGateway.Helpers;
+using System.Web.Mvc;
+using System.IO;
+using Microsoft.Extensions.Configuration;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PaymentGatewayContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PaymentGatewayContext") ?? throw new InvalidOperationException("Connection string 'PaymentGatewayContext' not found.")));
 
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
+builder.Services.AddHttpClient();
+
+//var apiSettings = builder.Configuration.GetSection("ApiSettings").Get<ApiSettings>();
+//builder.Services.Configure<ApiSettings>(options => builder.Configuration.GetSection("ApiSettings").Bind(apiSettings));
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+builder.Services.AddScoped<TransactionsRepository>();
+
+
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
 //DI for DbContext
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -32,6 +48,9 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Transactions}/{action=transaction}/{id?}");
 
 app.Run();
+
+
+

@@ -1,0 +1,22 @@
+﻿@model PaymentGateway.Models.TransactionViewModel
+
+<div>
+  
+    <p><strong>Sender Name:</strong> @Model.SenderName</p>
+    <p><strong>Sender ID NO:</strong> @Model.SenderID_NO</p>
+    <p><strong>Sender Phone Number:</strong> @Model.SenderPhone_No</p>
+    <p><strong>Sender Source Account:</strong> @Model.SenderSrc_Account</p>
+    <p><strong>Receiver Name:</strong> @Model.ReceiverName</p>
+    <p><strong>Receiver ID NO:</strong> @Model.ReceiverID_NO</p>
+    <p><strong>Receiver Phone Number:</strong> @Model.ReceiverPhone_No</p>
+    <p><strong>Receiver Destination Account:</strong> @Model.ReceiverDst_Account</p>
+    <p><strong>Route ID:</strong> @Model.RouteId</p>
+    <p><strong>Category Description:</strong> @Model.CategoryDescription</p>
+    <p><strong>Channel Type:</strong> @Model.ChannelType</p>
+    <p><strong>Channel Description:</strong> @Model.ChannelDescription</p>
+    <p><strong>Reference:</strong> @Model.reference</p>
+       <p><strong>Amount:</strong> @Model.Amount</p>
+    <p><strong>Date:</strong> @Model.Date</p>
+  
+</div>
+<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>

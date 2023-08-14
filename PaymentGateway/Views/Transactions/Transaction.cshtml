@@ -1,0 +1,182 @@
+﻿@model PaymentGateway.Models.TransactionViewModel
+
+
+@{
+    ViewData["Title"] = "Transaction";
+
+    var routes = ViewBag.RouteItems as SelectListItem;
+}
+
+<div class="row">
+    <div class="col-md-4">
+
+        <form asp-action="Transaction">
+            <fieldset>
+            <legend>Sender's Information</legend>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SenderName" class="control-label"></label>
+                <input asp-for="SenderName" class="form-control" />
+                <span asp-validation-for="SenderName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SenderID_NO" class="control-label"></label>
+                <input asp-for="SenderID_NO" class="form-control" />
+                <span asp-validation-for="SenderID_NO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SenderPhone_No" class="control-label"></label>
+                <input asp-for="SenderPhone_No" class="form-control" />
+                <span asp-validation-for="SenderPhone_No" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SenderSrc_Account" class="control-label"></label>
+                <input asp-for="SenderSrc_Account" class="form-control" />
+                <span asp-validation-for="SenderSrc_Account" class="text-danger"></span>
+            </div>
+            </fieldset>
+            <fieldset>
+                <legend>Receiver's Information</legend>
+             <div class ="form-group">
+                 <label asp-for="ReceiverName" class="control-label"></label>
+                 <input asp-for="ReceiverName" class="form-control" />
+                 <span asp-validation-for="ReceiverName" class="text-danger"></span>
+             </div>
+            <div class="form-group">
+                <label asp-for="ReceiverID_NO" class="control-label"></label>
+                <input asp-for="ReceiverID_NO" class="form-control" />
+                <span asp-validation-for="ReceiverID_NO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReceiverPhone_No" class="control-label"></label>
+                <input asp-for="ReceiverPhone_No" class="form-control" />
+                <span asp-validation-for="ReceiverPhone_No" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReceiverDst_Account" class="control-label"></label>
+                <input asp-for="ReceiverDst_Account" class="form-control" />
+                <span asp-validation-for="ReceiverDst_Account" class="text-danger"></span>
+            </div>
+            </fieldset>
+            <fieldset>
+                <legend>Transcation Information</legend>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="reference" class="control-label"></label>
+                <input asp-for="reference" class="form-control" />
+                <span asp-validation-for="reference" class="text-danger"></span>
+            </div>
+           
+            <div>
+                <select id="categoryDropdown" style="margin-top:20px" asp-for="RouteId">
+                        <option value="">Select Route</option>
+
+            </select>
+     
+            <input type="hidden" id="categoryDescriptionInput" asp-for="CategoryDescription" />
+
+
+                    <select id="channelTypeDropdown" style="margin-bottom:20px" asp-for="ChannelType">
+                <option value="">Select Channel Type</option>
+            </select>
+            </div>
+            <input type="hidden" id="channelDescriptionInput" asp-for="ChannelDescription" />
+            </fieldset>
+
+           
+            <div class="form-group">
+                <input type="submit" style="margin-top:20px" value="Transact" class="btn btn-primary" id="submitBtn" />
+            </div>
+            @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+            {
+                <div class="alert alert-success">
+                    @ViewBag.SuccessMessage
+                </div>
+            }
+
+                   </form>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            LoadRoutes();
+            $("#categoryDropdown").change(function () {
+                var selectedRouteId = $(this).val();
+                var selectedRouteDescription = $("#categoryDropdown option:selected").text();
+                $("#categoryDescriptionInput").val(selectedRouteDescription);
+               
+                $.ajax({
+                    url: "/Transactions/GetChannelTypeByRouteId?id=" + selectedRouteId,
+                    type: "GET",
+                    success: function (data) {
+                        var channelTypeDropdown = $("#channelTypeDropdown");
+                        channelTypeDropdown.empty();
+                        channelTypeDropdown.append('<option value="">Select a Channel Type</option>');
+                        $.each(data, function (index, item) {
+                            channelTypeDropdown.append('<option value="' + item.value + '">' + item.text + '</option>');
+                        });
+                    },
+                    error: function () {
+                        console.error("Error occurred while loading channel types.");
+                    }
+                });
+
+            });
+            $("#channelTypeDropdown").change(function () {
+                var selectedChannelDescription = $("#channelTypeDropdown option:selected").text();
+                $("#channelDescriptionInput").val(selectedChannelDescription);
+            });
+         
+        });
+       
+    </script>
+    <script>
+        function LoadRoutes() {
+            $.ajax({
+                url: '/transactions/gettransactionroute/',
+                type:'POST',
+                error: function (xhr) {
+                    console.log("An error occured: " + xhr.status + " " + xhr.statusText);
+                },
+                success: function (result) {
+                    if (result) {
+                        var select = $("#categoryDropdown");
+
+                        select.empty();
+
+                        select.append($('<option/>',
+                            {
+                                value: "",
+                                text: "Select Route"
+                            }));
+
+                        $.each(result,
+                            function (index, itemData) {
+                                select.append($('<option/>',
+                                    {
+                                        value: itemData.value,
+                                        text: itemData.text,
+                                    }));
+
+                                   
+                            });
+                        console.log(result);
+
+                    }
+                }
+            });
+        }
+    </script>
+   
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+   
+}
