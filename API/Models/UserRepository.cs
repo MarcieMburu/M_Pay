@@ -1,54 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using API.Models;
+using System.Linq;
 
 namespace API.Models
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository
     {
-        public bool CheckUser(string username, string password)
+        private readonly ApplicationDbContext _dbContext;
+
+        public UserRepository(ApplicationDbContext dbContext)
         {
-            return username.Equals("Mercy") && password.Equals("212");
+            _dbContext = dbContext;
         }
 
-        public bool IsValid(string authHeader)
+        public User GetUserByUsername(string username)
         {
-            throw new NotImplementedException();
+            return _dbContext.Users.FirstOrDefault(u => u.Username == username);
         }
-        //private List<User> _users = new List<User>
-        //{
-        //    new User
-        //    {
-        //        Id = 1, Username = "peter", Password = "peter123"
-        //    },
-        //    new User
-        //    {
-        //        Id = 2, Username = "joydip", Password = "joydip123"
-        //    },
-        //    new User
-        //    {
-        //        Id = 3, Username = "james", Password = "james123"
-        //    }
-        //};
-        //public async Task<bool> Authenticate(string username, string password)
-        //{
-        //    if (await Task.FromResult(_users.SingleOrDefault(x => x.Username == username && x.Password == password)) != null)
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
-        //public async Task<List<string>> GetUserNames()
-        //{
-        //    List<string> users = new List<string>();
-        //    foreach (var user in _users)
-        //    {
-        //        users.Add(user.Username);
-        //    }
-        //    return await Task.FromResult(users);
-        //}
-
-        //Task IUserRepository.Authenticate(string username, string password)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

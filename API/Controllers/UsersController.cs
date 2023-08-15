@@ -1,64 +1,46 @@
 ﻿using API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Web.Http;
+using Microsoft.AspNetCore.Authorization;
+
+using System.Linq;
+using System.Threading.Tasks;
 
 
 namespace API.Controllers
 {
-    [Authorize]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     [ApiVersion("1.0")]
-    [System.Web.Http.Route("api/[controller]")]
+    [Microsoft.AspNetCore.Components.Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
-        List<User> _users = new List<User>();
+        private readonly ApplicationDbContext _dbContext;
+        public UsersController(ApplicationDbContext dbContext) {
+            _dbContext = dbContext;
+        }
 
-        public UsersController()
+        
+
+
+        [Microsoft.AspNetCore.Mvc.HttpGet("profile")]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public async Task<ActionResult<User>> GetUser()
         {
-            for (int i = 1; i <= 9; i++)
+            string username = HttpContext.User.Identity.Name;
+            var user = await _dbContext.Users
+               .FirstOrDefaultAsync(u => u.Username == username);
+
+            if (user == null)
             {
-                _users.Add(new User()
-                {
-                    Id = i,
-                    Username = "Mercy" + i,
-                    Password = "Mercy1" + i,
-
-                });
+                return NotFound("User not found");
             }
+
+            return Ok(user);
         }
-
-
-        // GET: api/<UsersController>
-        [System.Web.Http.HttpGet]
-        public IEnumerable<User> Get()
-        {
-            return _users;
-        }
-
-        //// GET api/<UsersController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-        //// POST api/<UsersController>
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
-
-        //// PUT api/<UsersController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE api/<UsersController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
+
 }
+
 

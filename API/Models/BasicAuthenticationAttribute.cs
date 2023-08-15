@@ -1,83 +1,43 @@
-﻿//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.AspNetCore.Mvc.Filters;
-//using System;
-//using System.Net;
-//using System.Net.Http.Headers;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using System;
+using System.Text;
+using System.Web.Http.Controllers;
+using System.Web.Http.Filters;
 
+public class BasicAuthenticationAttribute : AuthorizationFilterAttribute
+{
+    public override void OnAuthorization(HttpActionContext actionContext)
+    {
+        // Check if the Authorization header is present
+        if (actionContext.Request.Headers.Authorization != null)
+        {
+            // Get the credentials from the header
+            string authHeader = actionContext.Request.Headers.Authorization.Parameter;
+            byte[] authBytes = Convert.FromBase64String(authHeader);
+            string credentials = Encoding.UTF8.GetString(authBytes).Trim();
 
-//namespace API.Models
-//{
-//    public class BasicAuthenticationAttribute : Attribute, IAsyncAuthorizationFilter
-//    {
-//        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
-//        {
-//            var authService = context.HttpContext.RequestServices.GetRequiredService<IAuthService>();
-//            var authHeader = context.HttpContext.Request.Headers["Authorization"].ToString();
+            // Split credentials into username and password
+            string[] splitCredentials = credentials.Split(':');
+            string username = splitCredentials[0];
+            string password = splitCredentials[1];
 
-//            if (!await authService.IsValidAsync(authHeader))
-//            {
-//                context.Result = new UnauthorizedResult();
-//            }
-//        }
-//    }
+            // Perform authentication logic (e.g., check against database)
+            if (IsValidUser(username, password))
+            {
+                // User is authenticated, continue with the request
+                return;
+            }
+        }
 
-//    public interface IAuthService
-//    {
-//        Task<bool> IsValidAsync(string authHeader);
-//    }
+        // User is not authenticated, return Unauthorized response
+        actionContext.Response = new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
+    }
 
-//    public class AuthService : IAuthService
-//    {
-//        private readonly IUserRepository _userRepository;
-
-//        public AuthService(IUserRepository userRepository)
-//        {
-//            _userRepository = userRepository;
-//        }
-
-//        public async Task<bool> IsValidAsync(string authHeader)
-//        {
-//            if (!AuthenticationHeaderValue.TryParse(authHeader, out var headerValue) ||
-//                headerValue.Scheme != "Basic")
-//            {
-//                return false;
-//            }
-
-//            var credentials = Encoding.UTF8.GetString(Convert.FromBase64String(headerValue.Parameter));
-//            var usernamePassword = credentials.Split(':', 2);
-//            var username = usernamePassword[0];
-//            var password = usernamePassword[1];
-
-//            var user = await _userRepository.GetUserByUsername(username);
-
-//            if (user == null || user.Password != password)
-//            {
-//                return false;
-//            }
-
-//            return true;
-//        }
-//    }
-
-//    public interface IUserRepository
-//    {
-//        Task<User> GetUserByUsername(string username);
-//    }
-
-//    public class UserService : IUserRepository
-//    {
-//        private readonly List<User> _users = new List<User>
-//        {
-//            new User { Id = 1, Username = "user1", Password = "password1" },
-//            new User { Id = 2, Username = "user2", Password = "password2" }
-//            // Add more users as needed
-//        };
-
-//        public Task<User> GetUserByUsername(string username)
-//        {
-//            return Task.FromResult(_users.FirstOrDefault(u => u.Username == username));
-//        }
-//    }
-//}
+    private bool IsValidUser(string username, string password)
+    {
+        // Implement your authentication logic here
+        // You might check against a database or other authentication mechanism
+        // Return true if the user is valid, false otherwise
+        // Example:
+        return username == "validuser" && password == "password123";
+    }
+}

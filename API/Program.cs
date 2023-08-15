@@ -1,15 +1,22 @@
 using API.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
+using API.Data;
+using API.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<APIContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("APIContext") ?? throw new InvalidOperationException("Connection string 'APIContext' not found.")));
 
 // Add services to the container.
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'PaymentGatewayContext' not found.")));
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<UserRepository>();
 builder.Services.AddVersionedApiExplorer(c =>
 {
     c.GroupNameFormat = "'v'VVV";
@@ -35,7 +42,7 @@ builder.Services.AddSwaggerGen(c =>
     {
         Version = "v1",
         Title = "API",
-        Description = "An ASP.NET Core Web API for managing  items",
+        Description = "An ASP.NET Core Web API for making payments",
 
     });
     c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
@@ -74,12 +81,23 @@ if (app.Environment.IsDevelopment())
 }
 app.UseRouting();
 app.UseStaticFiles();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+};
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    }
+);
 
+app.MapUserEndpoints();
 app.Run();
