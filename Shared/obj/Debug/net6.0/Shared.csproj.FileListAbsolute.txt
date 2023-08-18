@@ -1,3 +1,8 @@
+C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.csproj.AssemblyReference.cache
+C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.AssemblyInfoInputs.cache
+C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.AssemblyInfo.cs
+C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.csproj.CoreCompileInputs.cache
 C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\bin\Debug\net6.0\PaymentGateway.deps.json
 C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\bin\Debug\net6.0\PaymentGateway.runtimeconfig.json
 C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\bin\Debug\net6.0\appsettings.Development.json
@@ -9,11 +14,6 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\bin\Debug\net6.0\Shared.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\bin\Debug\net6.0\Shared.pdb
 C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\bin\Debug\net6.0\PaymentGateway.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\bin\Debug\net6.0\PaymentGateway.pdb
-C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.csproj.AssemblyReference.cache
-C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.AssemblyInfoInputs.cache
-C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.AssemblyInfo.cs
-C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.csproj.CoreCompileInputs.cache
 C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.csproj.CopyComplete
 C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\Shared.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\Shared\obj\Debug\net6.0\refint\Shared.dll

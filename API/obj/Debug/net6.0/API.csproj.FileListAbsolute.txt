@@ -1,3 +1,9 @@
+C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.csproj.AssemblyReference.cache
+C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.AssemblyInfoInputs.cache
+C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.AssemblyInfo.cs
+C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.csproj.CoreCompileInputs.cache
+C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Paul\source\repos\Pay\PaymentGateway\API\bin\Debug\net6.0\PaymentGateway.deps.json
 C:\Users\Paul\source\repos\Pay\PaymentGateway\API\bin\Debug\net6.0\PaymentGateway.runtimeconfig.json
 C:\Users\Paul\source\repos\Pay\PaymentGateway\API\bin\Debug\net6.0\PaymentGateway.staticwebassets.runtime.json
@@ -335,13 +341,6 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\API\bin\Debug\net6.0\PaymentGatewa
 C:\Users\Paul\source\repos\Pay\PaymentGateway\API\bin\Debug\net6.0\Shared.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\API\bin\Debug\net6.0\PaymentGateway.pdb
 C:\Users\Paul\source\repos\Pay\PaymentGateway\API\bin\Debug\net6.0\Shared.pdb
-C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.csproj.AssemblyReference.cache
-C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.AssemblyInfoInputs.cache
-C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.AssemblyInfo.cs
-C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.csproj.CoreCompileInputs.cache
-C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\API.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\staticwebassets\msbuild.API.Microsoft.AspNetCore.StaticWebAssets.props
 C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\staticwebassets\msbuild.build.API.props
 C:\Users\Paul\source\repos\Pay\PaymentGateway\API\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.API.props

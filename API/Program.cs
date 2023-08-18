@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 
+
 using Microsoft.AspNetCore.Identity;
 using System.Net;
 using System.Configuration;
@@ -14,6 +15,8 @@ using PaymentGateway.Data;
 using PaymentGateway.Helpers;
 using PaymentGateway.Controllers;
 using PaymentGateway.Models;
+using PaymentGateway.DTOs;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +29,10 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IRepository<Transaction>, Repository<Transaction>>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped< ZamupayService>();
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+builder.Services.AddScoped(sp => sp.GetRequiredService<IOptions<ApiSettings>>().Value);
+
 
 
 
@@ -47,7 +54,6 @@ builder.Services.AddAuthentication("BasicAuthentication").
             AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-//builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
 
 
@@ -61,6 +67,7 @@ builder.Services.AddSingleton(mapper);
 
 builder.Services.AddSwaggerGen(c =>
 {
+    
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",

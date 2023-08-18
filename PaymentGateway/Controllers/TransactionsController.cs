@@ -29,7 +29,7 @@ namespace PaymentGateway.Controllers
 
         public TransactionsController(PaymentGatewayContext context, IMemoryCache memoryCache,
           IRepository<Transaction> repository,
-            IMapper mapper, IOptions<ApiSettings> apiSettings,
+          IMapper mapper, IOptions<ApiSettings> apiSettings,
             HttpClient httpClient, IHttpClientFactory httpClientFactory)
         {
             _context = context;
@@ -39,7 +39,6 @@ namespace PaymentGateway.Controllers
             _httpClient = httpClient;
             _apiSettings = apiSettings.Value;
             _httpClientFactory = httpClientFactory;
-
         }
 
 
@@ -465,7 +464,6 @@ namespace PaymentGateway.Controllers
             public string RouteId { get; set; }
             public string categoryDescription { get; set; }
         }
-
 
     }
 }
