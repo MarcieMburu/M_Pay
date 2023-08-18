@@ -11,26 +11,29 @@ using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Caching.Memory;
+using NuGet.Protocol.Core.Types;
 
 namespace PaymentGateway.Controllers
 {
     public class TransactionsController : Controller
     {
         private readonly PaymentGatewayContext _context;
-        private readonly TransactionsRepository _transactionsRepository;
+
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient = new HttpClient();
         private ApiSettings _apiSettings;
         private readonly IHttpClientFactory _httpClientFactory;
         private AccessToken _accessToken;
-        
+        public IRepository<Transaction> _repository;
         private readonly IMemoryCache _memoryCache;
 
-        public TransactionsController(PaymentGatewayContext context, IMemoryCache memoryCache, TransactionsRepository transactionsRepository, 
-            IMapper mapper, IOptions<ApiSettings> apiSettings, HttpClient httpClient,IHttpClientFactory httpClientFactory)
+        public TransactionsController(PaymentGatewayContext context, IMemoryCache memoryCache,
+          IRepository<Transaction> repository,
+            IMapper mapper, IOptions<ApiSettings> apiSettings,
+            HttpClient httpClient, IHttpClientFactory httpClientFactory)
         {
             _context = context;
-            _transactionsRepository = transactionsRepository;
+            _repository = repository;
             this._mapper = mapper;
             _memoryCache = memoryCache;
             _httpClient = httpClient;
@@ -44,13 +47,22 @@ namespace PaymentGateway.Controllers
         // GET: Transactions/transaction
         public async Task<IActionResult> Transaction()
         {
-            return (View(new TransactionViewModel()));
-        }
+            TransactionViewModel transactionViewModel = new TransactionViewModel();
 
+            transactionViewModel.originatorConversationId = Guid.NewGuid().ToString();
+            transactionViewModel.systemTraceAuditNumber = Guid.NewGuid().ToString();
+
+
+            return View(transactionViewModel);
+        }
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
 
         public async Task<string> GetBearerToken(string client_id, string client_secret)
         {
-            
+
             var requestContent = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("client_id",_apiSettings.client_id),
@@ -65,7 +77,7 @@ namespace PaymentGateway.Controllers
                 //response.EnsureSuccessStatusCode();
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var accessToken = JsonConvert.DeserializeObject<AccessToken>(responseContent);
-               
+
 
                 return accessToken.access_token;
             }
@@ -151,24 +163,21 @@ namespace PaymentGateway.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Transaction(TransactionViewModel transactionViewModel)
         {
+            transactionViewModel.Date = DateTime.Now;
+            Transaction transaction = _mapper.Map<Transaction>(transactionViewModel);
+
 
             if (ModelState.IsValid)
             {
-                Transaction transaction = _mapper.Map<Transaction>(transactionViewModel);
-
-                transaction.Date = DateTime.Now;
-
-                transaction.originatorConversationId = Guid.NewGuid().ToString();
-                transaction.systemTraceAuditNumber = Guid.NewGuid().ToString();
-
                 _context.Add(transaction);
                 await _context.SaveChangesAsync();
 
                 TempData["SuccessMessage"] = "Transaction has been successfully saved to the database.";
 
 
-                return RedirectToAction(nameof(DisplayData));
+                return RedirectToAction(nameof(Index));
             }
+
 
             return View(transactionViewModel);
 
@@ -178,14 +187,14 @@ namespace PaymentGateway.Controllers
 
         public IActionResult DisplayData()
         {
-            var successMessage = TempData["SuccessMessage"] as string;
+           // var successMessage = TempData["SuccessMessage"] as string;
 
-            ViewBag.SuccessMessage = successMessage;
+          //  ViewBag.institutionIdentifier = "phone";
             return View();
         }
         //Post data to jquery datatable
         public JsonResult DisplayDataToDataTable()
-        
+
         {
             List<Transaction> transactions = new List<Transaction>();
 
@@ -215,11 +224,12 @@ namespace PaymentGateway.Controllers
 
                 if (isPaymentOrderRequestSuccessful)
                 {
-                    var updateResult = await _transactionsRepository.UpdateEntityPropertiesAsync(
+                    var updateResult = await _repository.UpdateEntityPropertiesAsync(
                  transaction,
-                 entity =>
+                async entity =>
                  {
                      entity.IsPosted = true;
+                     return true;
                  }
              );
 
@@ -277,6 +287,7 @@ namespace PaymentGateway.Controllers
                 recipientItem.financialInstitution = "Mpesa";
                 recipientItem.idType = "National ID";
                 recipientItem.purpose = "TEST";
+                recipientItem.institutionIdentifier = "phone";
 
                 transactionItem.amount = transaction.Amount;
                 transactionItem.ChannelType = transaction.ChannelType;
@@ -326,15 +337,14 @@ namespace PaymentGateway.Controllers
                     throw new InvalidOperationException("Transaction not found in the database.");
                 }
 
-                var updateResult = await _transactionsRepository.UpdateEntityPropertiesAsync(
-                          existingTransaction,
-                          entity =>
-                          {
+                var updateResult = await _repository.UpdateEntityPropertiesAsync(transaction, async entity =>
+                {
 
-                              entity.systemConversationId = paymentResponse.message.systemConversationId;
-                              entity.originatorConversationId = paymentResponse.message.originatorConversationId;
 
-                          });
+                    entity.systemConversationId = paymentResponse.message.systemConversationId;
+                    entity.originatorConversationId = paymentResponse.message.originatorConversationId;
+                    return true;
+                });
 
                 if (updateResult)
                 {
@@ -417,14 +427,15 @@ namespace PaymentGateway.Controllers
                     var transactionToUpdate = _context.Transaction.FirstOrDefault(t => t.originatorConversationId == originatorConversationId);
                     if (transactionToUpdate != null)
                     {
-                        var success = await _transactionsRepository.UpdateEntityPropertiesAsync(transactionToUpdate, entity =>
+                        var updateEntity = await _repository.UpdateEntityPropertiesAsync(transactionToUpdate, async entity =>
                         {
                             entity.resultCode = resultCode?.ToString();
                             entity.resultCodeDescription = resultCode?.ToString();
 
+                            return true;
                         });
 
-                        if (success)
+                        if (updateEntity)
                         {
                             return Json(new { message = "Result code updated successfully." });
                         }
@@ -455,83 +466,6 @@ namespace PaymentGateway.Controllers
             public string categoryDescription { get; set; }
         }
 
-
-        public class PaymentOrderLine
-        {
-            public RecipientItem recipient { get; set; }
-            public TransactionItem transaction { get; set; }
-
-            public RemitterItem remitter { get; set; }
-        }
-
-        public class RecipientItem
-        {
-            public string name { get; set; }
-            public string address { get; set; }
-            public string emailAddress { get; set; }
-            public string phoneNumber { get; set; }
-            public string idType { get; set; }
-            public string idNumber { get; set; }
-            public string financialInstitution { get; set; }
-            public string primaryAccountNumber { get; set; }
-            public string mccmnc { get; set; }
-            public int ccy { get; set; }
-            public string country { get; set; }
-            public string purpose { get; set; }
-        }
-
-        public class RemitterItem
-        {
-            public string name { get; set; }
-            public string address { get; set; }
-            public string phoneNumber { get; set; }
-            public string idType { get; set; }
-            public string idIssuePlace { get; set; }
-            public string idNumber { get; set; }
-            public string idIssueDate { get; set; }
-            public string idExpireDate { get; set; }
-            public string nationality { get; set; }
-            public string country { get; set; }
-            public int ccy { get; set; }
-            public string financialInstitution { get; set; }
-            public string sourceOfFunds { get; set; }
-            public string principalActivity { get; set; }
-            public string dateOfBirth { get; set; }
-            public string state { get; set; }
-            public string city { get; set; }
-            public string postalCode { get; set; }
-        }
-
-
-        public class ZamupayRequest
-        {
-            public string originatorConversationId { get; set; }
-            public string paymentNotes { get; set; }
-            public List<PaymentOrderLine> paymentOrderLines { get; set; }
-        }
-
-        public class TransactionItem
-        {
-            public string routeId { get; set; }
-            public int ChannelType { get; set; }
-            public int amount { get; set; }
-            public string reference { get; set; }
-            public string systemTraceAuditNumber { get; set; }
-        }
-
-
-    }
-    public class ApiSettings
-    {
-        public string client_id { get; set; }
-
-        public string client_secret { get; set; }
-        public string grant_type { get; set; }
-
-        public string scope { get; set; }
-
-        public string base_api_url { get; set; }
-        public string base_token_url { get; set; }
 
     }
 }

@@ -1,22 +1,34 @@
-using API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using API.Data;
-using API.Controllers;
+using AutoMapper;
+using Microsoft.Extensions.Configuration;
+
+using Microsoft.AspNetCore.Identity;
+using System.Net;
+using System.Configuration;
+using API.Attributes;
+using PaymentGateway.Data;
+using PaymentGateway.Helpers;
+using PaymentGateway.Controllers;
+using PaymentGateway.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<APIContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("APIContext") ?? throw new InvalidOperationException("Connection string 'APIContext' not found.")));
 
+builder.Services.AddDbContext<PaymentGatewayContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("PaymentGatewayContext") ?? throw new InvalidOperationException("Connection string 'PaymentGatewayContext' not found.")));
 // Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'PaymentGatewayContext' not found.")));
+
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<UserRepository>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<IRepository<Transaction>, Repository<Transaction>>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+
+
 builder.Services.AddVersionedApiExplorer(c =>
 {
     c.GroupNameFormat = "'v'VVV";
@@ -33,8 +45,19 @@ builder.Services.AddApiVersioning(c =>
 
 builder.Services.AddAuthentication("BasicAuthentication").
             AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+//builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+
+
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new ApplicationMapper());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -99,5 +122,5 @@ app.UseEndpoints(endpoints =>
     }
 );
 
-app.MapUserEndpoints();
+//app.MapUserEndpoints();
 app.Run();

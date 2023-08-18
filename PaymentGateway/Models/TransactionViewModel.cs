@@ -19,7 +19,7 @@ namespace PaymentGateway.Models
         public string SenderID_NO { get; set; }
 
         [Display(Name = "Phone Number")]
-       // [RegularExpression(@"^\+?254\d{9}$", ErrorMessage = "Invalid phone number format. Use format: +254XXXXXXXXX.")]
+        [RegularExpression(@"^\+?254\d{9}$", ErrorMessage = "Invalid phone number format. Use format: +254XXXXXXXXX.")]
         public string SenderPhone_No { get; set; }
         [Display(Name = "Source Of Funds")]
         public string SenderSrc_Account { get; set; }
@@ -44,8 +44,9 @@ namespace PaymentGateway.Models
        
         [Display(Name = "Reference")]
         public string reference { get; set; }
-        public string? systemConversationId { get; internal set; }
-        public string? originatorConversationId { get; internal set; }
+        public string? systemConversationId { get;  set; }
+        public string originatorConversationId { get;  set; }
+        public string systemTraceAuditNumber { get; set; }
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Amount must be a positive number.")]

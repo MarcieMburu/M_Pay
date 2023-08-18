@@ -6,14 +6,47 @@
 
     var routes = ViewBag.RouteItems as SelectListItem;
 }
+<style>
+
+    fieldset {
+        background-color:;
+    }
+
+    legend {
+        background-color:;
+        text-align: center;
+        margin-bottom: 20px;
+        margin-top: 20px;
+        color: black;
+    }
+
+    button {
+        background-color: aqua;
+    }
+
+    
+/* Custom styles for the columns */
+.col-md-4 {
+    background-color: whitesmoke;
+    padding: 15px;
+    border-radius: 5px;
+    align-content:center;
+   
+}
+
+
+
+</style>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 mx-auto">
 
         <form asp-action="Transaction">
-            <fieldset>
+            <fieldset id ="page1">
             <legend>Sender's Information</legend>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="originatorConversationId" type="hidden" />
+                <input asp-for="systemTraceAuditNumber", type="hidden" />
             <div class="form-group">
                 <label asp-for="SenderName" class="control-label"></label>
                 <input asp-for="SenderName" class="form-control" />
@@ -34,8 +67,10 @@
                 <input asp-for="SenderSrc_Account" class="form-control" />
                 <span asp-validation-for="SenderSrc_Account" class="text-danger"></span>
             </div>
+                <button type="button" class=" btn btn-info" style="margin-top:10px; margin-left:350px" onclick="nextPage('page1', 'page2')">Next</button>
+
             </fieldset>
-            <fieldset>
+            <fieldset id="page2" style="display: none;">
                 <legend>Receiver's Information</legend>
              <div class ="form-group">
                  <label asp-for="ReceiverName" class="control-label"></label>
@@ -57,8 +92,10 @@
                 <input asp-for="ReceiverDst_Account" class="form-control" />
                 <span asp-validation-for="ReceiverDst_Account" class="text-danger"></span>
             </div>
+                <button type="button" class=" btn btn-info" style="margin-top:10px;margin-left:10px" onclick="previousPage('page2', 'page1')">Previous</button>
+                <button type="button" class=" btn btn-info" style="margin-top:10px; margin-left:250px" onclick="nextPage('page2', 'page3')">Next</button>
             </fieldset>
-            <fieldset>
+            <fieldset id="page3" style="display: none;">
                 <legend>Transcation Information</legend>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
@@ -85,12 +122,16 @@
             </select>
             </div>
             <input type="hidden" id="channelDescriptionInput" asp-for="ChannelDescription" />
+
+                <div class="form-group">
+                    <button type="button" style=" margin-left:00px"  class=" btn btn-info" onclick="previousPage('page3', 'page2')">Previous</button>
+
+                    <input type="submit" style=" margin-left:230px" value="Transact" class="btn btn-primary" id="submitBtn" />
+                </div>
             </fieldset>
 
-           
-            <div class="form-group">
-                <input type="submit" style="margin-top:20px" value="Transact" class="btn btn-primary" id="submitBtn" />
-            </div>
+            <input type="hidden" id="currentPage" value="page1">
+         
             @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
             {
                 <div class="alert alert-success">
@@ -103,6 +144,24 @@
 </div>
 
 @section scripts{
+    <script>
+        function nextPage(currentPageId, nextPageId) {
+           
+            document.getElementById(currentPageId).style.display = 'none';
+            document.getElementById(nextPageId).style.display = 'block';
+            document.getElementById('currentPage').value = nextPageId;
+        }
+
+        function previousPage(currentPageId, previousPageId) {
+            document.getElementById(currentPageId).style.display = 'none';
+            document.getElementById(previousPageId).style.display = 'block';
+            document.getElementById('currentPage').value = previousPageId;
+        }
+
+        function submitForm() {
+          
+        }
+    </script>
     <script>
         $(document).ready(function () {
             LoadRoutes();

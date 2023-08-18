@@ -19,10 +19,10 @@ namespace PaymentGateway.Models
         public string CategoryDescription { get; set; }
         public int ChannelType { get; set; }
         public string ChannelDescription { get; set; }
-        public string systemTraceAuditNumber { get; set; }
+        public string systemTraceAuditNumber { get;  set; }
       
-        public string? systemConversationId { get; internal set; }
-        public string originatorConversationId { get; internal set; }
+        public string? systemConversationId { get;  set; }
+        public string originatorConversationId { get;  set; }
         public string reference { get; set; }
         public int Amount { get; set; }
         public string? resultCode { get; set; }

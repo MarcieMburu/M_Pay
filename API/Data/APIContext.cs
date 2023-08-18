@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using API.Models;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Threading.Tasks;
+//using Microsoft.EntityFrameworkCore;
+//using API.Models;
 
-namespace API.Data
-{
-    public class APIContext : DbContext
-    {
-        public APIContext (DbContextOptions<APIContext> options)
-            : base(options)
-        {
-        }
+//namespace API.Data
+//{
+//    public class APIContext : DbContext
+//    {
+//        public APIContext (DbContextOptions<APIContext> options)
+//            : base(options)
+//        {
+//        }
 
-        public DbSet<API.Models.User> User { get; set; } = default!;
-    }
-}
+//        public DbSet<API.Models.Transaction> Transaction { get; set; } = default!;
+//    }
+//}

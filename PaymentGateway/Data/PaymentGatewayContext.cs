@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PaymentGateway.Models;
 
+
 namespace PaymentGateway.Data
 {
     public class PaymentGatewayContext : DbContext
@@ -22,6 +23,7 @@ namespace PaymentGateway.Data
 
         public DbSet<Transaction> Transaction { get; set; } = default!;
       
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Transaction>(ConfigureProfile);
@@ -35,6 +37,7 @@ namespace PaymentGateway.Data
 
 
         }
+      
 
     }
 }
