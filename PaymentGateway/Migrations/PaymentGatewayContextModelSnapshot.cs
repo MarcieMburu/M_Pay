@@ -44,6 +44,10 @@ namespace PaymentGateway.Migrations
                     b.Property<int>("ChannelType")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 

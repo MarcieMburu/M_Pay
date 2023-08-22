@@ -96,6 +96,7 @@ namespace API.Controllers
         public async Task<ActionResult> PostTransaction(TransactionViewModel transactionViewModel)
         {
             transactionViewModel.Date = DateTime.Now;
+            transactionViewModel.CreatedBy = "API";
 
             if (ModelState.IsValid)
             {

@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\PaymentGateway.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\wwwroot\\Images\\pexels-madison-inouye-1831234.jpg",
+      "PackagePath": "staticwebassets\\Images\\pexels-madison-inouye-1831234.jpg"
+    },
+    {
       "Id": "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

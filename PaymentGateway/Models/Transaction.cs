@@ -29,6 +29,7 @@ namespace PaymentGateway.Models
         public string? resultCodeDescription { get; set; }
         public DateTime Date { get; set; }
         public bool IsPosted { get; set; }
+        public string CreatedBy { get; set; }
     }
     
 }

@@ -12,6 +12,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Caching.Memory;
 using NuGet.Protocol.Core.Types;
+using Microsoft.EntityFrameworkCore;
 
 namespace PaymentGateway.Controllers
 {
@@ -47,9 +48,11 @@ namespace PaymentGateway.Controllers
         public async Task<IActionResult> Transaction()
         {
             TransactionViewModel transactionViewModel = new TransactionViewModel();
-
+           
             transactionViewModel.originatorConversationId = Guid.NewGuid().ToString();
             transactionViewModel.systemTraceAuditNumber = Guid.NewGuid().ToString();
+            transactionViewModel.CreatedBy = "Web App";
+
 
 
             return View(transactionViewModel);
@@ -162,9 +165,12 @@ namespace PaymentGateway.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Transaction(TransactionViewModel transactionViewModel)
         {
+            
             transactionViewModel.Date = DateTime.Now;
-            Transaction transaction = _mapper.Map<Transaction>(transactionViewModel);
+            //transactionViewModel.CreatedBy = "Web";
 
+            Transaction transaction = _mapper.Map<Transaction>(transactionViewModel);
+            //transaction.CreatedBy = "Web App";
 
             if (ModelState.IsValid)
             {
@@ -405,6 +411,18 @@ namespace PaymentGateway.Controllers
                 return Json(new { error = "Failed to fetch payment details." });
             }
         }
+        private async Task<int> QueryTransactionStatusIdFromZamupay(string originatorConversationId)
+        {
+            var apiUrl = $"{_apiSettings.base_api_url}/v1/payment-order/check-status?IdType=OriginatorConversationId&Id={originatorConversationId}";
+
+            var response = await _httpClient.GetAsync(apiUrl);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var transactionOutcome = JsonConvert.DeserializeObject<TransactionOutcome>(responseContent);
+
+            return transactionOutcome.transactionStatus;
+        }
+
+
         public async Task<IActionResult> UpdateResultCodeByStatusId(string originatorConversationId)
         {
             try
@@ -419,8 +437,8 @@ namespace PaymentGateway.Controllers
                 var responseContent = await paymentOrderDetailsResponse.Content.ReadAsStringAsync();
                 var paymentDetails = JsonConvert.DeserializeObject<PaymentDetails>(responseContent);
 
-                // Check if transaction status ID is 4
-                if (paymentDetails?.orderLines?.FirstOrDefault()?.transactionOutcome?.transactionStatus == 4)
+            
+                if (paymentDetails?.orderLines?.FirstOrDefault()?.transactionOutcome?.transactionStatus != null)
                 {
                     var resultCode = paymentDetails.orderLines.First().transactionOutcome.resultCode;
                     var transactionToUpdate = _context.Transaction.FirstOrDefault(t => t.originatorConversationId == originatorConversationId);

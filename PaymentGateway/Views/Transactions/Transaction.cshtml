@@ -6,147 +6,141 @@
 
     var routes = ViewBag.RouteItems as SelectListItem;
 }
-<style>
+<link rel="stylesheet" href="~/css/style.css">
 
-    fieldset {
-        background-color:;
-    }
-
-    legend {
-        background-color:;
-        text-align: center;
-        margin-bottom: 20px;
-        margin-top: 20px;
-        color: black;
-    }
-
-    button {
-        background-color: aqua;
-    }
-
-    
-/* Custom styles for the columns */
-.col-md-4 {
-    background-color: whitesmoke;
-    padding: 15px;
-    border-radius: 5px;
-    align-content:center;
-   
-}
+<div class="container">
+    <div class="container-info">
 
 
+    </div>
 
-</style>
 
-<div class="row">
-    <div class="col-md-4 mx-auto">
+    <div class="container-main">
 
-        <form asp-action="Transaction">
-            <fieldset id ="page1">
-            <legend>Sender's Information</legend>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input asp-for="originatorConversationId" type="hidden" />
-                <input asp-for="systemTraceAuditNumber", type="hidden" />
-            <div class="form-group">
-                <label asp-for="SenderName" class="control-label"></label>
-                <input asp-for="SenderName" class="form-control" />
-                <span asp-validation-for="SenderName" class="text-danger"></span>
+        <div class="row">
+
+            <div class="col-md-4 mx-auto">
+
+                <form asp-action="Transaction" class="form-container">
+
+                    <fieldset id="page1">
+                        <legend class="form-title">Sender's Information</legend>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input asp-for="originatorConversationId" type="hidden" />
+                        <input asp-for="systemTraceAuditNumber" type="hidden" />
+                        <input asp-for="CreatedBy" , type="hidden" />
+                        <div class="form-group">
+                            <label asp-for="SenderName" class="control-label"></label>
+                            <input asp-for="SenderName" class="form-control" placeholder="Your name and surname" />
+                            <span asp-validation-for="SenderName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SenderID_NO" class="control-label"></label>
+                            <input asp-for="SenderID_NO" class="form-control" placeholder="eg 12345678" />
+                            <span asp-validation-for="SenderID_NO" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SenderPhone_No" class="control-label"></label>
+                            <input asp-for="SenderPhone_No" class="form-control" placeholder="eg +254712345678" />
+                            <span asp-validation-for="SenderPhone_No" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SenderSrc_Account" class="control-label"></label>
+                            <input asp-for="SenderSrc_Account" class="form-control" placeholder="eg Mpesa" />
+                            <span asp-validation-for="SenderSrc_Account" class="text-danger"></span>
+                        </div>
+                        <button type="button" class="button"  onclick="nextPage('page1', 'page2')">Next</button>
+
+                    </fieldset>
+
+
+                    <fieldset id="page2" style="display: none;">
+                        <legend class ="form-title">Receiver's Information</legend>
+                        <div class="form-group">
+                            <label asp-for="ReceiverName" class="control-label"></label>
+                            <input asp-for="ReceiverName" class="form-control" placeholder="Your name and surname" />
+                            <span asp-validation-for="ReceiverName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ReceiverID_NO" class="control-label"></label>
+                            <input asp-for="ReceiverID_NO" class="form-control" placeholder="eg 12345678" />
+                            <span asp-validation-for="ReceiverID_NO" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ReceiverPhone_No" class="control-label"></label>
+                            <input asp-for="ReceiverPhone_No" class="form-control" placeholder="eg +254712345678" />
+                            <span asp-validation-for="ReceiverPhone_No" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ReceiverDst_Account" class="control-label"></label>
+                            <input asp-for="ReceiverDst_Account" class="form-control" placeholder="eg Mpesa" />
+                            <span asp-validation-for="ReceiverDst_Account" class="text-danger"></span>
+                        </div>
+                        <button type="button" class="button" onclick="previousPage('page2', 'page1')">Previous</button>
+                        <button type="button" class=" button"  onclick="nextPage('page2', 'page3')">Next</button>
+                    </fieldset>
+
+
+                    <fieldset id="page3" style="display: none;">
+                        <legend class="form-title">Transcation Information</legend>
+                        <div class="form-group">
+                            <label asp-for="Amount" class="control-label"></label>
+                            <input asp-for="Amount" class="form-control" />
+                            <span asp-validation-for="Amount" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="reference" class="control-label"></label>
+                            <input asp-for="reference" class="form-control" placeholder="eg Shopping" />
+                            <span asp-validation-for="reference" class="text-danger"></span>
+                        </div>
+
+                        <div>
+                            <select id="categoryDropdown" style="margin-top:20px" asp-for="RouteId">
+                                <option value="">Select Route</option>
+
+                            </select>
+
+                            <input type="hidden" id="categoryDescriptionInput" asp-for="CategoryDescription" />
+
+
+                            <select id="channelTypeDropdown" style="margin-bottom:20px" asp-for="ChannelType">
+                                <option value="">Select Channel Type</option>
+                            </select>
+                        </div>
+                        <input type="hidden" id="channelDescriptionInput" asp-for="ChannelDescription" />
+
+                        <div class="form-group">
+                            <button type="button" class=" button" onclick="previousPage('page3', 'page2')">Previous</button>
+
+                            <input type="submit"  value="Transact" class="btn btn-primary" id="submitBtn" />
+                        </div>
+                    </fieldset>
+
+
+
+                    <input type="hidden" id="currentPage" value="page1">
+
+                    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+                    {
+                        <div class="alert alert-success">
+                            @ViewBag.SuccessMessage
+                        </div>
+                    }
+
+
+                </form>
+
+
             </div>
-            <div class="form-group">
-                <label asp-for="SenderID_NO" class="control-label"></label>
-                <input asp-for="SenderID_NO" class="form-control" />
-                <span asp-validation-for="SenderID_NO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SenderPhone_No" class="control-label"></label>
-                <input asp-for="SenderPhone_No" class="form-control" />
-                <span asp-validation-for="SenderPhone_No" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SenderSrc_Account" class="control-label"></label>
-                <input asp-for="SenderSrc_Account" class="form-control" />
-                <span asp-validation-for="SenderSrc_Account" class="text-danger"></span>
-            </div>
-                <button type="button" class=" btn btn-info" style="margin-top:10px; margin-left:350px" onclick="nextPage('page1', 'page2')">Next</button>
 
-            </fieldset>
-            <fieldset id="page2" style="display: none;">
-                <legend>Receiver's Information</legend>
-             <div class ="form-group">
-                 <label asp-for="ReceiverName" class="control-label"></label>
-                 <input asp-for="ReceiverName" class="form-control" />
-                 <span asp-validation-for="ReceiverName" class="text-danger"></span>
-             </div>
-            <div class="form-group">
-                <label asp-for="ReceiverID_NO" class="control-label"></label>
-                <input asp-for="ReceiverID_NO" class="form-control" />
-                <span asp-validation-for="ReceiverID_NO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReceiverPhone_No" class="control-label"></label>
-                <input asp-for="ReceiverPhone_No" class="form-control" />
-                <span asp-validation-for="ReceiverPhone_No" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReceiverDst_Account" class="control-label"></label>
-                <input asp-for="ReceiverDst_Account" class="form-control" />
-                <span asp-validation-for="ReceiverDst_Account" class="text-danger"></span>
-            </div>
-                <button type="button" class=" btn btn-info" style="margin-top:10px;margin-left:10px" onclick="previousPage('page2', 'page1')">Previous</button>
-                <button type="button" class=" btn btn-info" style="margin-top:10px; margin-left:250px" onclick="nextPage('page2', 'page3')">Next</button>
-            </fieldset>
-            <fieldset id="page3" style="display: none;">
-                <legend>Transcation Information</legend>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="reference" class="control-label"></label>
-                <input asp-for="reference" class="form-control" />
-                <span asp-validation-for="reference" class="text-danger"></span>
-            </div>
-           
-            <div>
-                <select id="categoryDropdown" style="margin-top:20px" asp-for="RouteId">
-                        <option value="">Select Route</option>
-
-            </select>
-     
-            <input type="hidden" id="categoryDescriptionInput" asp-for="CategoryDescription" />
-
-
-                    <select id="channelTypeDropdown" style="margin-bottom:20px" asp-for="ChannelType">
-                <option value="">Select Channel Type</option>
-            </select>
-            </div>
-            <input type="hidden" id="channelDescriptionInput" asp-for="ChannelDescription" />
-
-                <div class="form-group">
-                    <button type="button" style=" margin-left:00px"  class=" btn btn-info" onclick="previousPage('page3', 'page2')">Previous</button>
-
-                    <input type="submit" style=" margin-left:230px" value="Transact" class="btn btn-primary" id="submitBtn" />
-                </div>
-            </fieldset>
-
-            <input type="hidden" id="currentPage" value="page1">
-         
-            @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
-            {
-                <div class="alert alert-success">
-                    @ViewBag.SuccessMessage
-                </div>
-            }
-
-                   </form>
+        </div>
     </div>
 </div>
 
 @section scripts{
     <script>
         function nextPage(currentPageId, nextPageId) {
-           
+
             document.getElementById(currentPageId).style.display = 'none';
             document.getElementById(nextPageId).style.display = 'block';
             document.getElementById('currentPage').value = nextPageId;
@@ -159,7 +153,7 @@
         }
 
         function submitForm() {
-          
+
         }
     </script>
     <script>
@@ -169,7 +163,7 @@
                 var selectedRouteId = $(this).val();
                 var selectedRouteDescription = $("#categoryDropdown option:selected").text();
                 $("#categoryDescriptionInput").val(selectedRouteDescription);
-               
+
                 $.ajax({
                     url: "/Transactions/GetChannelTypeByRouteId?id=" + selectedRouteId,
                     type: "GET",
@@ -191,15 +185,15 @@
                 var selectedChannelDescription = $("#channelTypeDropdown option:selected").text();
                 $("#channelDescriptionInput").val(selectedChannelDescription);
             });
-         
+
         });
-       
+
     </script>
     <script>
         function LoadRoutes() {
             $.ajax({
                 url: '/transactions/gettransactionroute/',
-                type:'POST',
+                type: 'POST',
                 error: function (xhr) {
                     console.log("An error occured: " + xhr.status + " " + xhr.statusText);
                 },
@@ -223,7 +217,7 @@
                                         text: itemData.text,
                                     }));
 
-                                   
+
                             });
                         console.log(result);
 
@@ -232,10 +226,10 @@
             });
         }
     </script>
-   
+
 
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-   
-}
+
+    }
