@@ -87,9 +87,10 @@ $(document).ready(function(){
                     { "targets": 15, "data": "date", "title": "Transaction Date" },
                     { "targets": 16, "data": "transactionStatusDescription", "title": "Status " },
                     { "targets": 17, "data": "transactionStatus", "title": "Status ID" },
-                    { "targets": 18, "data": "isPosted", "title": "Posted" },
-                    { "targets": 19, "data": "date", "title": "Action" },
-                    { "targets": 20, "data": "date", "title": "Payment Details" }
+                    { "targets": 18, "data": "createdBy", "title": "Created By" },
+                    { "targets": 19, "data": "isPosted", "title": "Posted" },
+                    { "targets": 10, "data": "date", "title": "Post" },
+                    { "targets": 21, "data": "date", "title": "View" }
 
                     
                     
@@ -112,15 +113,20 @@ $(document).ready(function(){
                    
                     var id = aData.id;
                     var originatorConversationId = aData.originatorConversationId;
-                    var postButton = '<button class="btn btn-primary post-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">Post</button>';
-                    var viewButton = '<button class="btn btn-info view-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">View</button>';
 
+                    var postButton = '<button class="btn btn-primary post-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">Post</button>';
+                    //var viewButton = '<button class="btn btn-info view-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">View</button>';
+
+                   // var statusButton = '<button class="btn btn-info status-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">Status</button>';
 
                     var statusLink = '<a class="status-link" href="#" data-transaction-id="' + id + '" data-originator-conversation-id="' + originatorConversationId + '">Status</a>';
+                    var viewLink = '<a class="view-link" href="#" data-transaction-id="' + id + '" data-originator-conversation-id="' + originatorConversationId + '">View</a>';
 
 
 
-                    $(nRow).find('td:eq(15)').html(postButton + ' ' + viewButton);
+                    $(nRow).find('td:eq(16)').html(postButton);
+                    $(nRow).find('td:eq(17)').html(viewLink + ' ' + statusLink);
+
                   
                     var formattedAmount = parseFloat(aData.amount).toLocaleString(undefined, {
                        minimumFractionDigits: 2,
@@ -162,9 +168,9 @@ $(document).ready(function(){
                     $(nRow).find('td:eq(12)').html(formattedTime + '<br>' + formattedDate);
 
 
-                    $(nRow).find('td:eq(16)').html(statusLink);
+                   // $(nRow).find('td:eq(16)').html(statusLink);
 
-                    var isPostedCell = $(nRow).find('td:eq(14)');
+                    var isPostedCell = $(nRow).find('td:eq(15)');
                     if (aData.isPosted) {
                         isPostedCell.text('Posted');
                     } else {
@@ -222,10 +228,10 @@ $(document).ready(function(){
                 });
             });
 
-            $('#dataTable').on('click', '.view-btn', function () {
+            $('#dataTable').on('click', '.view-link', function () {
               console.log('Button Clicked');
-                var viewButton = $(this);
-                var id = viewButton.data('transaction-id');
+                var viewLink = $(this);
+                var id = viewLink.data('transaction-id');
 
                 $.ajax({
                     url: '/Transactions/ViewPaymentDetails',
