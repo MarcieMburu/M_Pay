@@ -2,12 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using PaymentGateway.Data;
-
+using PaymentGateway.Helpers;
+using PaymentGateway.Models;
 using WorkerService;
 
-
-//builder.Services.AddDbContext<PaymentGatewayContext>(options =>
- //   options.UseSqlServer(builder.Configuration.GetConnectionString("PaymentGatewayContext") ?? throw new InvalidOperationException("Connection string 'PaymentGatewayContext' not found.")));
 
 
 
@@ -19,10 +17,14 @@ IHost host = Host.CreateDefaultBuilder(args)
 
         services.AddDbContext<PaymentGatewayContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("PaymentGateway"));
+            options.UseSqlServer(configuration.GetConnectionString("PaymentGatewayContext"));
         }, ServiceLifetime.Scoped);
 
         services.AddHostedService<Worker>();
+        services.AddHttpClient();
+        services.AddScoped<IRepository<Transaction>, Repository<Transaction>>();
+        services.AddAutoMapper(typeof(Program).Assembly);
+
 
     })
     .Build();

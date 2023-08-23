@@ -30,6 +30,10 @@ namespace PaymentGateway.Models
         public DateTime Date { get; set; }
         public bool IsPosted { get; set; }
         public string CreatedBy { get; set; }
+
+        public int transactionStatus { get; set; }
+        public string? transactionStatusDescription { get; set; }
+        public bool IsStatusUpdated { get; set; }
     }
     
 }

@@ -348,6 +348,7 @@ namespace PaymentGateway.Controllers
 
                     entity.systemConversationId = paymentResponse.message.systemConversationId;
                     entity.originatorConversationId = paymentResponse.message.originatorConversationId;
+                    entity.IsPosted = true;
                     return true;
                 });
 
@@ -395,22 +396,32 @@ namespace PaymentGateway.Controllers
                 var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
+                var transaction = await _context.Transaction.FirstOrDefaultAsync(t => t.originatorConversationId == originatorConversationId && t.IsPosted);
+                if (transaction == null)
+                {
+
+                    return Json(new { error = "Transaction is not posted or not found." });
+                }
+
+
                 var apiUrl = $"{_apiSettings.base_api_url}/v1/payment-order/check-status?IdType=OriginatorConversationId&Id={originatorConversationId}";
                 var paymentOrderDetailsResponse = await _httpClient.GetAsync(apiUrl);
                 //paymentOrderDetailsResponse.EnsureSuccessStatusCode();
-
+               
                 var responseContent = await paymentOrderDetailsResponse.Content.ReadAsStringAsync();
                 var paymentDetails = JsonConvert.DeserializeObject<PaymentDetails>(responseContent);
-
+               
 
                 return PartialView("_PaymentDetails", paymentDetails);
             }
             catch (Exception ex)
             {
 
-                return Json(new { error = "Failed to fetch payment details." });
+                return Json(new { error = "An error occurred while fetching payment details." });
             }
         }
+
+       
         private async Task<int> QueryTransactionStatusIdFromZamupay(string originatorConversationId)
         {
             var apiUrl = $"{_apiSettings.base_api_url}/v1/payment-order/check-status?IdType=OriginatorConversationId&Id={originatorConversationId}";

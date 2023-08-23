@@ -54,6 +54,9 @@ namespace PaymentGateway.Migrations
                     b.Property<bool>("IsPosted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsStatusUpdated")
+                        .HasColumnType("bit");
+
                     b.Property<string>("RouteId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -77,6 +80,12 @@ namespace PaymentGateway.Migrations
 
                     b.Property<string>("systemTraceAuditNumber")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("transactionStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("transactionStatusDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
