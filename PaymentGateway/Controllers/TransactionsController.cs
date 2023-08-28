@@ -59,6 +59,8 @@ namespace PaymentGateway.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            
+
             return View();
         }
 
@@ -167,10 +169,10 @@ namespace PaymentGateway.Controllers
         {
             
             transactionViewModel.Date = DateTime.Now;
-            //transactionViewModel.CreatedBy = "Web";
+          
 
             Transaction transaction = _mapper.Map<Transaction>(transactionViewModel);
-            //transaction.CreatedBy = "Web App";
+            
 
             if (ModelState.IsValid)
             {
@@ -201,7 +203,7 @@ namespace PaymentGateway.Controllers
         public JsonResult DisplayDataToDataTable()
 
         {
-            List<Transaction> transactions = new List<Transaction>();
+                     List<Transaction> transactions = new List<Transaction>();
 
             transactions = _context.Transaction.ToList<Transaction>();
 
@@ -396,6 +398,8 @@ namespace PaymentGateway.Controllers
                 var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
+               // var isPaymentDetailsSuccessful = await UpdateResultCodeByStatusId(originatorConversationId);
+
                 var transaction = await _context.Transaction.FirstOrDefaultAsync(t => t.originatorConversationId == originatorConversationId && t.IsPosted);
                 if (transaction == null)
                 {
@@ -407,10 +411,11 @@ namespace PaymentGateway.Controllers
                 var apiUrl = $"{_apiSettings.base_api_url}/v1/payment-order/check-status?IdType=OriginatorConversationId&Id={originatorConversationId}";
                 var paymentOrderDetailsResponse = await _httpClient.GetAsync(apiUrl);
                 //paymentOrderDetailsResponse.EnsureSuccessStatusCode();
+
                
                 var responseContent = await paymentOrderDetailsResponse.Content.ReadAsStringAsync();
                 var paymentDetails = JsonConvert.DeserializeObject<PaymentDetails>(responseContent);
-               
+
 
                 return PartialView("_PaymentDetails", paymentDetails);
             }
@@ -434,7 +439,7 @@ namespace PaymentGateway.Controllers
         }
 
 
-        public async Task<IActionResult> UpdateResultCodeByStatusId(string originatorConversationId)
+        public async Task<JsonResult> UpdateResultCodeByStatusId(string originatorConversationId)
         {
             try
             {

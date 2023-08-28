@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "IVTAQ3GBlFXE0p52dIkKqkWtnHUicwon4wYuNwCTaKg=",
+  "Hash": "NOSlNb+VWBmTw2BnQ5fhe81lI1nelG4GmHBEXYrj3sM=",
   "Source": "PaymentGateway",
   "BasePath": "_content/PaymentGateway",
   "Mode": "Default",
@@ -100,6 +100,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\wwwroot\\Images\\cc0f9786-d084-4cc7-9bfc-0c3f436533f9.jpg",
+      "SourceId": "PaymentGateway",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\wwwroot\\",
+      "BasePath": "_content/PaymentGateway",
+      "RelativePath": "Images/cc0f9786-d084-4cc7-9bfc-0c3f436533f9.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\cc0f9786-d084-4cc7-9bfc-0c3f436533f9.jpg"
     },
     {
       "Identity": "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\wwwroot\\Images\\pexels-madison-inouye-1831234.jpg",

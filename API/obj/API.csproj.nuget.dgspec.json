@@ -105,9 +105,17 @@
               "target": "Package",
               "version": "[6.0.21, )"
             },
+            "Microsoft.Extensions.Caching.StackExchangeRedis": {
+              "target": "Package",
+              "version": "[7.0.10, )"
+            },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[6.0.16, )"
+            },
+            "StackExchange.Redis": {
+              "target": "Package",
+              "version": "[2.6.122, )"
             },
             "Swashbuckle": {
               "target": "Package",
@@ -229,6 +237,10 @@
               "target": "Package",
               "version": "[7.0.9, )"
             },
+            "Microsoft.Extensions.Caching.StackExchangeRedis": {
+              "target": "Package",
+              "version": "[7.0.10, )"
+            },
             "Microsoft.Identity.Web": {
               "target": "Package",
               "version": "[2.13.1, )"
@@ -256,6 +268,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "StackExchange.Redis": {
+              "target": "Package",
+              "version": "[2.6.122, )"
             },
             "System.Data.SqlClient": {
               "target": "Package",

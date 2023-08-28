@@ -91,8 +91,8 @@
         public string trackingNumber { get; set; }
         public int transactionStatus { get; set; }
         public string transactionStatusDescription { get; set; }
-        public object resultCode { get; set; }
-        public object resultCodeDescription { get; set; }
+        public string resultCode { get; set; }
+        public string resultCodeDescription { get; set; }
         public ThirdPartyPayload thirdPartyPayload { get; set; }
     }
 

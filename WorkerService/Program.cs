@@ -5,10 +5,8 @@ using PaymentGateway.Data;
 using PaymentGateway.Helpers;
 using PaymentGateway.Models;
 using WorkerService;
-
-
-
-
+using Microsoft.Extensions.Configuration;
+using static WorkerService.GetTransactionStatus;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services )=>
@@ -20,11 +18,22 @@ IHost host = Host.CreateDefaultBuilder(args)
             options.UseSqlServer(configuration.GetConnectionString("PaymentGatewayContext"));
         }, ServiceLifetime.Scoped);
 
-        services.AddHostedService<Worker>();
+        services.AddHostedService<GetTransactionStatus>();
+
+        services.AddHostedService<PaymentOrderRequest>();
+       
+      
+
         services.AddHttpClient();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IRepository<Transaction>, Repository<Transaction>>();
         services.AddAutoMapper(typeof(Program).Assembly);
-
+        services.Configure<ApiSettings>(configuration.GetSection("ApiSettings"));
+        //services.AddStackExchangeRedisCache(options =>
+        //{
+        //    options.Configuration = "localhost:6379";
+        //    options.InstanceName = "MyRedis";
+        //});
 
     })
     .Build();

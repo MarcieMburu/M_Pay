@@ -265,15 +265,6 @@ C:\Users\Paul\source\repos\PaymentGateway\PaymentGateway\bin\Debug\net6.0\runtim
 C:\Users\Paul\source\repos\PaymentGateway\PaymentGateway\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\Paul\source\repos\PaymentGateway\PaymentGateway\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Paul\source\repos\PaymentGateway\PaymentGateway\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.csproj.AssemblyReference.cache
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.AssemblyInfoInputs.cache
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.AssemblyInfo.cs
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.csproj.CoreCompileInputs.cache
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.RazorAssemblyInfo.cache
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.RazorAssemblyInfo.cs
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\appsettings.json
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\PaymentGateway.staticwebassets.runtime.json
@@ -345,6 +336,7 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Mi
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Caching.Abstractions.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
@@ -400,6 +392,7 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Nu
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\NuGet.ProjectModel.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\NuGet.Protocol.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\NuGet.Versioning.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Pipelines.Sockets.Unofficial.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Serilog.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Serilog.Enrichers.Environment.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Serilog.Enrichers.Thread.dll
@@ -410,6 +403,7 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Se
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Serilog.Sinks.File.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Serilog.Sinks.Trace.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\SerilogTraceListener.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\StackExchange.Redis.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.CodeDom.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Composition.AttributedModel.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Composition.Convention.dll
@@ -590,6 +584,15 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\ru
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.csproj.AssemblyReference.cache
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.AssemblyInfoInputs.cache
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.AssemblyInfo.cs
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.csproj.CoreCompileInputs.cache
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.RazorAssemblyInfo.cache
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.RazorAssemblyInfo.cs
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\staticwebassets\msbuild.PaymentGateway.Microsoft.AspNetCore.StaticWebAssets.props
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\staticwebassets\msbuild.build.PaymentGateway.props
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.PaymentGateway.props

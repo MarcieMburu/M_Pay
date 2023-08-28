@@ -18,6 +18,8 @@ using PaymentGateway.Models;
 using PaymentGateway.DTOs;
 using Microsoft.Extensions.Options;
 
+using API;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<PaymentGatewayContext>(options =>
@@ -33,7 +35,7 @@ builder.Services.AddScoped< ZamupayService>();
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 builder.Services.AddScoped(sp => sp.GetRequiredService<IOptions<ApiSettings>>().Value);
 
-
+//builder.Services.AddHostedService<MessageService>();
 
 
 builder.Services.AddVersionedApiExplorer(c =>
@@ -54,6 +56,21 @@ builder.Services.AddAuthentication("BasicAuthentication").
             AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+//builder.Services.AddMassTransit(x =>
+//{
+//    x.AddConsumer<Customer>(); 
+
+//    x.UsingRabbitMq((context, cfg) =>
+//    {
+//        cfg.Host(new Uri("rabbitmq://localhost" ), h => {
+//            h.Username("guest");
+//            h.Password("guest");
+//            });
+//        cfg.ConfigureEndpoints(context); 
+//    });
+//});
+
+//builder.Services.AddMassTransitHostedService(); 
 
 
 

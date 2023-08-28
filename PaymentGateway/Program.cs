@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using AutoMapper;
 using PaymentGateway.Models;
 using PaymentGateway.DTOs;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PaymentGatewayContext>(options =>

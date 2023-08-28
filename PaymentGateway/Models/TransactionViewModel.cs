@@ -16,6 +16,8 @@ namespace PaymentGateway.Models
         [Display(Name = "Name")]
         public string SenderName { get; set; }
         [Display(Name = "Identification Number")]
+        [StringLength(8, MinimumLength = 8, ErrorMessage = " Identification Number must be exactly 8 digits.")]
+
         public string SenderID_NO { get; set; }
 
         [Display(Name = "Phone Number")]
@@ -27,6 +29,7 @@ namespace PaymentGateway.Models
         public string ReceiverName { get; set; }
 
         [Display(Name = "Identification Number")]
+        [StringLength(8, MinimumLength = 8, ErrorMessage = " Identification Number must be exactly 8 digits.")]
 
         public string ReceiverID_NO { get; set; }
         [Display(Name = "Phone Number")]
@@ -49,7 +52,7 @@ namespace PaymentGateway.Models
         public string systemTraceAuditNumber { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Amount must be a positive number.")]
+        [Range(10, 1000000, ErrorMessage = "Amount must be between KSH 10 and KSH 1,000,000.")]
         public int Amount { get; set; }
         public string? resultCode { get; set; }
         public string? resultCodeDescription { get; set; }

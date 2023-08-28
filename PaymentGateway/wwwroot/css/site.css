@@ -14,7 +14,8 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #D1E3F2;
 }
 
 .min-vh-100 {
@@ -35,5 +36,6 @@ body {
 @media (max-width: 767px) {
     .col-md-4 {
         margin-bottom: 20px;
+        margin-top: 20px;
     }
 }
