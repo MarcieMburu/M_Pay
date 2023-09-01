@@ -8,9 +8,9 @@ namespace PaymentGateway.Helpers
     {
        
         Task<string> GetBearerToken(string client_id, string client_secret);
-     
-       Task<bool> UpdateEntityPropertiesAsync<TEntity>(TEntity entity, Func<TEntity, Task<bool>> updateAction);
-      // Task<bool> ProcessPaymentOrderAsync<TEntity>(TEntity entity,Func<TEntity, Task<bool>> processAction);
-        //Task<TransactionViewModel> PaymentOrderRequest(int id, string originatorConversationId);
+        Task<List<Transaction>> GetTransactionsAsync();
+        Task<ActionResult<Transaction>> GetLatestTransaction();
+        Task<bool> UpdateEntityPropertiesAsync<TEntity>(TEntity entity, Func<TEntity, Task<bool>> updateAction);
+        Task<bool> ProcessPaymentOrderAsync(Transaction transaction);
     }
 }

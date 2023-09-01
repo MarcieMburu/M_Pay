@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+using MassTransit;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PaymentGateway.Data;
@@ -8,13 +8,12 @@ using PaymentGateway.Helpers;
 using PaymentGateway.Models;
 using System.Net.Http.Headers;
 using System.Text;
-using static API.Controllers.TransactionsController;
 
 namespace WorkerService
 {
     public class PaymentOrderRequest : BackgroundService
     {
-        private readonly ILogger<GetTransactionStatus> _logger;
+        private readonly ILogger<PaymentOrderRequest> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly HttpClient _httpClient;
         private AccessToken _accessToken;
@@ -26,11 +25,16 @@ namespace WorkerService
         private readonly string client_secret;
         private readonly string base_api_url;
         private IRepository<Transaction> _repository;
+        private readonly IBus _bus;
+        private readonly IRequestClient<PaymentMessage> _requestClient;
+        private readonly IBusControl _busControl;
+        private readonly IPublishEndpoint _publishEndpoint;
 
 
-        public PaymentOrderRequest(ILogger<GetTransactionStatus> logger, IServiceScopeFactory serviceScopeFactory,
+
+        public PaymentOrderRequest(ILogger<PaymentOrderRequest> logger, IServiceScopeFactory serviceScopeFactory,
             HttpClient httpClient, IHttpClientFactory httpClientFactory, IMapper mapper, IOptions<ApiSettings> apiSettings,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider, IBus bus, IBusControl busControl)
         {
             _logger = logger;
             _serviceScopeFactory = serviceScopeFactory;
@@ -38,11 +42,16 @@ namespace WorkerService
             _apiSettings = apiSettings.Value;
             _httpClientFactory = httpClientFactory;
             _mapper = mapper;
+            _bus = bus;
             _serviceProvider = serviceProvider;
             client_id = "rahab";
             client_secret = "rahab";
             base_api_url = "https://sandboxapi.zamupay.com";
+            _busControl = busControl;
         }
+
+
+
         public async Task<string> GetBearerToken(string client_id, string client_secret)
         {
 
@@ -64,16 +73,29 @@ namespace WorkerService
 
                 return accessToken.access_token;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
 
             return null;
         }
-
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        public async Task PublishPaymentMessageAsync(PaymentMessage paymentMessage)
         {
+            await _publishEndpoint.Publish(paymentMessage);
+
+            //await _bus.Publish(paymentMessage);
+        }
+       
+
+      
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        
+        {
+            _logger.LogInformation("Posting  bus started.");
+
+            await _busControl.StartAsync(stoppingToken);
+
             var _httpClient = _httpClientFactory.CreateClient();
             var accessToken = await GetBearerToken(client_id, client_secret);
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -88,20 +110,68 @@ namespace WorkerService
                 {
                     var scopedContext = scope.ServiceProvider.GetRequiredService<PaymentGatewayContext>();
                     var httpClient = _httpClientFactory.CreateClient();
+                    var requestClient = scope.ServiceProvider.GetRequiredService<IRequestClient<PaymentMessage>>();
+
+
 
                     var orderLines = scopedContext.Transaction
                  .Where(t => !t.IsPosted)
                  .ToList();
 
                     foreach (var transaction in orderLines)
+                    
                     {
 
                         if (transaction.IsPosted)
                         {
 
-                            _logger.LogInformation($"Transaction with ID {transaction.Id} has  been posted. Skipping posting check");
+                            _logger.LogInformation($"Transaction with ID {transaction.Id} has already been posted. Skipping post");
                             continue;
                         }
+
+                        //var paymentMessageResponse = new PaymentMessage
+                        //{
+                        //    Id = transaction.Id,
+                        //    SenderName = transaction.Sender.Name,
+                        //    SenderID_NO = transaction.Sender.ID_NO,
+                        //    SenderPhone_No = transaction.Sender.Phone_No,
+                        //    SenderSrc_Account = transaction.Sender.Src_Account,
+                        //    ReceiverName = transaction.Receiver.Name,
+                        //    ReceiverID_NO = transaction.Receiver.ID_NO,
+                        //    originatorConversationId = transaction.originatorConversationId,
+                            
+                        //    Amount = transaction.Amount,
+
+                        //};
+
+
+
+                        _logger.LogInformation("Received Payment Message...");
+
+                  //      await _busControl.StartAsync(stoppingToken);
+
+
+
+
+                        // var responseMessage = await requestClient.GetResponse<PaymentMessage>(paymentMessageResponse, timeout: TimeSpan.FromSeconds(60));
+
+                        //await _publishEndpoint.Publish(paymentMessageResponse);
+
+                        //try { 
+
+
+                        //var paymentResponse = responseMessage.Message;
+                        //    _logger.LogInformation("Received Payment Response: " + paymentResponse);
+                        //}
+                        //catch (RequestTimeoutException)
+                        //{
+                        //    _logger.LogError("Payment Request Timed Out.");
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    _logger.LogError("An error occurred: " + ex.Message);
+                        //}
+
 
                         ZamupayRequest orderRequest = new ZamupayRequest();
 
@@ -157,13 +227,13 @@ namespace WorkerService
                         var jsonPayload = JsonConvert.SerializeObject(orderRequest);
                         var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-
                         var response = await _httpClient.PostAsync(paymentOrderRequest, httpContent);
 
                         //response.EnsureSuccessStatusCode(); 
 
 
                         var responseContent = await response.Content.ReadAsStringAsync();
+
                         try
                         {
                             response.EnsureSuccessStatusCode();
@@ -205,16 +275,32 @@ namespace WorkerService
                         {
                             _logger.LogError($"Failed to post transaction with ID {transaction.Id} to API: {ex.Message}");
                         }
+
+                        //      await _bus.Publish(new PaymentMessage {               });
+                  //      await _publishEndpoint.Publish(paymentMessageResponse);
+
+
                     }
 
 
-                    await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken); // Delay before next iteration
+                    await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken);
+
                 }
                 _logger.LogInformation("Posting  worker stopped.");
 
             }
-        }
 
+
+
+
+        }
+        public override Task StopAsync(CancellationToken stoppingToken)
+        {
+            _logger.LogInformation("Stopped Rabbit Mq Server");
+
+            return Task.WhenAll( base.StopAsync(stoppingToken), _busControl.StopAsync(stoppingToken));
+            
+        }
 
 
 

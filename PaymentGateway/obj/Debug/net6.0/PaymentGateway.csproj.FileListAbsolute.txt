@@ -609,3 +609,11 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\re
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.pdb
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.genruntimeconfig.cache
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\ref\PaymentGateway.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\MassTransit.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\MassTransit.Abstractions.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\MassTransit.RabbitMqTransport.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Diagnostics.HealthChecks.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\RabbitMQ.Client.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Threading.Channels.dll

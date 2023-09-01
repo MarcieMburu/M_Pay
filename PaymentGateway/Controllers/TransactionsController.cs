@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Caching.Memory;
 using NuGet.Protocol.Core.Types;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using MassTransit;
 
 namespace PaymentGateway.Controllers
 {
@@ -27,11 +29,14 @@ namespace PaymentGateway.Controllers
         private AccessToken _accessToken;
         public IRepository<Transaction> _repository;
         private readonly IMemoryCache _memoryCache;
+        private IDistributedCache _distributedCache;
+        private readonly IRequestClient<TransactionViewModel> _requestClient;
+
 
         public TransactionsController(PaymentGatewayContext context, IMemoryCache memoryCache,
-          IRepository<Transaction> repository,
+          IRepository<Transaction> repository,IRequestClient<TransactionViewModel> requestClient,
           IMapper mapper, IOptions<ApiSettings> apiSettings,
-            HttpClient httpClient, IHttpClientFactory httpClientFactory)
+            HttpClient httpClient, IHttpClientFactory httpClientFactory, IDistributedCache distributedCache)
         {
             _context = context;
             _repository = repository;
@@ -40,6 +45,8 @@ namespace PaymentGateway.Controllers
             _httpClient = httpClient;
             _apiSettings = apiSettings.Value;
             _httpClientFactory = httpClientFactory;
+            _distributedCache = distributedCache;
+            _requestClient = requestClient;
         }
 
 
@@ -64,6 +71,7 @@ namespace PaymentGateway.Controllers
             return View();
         }
 
+     
         public async Task<string> GetBearerToken(string client_id, string client_secret)
         {
 
@@ -92,7 +100,7 @@ namespace PaymentGateway.Controllers
 
             return null;
         }
-        private async Task<TransactionRoute> GetTransactionRouteAsync()
+        public async Task<TransactionRoute> GetTransactionRouteAsync()
         {
             var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
             var transactionRouteEndpoint = $"{_apiSettings.base_api_url}/v1/transaction-routes/assigned-routes";
@@ -181,6 +189,8 @@ namespace PaymentGateway.Controllers
 
                 TempData["SuccessMessage"] = "Transaction has been successfully saved to the database.";
 
+                await _requestClient.GetResponse<TransactionViewModel>(transactionViewModel, timeout: TimeSpan.FromSeconds(60));
+
 
                 return RedirectToAction(nameof(Index));
             }
@@ -194,19 +204,33 @@ namespace PaymentGateway.Controllers
 
         public IActionResult DisplayData()
         {
-           // var successMessage = TempData["SuccessMessage"] as string;
-
-          //  ViewBag.institutionIdentifier = "phone";
+           
             return View();
         }
         //Post data to jquery datatable
         public JsonResult DisplayDataToDataTable()
 
         {
-                     List<Transaction> transactions = new List<Transaction>();
+             List<Transaction> transactions = new List<Transaction>();
+            try
+            {
+                var cachedTransactions = _distributedCache.GetString("CachedTransactions");
+                if (cachedTransactions != null)
+                {
+                    transactions = JsonConvert.DeserializeObject<List<Transaction>>(cachedTransactions);
+                }
+                else
+                {
 
-            transactions = _context.Transaction.ToList<Transaction>();
+                    transactions = _context.Transaction.ToList<Transaction>();
+                    _distributedCache.SetString("CachedTransactions", JsonConvert.SerializeObject(transactions));
+                }
+            }
+            catch (Exception ex)
+            {
 
+                transactions = _context.Transaction.ToList<Transaction>();
+            }
             return Json(transactions);
         }
 
@@ -490,7 +514,7 @@ namespace PaymentGateway.Controllers
             }
         }
 
-
+      
         public class ChannelTypeItemViewModel : SelectListItem
         {
             public string Value { get; set; }

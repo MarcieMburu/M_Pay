@@ -65,6 +65,22 @@
               "target": "Package",
               "version": "[4.0.3, )"
             },
+            "MassTransit": {
+              "target": "Package",
+              "version": "[8.1.0, )"
+            },
+            "MassTransit.AspNetCore": {
+              "target": "Package",
+              "version": "[7.3.1, )"
+            },
+            "MassTransit.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[7.3.1, )"
+            },
+            "MassTransit.RabbitMQ": {
+              "target": "Package",
+              "version": "[8.1.0, )"
+            },
             "Microsoft.AspNet.Mvc": {
               "target": "Package",
               "version": "[5.2.9, )"
@@ -112,6 +128,10 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[6.0.16, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.5.0, )"
             },
             "StackExchange.Redis": {
               "target": "Package",
@@ -218,6 +238,14 @@
             "IppDotNetSdkForQuickBooksApiV3": {
               "target": "Package",
               "version": "[14.6.3.5, )"
+            },
+            "MassTransit": {
+              "target": "Package",
+              "version": "[8.1.0, )"
+            },
+            "MassTransit.RabbitMQ": {
+              "target": "Package",
+              "version": "[8.1.0, )"
             },
             "Microsoft.AspNetCore.Authentication": {
               "target": "Package",

@@ -11,9 +11,8 @@ using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PaymentGateway.Data;
 using System.Net.Http.Headers;
-
-
-
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.EntityFrameworkCore;
 
 namespace PaymentGateway.Helpers
 {
@@ -26,10 +25,12 @@ namespace PaymentGateway.Helpers
         private readonly HttpClient _httpClient = new HttpClient();
         private ApiSettings _apiSettings;
         private AccessToken _accessToken;
-     
+        private IDistributedCache _distributedCache;
+        private readonly ILogger<Repository<TEntity>> _logger;
+
 
         public Repository(IHttpClientFactory httpClientFactory, PaymentGatewayContext context,
-            IMapper mapper, IOptions<ApiSettings> apiSettings, HttpClient httpClient)
+            IMapper mapper, IOptions<ApiSettings> apiSettings, HttpClient httpClient, IDistributedCache distributedCache, ILogger<Repository<TEntity>> logger)
         {
             _context = context;
 
@@ -39,7 +40,8 @@ namespace PaymentGateway.Helpers
             _apiSettings = apiSettings.Value;
 
             _httpClientFactory = httpClientFactory;
-           
+            _distributedCache = distributedCache;
+            _logger = logger;
         }
 
         public async Task<bool> UpdateEntityPropertiesAsync<TEntity>(TEntity entity, Func<TEntity, Task<bool>> updateAction)
@@ -95,160 +97,166 @@ namespace PaymentGateway.Helpers
             return null;
         }
 
-       
-        //[HttpPost]
-        //public async Task<TEntity> PaymentOrderRequest(int id, string originatorConversationId)
-        //{
-        //    var transaction = await _context.TEntity.FindAsync(id);
-            
-        //    if (transaction == null)
-        //    {
-        //        return null;
-        //    }
+        public async Task<List<Transaction>> GetTransactionsAsync()
+        {
+            var cachedTransactions = await _distributedCache.GetStringAsync("CachedTransactions");
+            if (cachedTransactions != null)
+            {
+                _logger.LogInformation("Transactions fetched from cache.");
+                return JsonConvert.DeserializeObject<List<Transaction>>(cachedTransactions);
+            }
 
-        //    if (transaction.IsPosted)
-        //    {
-        //       // return Ok(new { isTransactionPosted = true });
-        //    }
-        //    else
-        //    {
-        //        var isPaymentOrderRequestSuccessful = await ProcessPaymentOrderAsync(transaction);
+            // If not in cache, fetch from the database
+            var transactions = await _context.Transaction.ToListAsync();
 
-        //        if (isPaymentOrderRequestSuccessful)
-        //        {
-        //            var updateResult = await UpdateEntityPropertiesAsync(
-        //         transaction,
-        //        async entity =>
-        //        {
-        //            entity.IsPosted = true;
-        //            return true;
-        //        }
-        //     );
+            // Store transactions in cache
+            var cacheOptions = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10) // Cache for 10 minutes
+            };
+            await _distributedCache.SetStringAsync("CachedTransactions", JsonConvert.SerializeObject(transactions), cacheOptions);
 
-        //            if (updateResult)
-        //            {
-                        
-        //            }
-        //            else
-        //            {
-        //              //  return Ok(new { Message = "ERROR" });
-        //            }
-        //        }
-        //        else
-        //        {
-        //          //  return Ok(new { Message = "ERROR" });
-        //        }
-        //    }
-        //    return transaction;
-        //}
+            _logger.LogInformation("Transactions fetched from database and cached.");
 
-      
+            return transactions;
+        }
 
-        //public  async Task<bool> ProcessPaymentOrderAsync<TEntity>(TEntity entity, Func<TEntity, Task<bool>> processAction)
-        //{
-        
-        //var _httpClient = _httpClientFactory.CreateClient();
-        //    var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
-        //    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-        //    var paymentOrderRequest = $"{_apiSettings.base_api_url}/v1/payment-order/new-order";
+        public async Task<ActionResult<Transaction>> GetLatestTransaction()
+        {
+            // Try to get cached latest transaction first
+            var cachedLatestTransaction = await _distributedCache.GetStringAsync("cached_latest_transaction");
 
-        //    try
-        //    {
-        //        ZamupayRequest orderRequest = new ZamupayRequest();
+            if (!string.IsNullOrEmpty(cachedLatestTransaction))
+            {
+                var latestTransaction = JsonConvert.DeserializeObject<Transaction>(cachedLatestTransaction);
+                return latestTransaction;
+            }
+            else
+            {
+                // If not in cache, retrieve latest transaction data from the database
+                var latestTransaction = await _context.Transaction.OrderByDescending(t => t.Date).FirstOrDefaultAsync();
 
-        //        RecipientItem recipientItem = new RecipientItem();
-        //        RemitterItem remitterItem = new RemitterItem();
-        //        TransactionItem transactionItem = new TransactionItem();
+               
 
-        //        remitterItem.name = entity.Sender.Name;
-        //        remitterItem.idNumber = transaction.Sender.ID_NO;
-        //        remitterItem.phoneNumber = transaction.Sender.Phone_No;
-        //        remitterItem.address = "nyeri";
-        //        remitterItem.sourceOfFunds = transaction.Sender.Src_Account;
-        //        remitterItem.ccy = 404;
-        //        remitterItem.country = "Kenya";
-        //        remitterItem.nationality = "Kenyan";
-        //        remitterItem.principalActivity = "Business";
-        //        remitterItem.financialInstitution = "Bank";
-        //        remitterItem.dateOfBirth = "01/01/2002";
+                // Store latest transaction data in cache for future use
+                await _distributedCache.SetStringAsync("CachedTransactions", JsonConvert.SerializeObject(latestTransaction));
 
-        //        recipientItem.mccmnc = "63902";
-        //        recipientItem.ccy = 404;
-        //        recipientItem.country = "KE";
-        //        recipientItem.name = transaction.Receiver.Name;
-        //        recipientItem.idNumber = transaction.Receiver.ID_NO;
-        //        recipientItem.primaryAccountNumber = transaction.Receiver.Phone_No;
-        //        recipientItem.financialInstitution = "Mpesa";
-        //        recipientItem.idType = "National ID";
-        //        recipientItem.purpose = "TEST";
+                return latestTransaction;
+            }
+        }
 
-        //        transactionItem.amount = transaction.Amount;
-        //        transactionItem.ChannelType = transaction.ChannelType;
-        //        transactionItem.routeId = transaction.RouteId;
-        //        transactionItem.reference = transaction.reference;
-        //        transactionItem.systemTraceAuditNumber = transaction.systemTraceAuditNumber;
+         public async Task<bool> ProcessPaymentOrderAsync(Transaction transaction)
+        {
+            var _httpClient = _httpClientFactory.CreateClient();
+            var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var paymentOrderRequest = $"{_apiSettings.base_api_url}/v1/payment-order/new-order";
 
-        //        PaymentOrderLine paymentOrderLines = new PaymentOrderLine();
+            try
+            {
+                ZamupayRequest orderRequest = new ZamupayRequest();
 
-        //        paymentOrderLines.remitter = remitterItem;
-        //        paymentOrderLines.recipient = recipientItem;
-        //        paymentOrderLines.transaction = transactionItem;
+                RecipientItem recipientItem = new RecipientItem();
+                RemitterItem remitterItem = new RemitterItem();
+                TransactionItem transactionItem = new TransactionItem();
 
-        //        orderRequest.paymentOrderLines = new List<PaymentOrderLine>
-        //         {
-        //            paymentOrderLines
-        //        };
+                remitterItem.name = transaction.Sender.Name;
+                remitterItem.idNumber = transaction.Sender.ID_NO;
+                remitterItem.phoneNumber = transaction.Sender.Phone_No;
+                remitterItem.address = "nyeri";
+                remitterItem.sourceOfFunds = transaction.Sender.Src_Account;
+                remitterItem.ccy = 404;
+                remitterItem.country = "Kenya";
+                remitterItem.nationality = "Kenyan";
+                remitterItem.principalActivity = "Business";
+                remitterItem.financialInstitution = "Bank";
+                remitterItem.dateOfBirth = "01/01/2002";
 
-        //        orderRequest.paymentNotes = "Transactions";
+                recipientItem.mccmnc = "63902";
+                recipientItem.ccy = 404;
+                recipientItem.country = "KE";
+                recipientItem.name = transaction.Receiver.Name;
+                recipientItem.idNumber = transaction.Receiver.ID_NO;
+                recipientItem.primaryAccountNumber = transaction.Receiver.Phone_No;
+                recipientItem.financialInstitution = "Mpesa";
+                recipientItem.idType = "National ID";
+                recipientItem.purpose = "TEST";
+                recipientItem.institutionIdentifier = "phone";
 
-        //        orderRequest.originatorConversationId = transaction.originatorConversationId;
+                transactionItem.amount = transaction.Amount;
+                transactionItem.ChannelType = transaction.ChannelType;
+                transactionItem.routeId = transaction.RouteId;
+                transactionItem.reference = transaction.reference;
+                transactionItem.systemTraceAuditNumber = transaction.systemTraceAuditNumber;
 
+                PaymentOrderLine paymentOrderLines = new PaymentOrderLine();
 
-        //        var jsonPayload = JsonConvert.SerializeObject(orderRequest);
-        //        var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                paymentOrderLines.remitter = remitterItem;
+                paymentOrderLines.recipient = recipientItem;
+                paymentOrderLines.transaction = transactionItem;
+
+                orderRequest.paymentOrderLines = new List<PaymentOrderLine>
+                 {
+                    paymentOrderLines
+                };
+
+                orderRequest.paymentNotes = "Transactions";
+
+                orderRequest.originatorConversationId = transaction.originatorConversationId;
 
 
-        //        var response = await _httpClient.PostAsync(paymentOrderRequest, httpContent);
-        //        //response.EnsureSuccessStatusCode(); 
+                var jsonPayload = JsonConvert.SerializeObject(orderRequest);
+                var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
 
-        //        var responseContent = await response.Content.ReadAsStringAsync();
+                var response = await _httpClient.PostAsync(paymentOrderRequest, httpContent);
+                //response.EnsureSuccessStatusCode(); 
 
 
-        //        var paymentResponse = JsonConvert.DeserializeObject<PaymentRequestResponse>(responseContent);
-
-        //        if (paymentResponse.message.originatorConversationId != transaction.originatorConversationId)
-        //        {
-        //            throw new InvalidOperationException("Received response with unexpected TransactionId.");
-        //        }
+                var responseContent = await response.Content.ReadAsStringAsync();
 
 
-        //        var existingTransaction = transaction;
+                var paymentResponse = JsonConvert.DeserializeObject<PaymentRequestResponse>(responseContent);
 
-        //        if (existingTransaction == null)
-        //        {
-        //            throw new InvalidOperationException("Transaction not found in the database.");
-        //        }
-
-        //        var success = await UpdateEntityPropertiesAsync(transaction, entity =>
-        //        {
+                if (paymentResponse.message.originatorConversationId != transaction.originatorConversationId)
+                {
+                    throw new InvalidOperationException("Received response with unexpected TransactionId.");
+                }
 
 
-        //            entity.systemConversationId = paymentResponse.message.systemConversationId;
-        //            entity.originatorConversationId = paymentResponse.message.originatorConversationId;
+                var existingTransaction = transaction;
 
-        //        });
-        //        // return updateResult; // Return the result of the update operation
-        //        return success;
-        //    }
-        //    catch (Exception ex) { }
+                if (existingTransaction == null)
+                {
+                    throw new InvalidOperationException("Transaction not found in the database.");
+                }
 
-        //    return false;
+                var updateResult = await UpdateEntityPropertiesAsync(transaction, async entity =>
+                {
 
 
-        //}
+                    entity.systemConversationId = paymentResponse.message.systemConversationId;
+                    entity.originatorConversationId = paymentResponse.message.originatorConversationId;
+                    entity.IsPosted = true;
+                    return true;
+                });
 
-     
+                if (updateResult)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+        }
+
 
     }
 }

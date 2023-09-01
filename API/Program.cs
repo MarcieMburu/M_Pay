@@ -1,24 +1,20 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using Microsoft.Extensions.Configuration;
-
-
-using Microsoft.AspNetCore.Identity;
-using System.Net;
-using System.Configuration;
 using API.Attributes;
 using PaymentGateway.Data;
 using PaymentGateway.Helpers;
-using PaymentGateway.Controllers;
 using PaymentGateway.Models;
 using PaymentGateway.DTOs;
 using Microsoft.Extensions.Options;
-
+using MassTransit;
 using API;
+using MassTransit.Clients;
+using RabbitMQ.Client;
+using System.Text;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,12 +26,10 @@ builder.Services.AddDbContext<PaymentGatewayContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IRepository<Transaction>, Repository<Transaction>>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped< ZamupayService>();
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 builder.Services.AddScoped(sp => sp.GetRequiredService<IOptions<ApiSettings>>().Value);
 
-//builder.Services.AddHostedService<MessageService>();
 
 
 builder.Services.AddVersionedApiExplorer(c =>
@@ -56,21 +50,33 @@ builder.Services.AddAuthentication("BasicAuthentication").
             AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-//builder.Services.AddMassTransit(x =>
-//{
-//    x.AddConsumer<Customer>(); 
 
-//    x.UsingRabbitMq((context, cfg) =>
-//    {
-//        cfg.Host(new Uri("rabbitmq://localhost" ), h => {
-//            h.Username("guest");
-//            h.Password("guest");
-//            });
-//        cfg.ConfigureEndpoints(context); 
-//    });
-//});
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-//builder.Services.AddMassTransitHostedService(); 
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+builder.Services.AddLogging();
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetSection("RedisConnection").GetValue<string>("Configuration");
+    options.InstanceName = builder.Configuration.GetSection("InstanceName").GetValue<string>("Configuration");
+});
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+        cfg.ConfigureEndpoints(context);
+
+    });
+    x.AddRequestClient<TransactionViewModel>();
+});
+
+//builder.Services.AddHostedService<ApiBus>();
 
 
 

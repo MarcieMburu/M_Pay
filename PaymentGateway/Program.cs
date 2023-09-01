@@ -1,15 +1,9 @@
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
-using PaymentGateway.Controllers;
 using PaymentGateway.Data;
 using PaymentGateway.Helpers;
-using System.Web.Mvc;
-using System.IO;
-using Microsoft.Extensions.Configuration;
-using AutoMapper;
 using PaymentGateway.Models;
 using PaymentGateway.DTOs;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PaymentGatewayContext>(options =>
@@ -24,9 +18,31 @@ builder.Services.AddHttpClient();
 
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 builder.Services.AddScoped<IRepository<Transaction>, Repository<Transaction>>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
+builder.Services.AddLogging();
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration =builder.Configuration.GetSection("RedisConnection").GetValue<string>("Configuration");
+    options.InstanceName = builder.Configuration.GetSection("InstanceName").GetValue<string>("Configuration");
+});
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+        cfg.ConfigureEndpoints(context);
+
+    });
+    x.AddRequestClient<TransactionViewModel>();
+});
 
 
 var app = builder.Build();

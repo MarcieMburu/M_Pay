@@ -7,6 +7,14 @@
 
     ViewBag.Title = "Data Table";
 }
+<style>
+    .custom-post-btn {
+        background-color: red;
+        color: white; /* Set the text color to contrast with the background */
+    }
+
+</style>
+
 
 <script>
 $(document).ready(function(){
@@ -59,6 +67,22 @@ $(document).ready(function(){
     <script>
        
         $(document).ready(function () {
+            console.log('Document is ready.');
+            var postedTransactionIds = Object.keys(localStorage).filter(function (key) {
+                return key.startsWith('postedTransactionId_');
+            });
+
+
+            console.log('Posted transaction IDs:', postedTransactionIds);
+            // Loop through posted transaction IDs and update button appearance
+            postedTransactionIds.forEach(function (key) {
+                var id = key.replace('postedTransactionId_', '');
+                var postButton = $('[data-transaction-id="' + id + '"]');
+                postButton.prop('disabled', true);
+                postButton.removeClass('btn-primary').addClass('custom-post-btn');
+                postButton.text('Posted');
+            });
+
            
             $('#dataTable').DataTable({
                 "ajax": {
@@ -89,7 +113,7 @@ $(document).ready(function(){
                     { "targets": 17, "data": "transactionStatus", "title": "Status ID" },
                     { "targets": 18, "data": "createdBy", "title": "Created By" },
                     { "targets": 19, "data": "isPosted", "title": "Posted" },
-                    { "targets": 10, "data": "date", "title": "Post" },
+                    { "targets": 20, "data": "date", "title": "Post" },
                     { "targets": 21, "data": "date", "title": "View" }
 
                     
@@ -240,22 +264,28 @@ $(document).ready(function(){
 
                            
                             postButton.prop('disabled', true);
-                            postButton.removeClass('btn-primary').addClass('btn-secondary');
+                            postButton.removeClass('btn-primary').addClass('custom-post-btn');
                             postButton.text('Post');
-                            postButton.css('background-color', 'grey');
+                           // postButton.css('background-color', 'grey');
                             console.log('Button class and text changed.');
 
                            
                             alert('Transaction already posted.');
+
+                            localStorage.setItem('postedTransactionId_' + id, 'posted');
+
                         } else if (response.isPosted) {
                           
 
                             postButton.prop('disabled', true);
-                            postButton.removeClass('btn-primary').addClass('btn-secondary');
-                            postButton.text('Post');
-                            postButton.css('background-color', 'yellow');
+                            postButton.removeClass('btn-primary').addClass('custom-post-btn');
+                            postButton.text('Posted');
+                          //  postButton.css('background-color', 'grey');
                             console.log('Button class and text changed.');
                             alert('Transaction posted successfully!');
+
+                            localStorage.setItem('postedTransactionId_' + id, 'posted');
+
                         } else {
                             alert('Failed to post the transaction. Please try again.');
                         }

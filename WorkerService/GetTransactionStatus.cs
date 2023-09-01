@@ -64,10 +64,10 @@ namespace WorkerService
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var _httpClient = _httpClientFactory.CreateClient();
-            var accessToken = await GetBearerToken(_apiSettings.client_id,_apiSettings.client_secret);
+            var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-         
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Transaction status update worker is running...");
@@ -78,7 +78,7 @@ namespace WorkerService
                     var httpClient = _httpClientFactory.CreateClient();
 
                     var orderLines = scopedContext.Transaction
-                 .Where(t => !t.IsStatusUpdated) 
+                 .Where(t => !t.IsStatusUpdated)
                  .ToList();
 
 
@@ -89,59 +89,67 @@ namespace WorkerService
                             _logger.LogInformation($"Transaction with ID {transaction.Id} has not been posted yet. Skipping status check.");
                             continue;
                         }
-
-                        var apiUrl = $"{_apiSettings.base_api_url}/v1/payment-order/check-status?Id={transaction.originatorConversationId}&IdType=OriginatorConversationId";
-
-                        _logger.LogInformation($"Request URL: {apiUrl}");
-
-
-                        var response = await _httpClient.GetAsync(apiUrl);
-                        var responseString = await response.Content.ReadAsStringAsync();
-
-                        if (response.IsSuccessStatusCode)
+                        try
                         {
-                            var responseContent = await response.Content.ReadAsStringAsync();
 
-                            var statusResponse = JsonConvert.DeserializeObject<PaymentDetails>(responseContent);
+                            var apiUrl = "https://sandboxapi.zamupay.com/v1/payment-order/check-status?Id={originatorConversationId}&IdType=OriginatorConversationId";
 
-                            var txn = scope.ServiceProvider.GetRequiredService<IRepository<Transaction>>();
-
+                            _logger.LogInformation($"Request URL: {apiUrl}");
 
 
-                          
-                            if (statusResponse.originatorConversationId != transaction.originatorConversationId)
+
+                            var response = await _httpClient.GetAsync(apiUrl);
+                            var responseString = await response.Content.ReadAsStringAsync();
+
+                            if (response.IsSuccessStatusCode)
                             {
-                                throw new InvalidOperationException("Received response with unexpected TransactionId.");
+                                var responseContent = await response.Content.ReadAsStringAsync();
+
+                                var statusResponse = JsonConvert.DeserializeObject<PaymentDetails>(responseContent);
+
+                                var txn = scope.ServiceProvider.GetRequiredService<IRepository<Transaction>>();
+
+
+
+
+                                if (statusResponse.originatorConversationId != transaction.originatorConversationId)
+                                {
+                                    throw new InvalidOperationException("Received response with unexpected TransactionId.");
+                                }
+
+                                var updateResult = await txn.UpdateEntityPropertiesAsync(transaction, async entity =>
+                                {
+
+
+                                    entity.transactionStatus = statusResponse.orderLines[0].transactionOutcome.transactionStatus;
+                                    entity.transactionStatusDescription = statusResponse.orderLines[0].transactionOutcome.transactionStatusDescription;
+                                    entity.transactionStatusDescription = statusResponse.orderLines[0].transactionOutcome.resultCode;
+                                    entity.transactionStatusDescription = statusResponse.orderLines[0].transactionOutcome.resultCodeDescription;
+                                    entity.IsStatusUpdated = true;
+                                    return true;
+                                });
+
+
+                                await scopedContext.SaveChangesAsync();
+                                _logger.LogInformation($"Transaction status updated for ID: {transaction.Id}");
                             }
-
-                            var updateResult = await txn.UpdateEntityPropertiesAsync(transaction, async entity =>
+                            else
                             {
-
-
-                                entity.transactionStatus = statusResponse.orderLines[0].transactionOutcome.transactionStatus;
-                                entity.transactionStatusDescription = statusResponse.orderLines[0].transactionOutcome.transactionStatusDescription;
-                                entity.transactionStatusDescription = statusResponse.orderLines[0].transactionOutcome.resultCode;
-                                entity.transactionStatusDescription = statusResponse.orderLines[0].transactionOutcome.resultCodeDescription;
-                                entity.IsStatusUpdated = true;
-                                return true;
-                            });
-
-
-                           await scopedContext.SaveChangesAsync();
-                            _logger.LogInformation($"Transaction status updated for ID: {transaction.Id}");
+                                _logger.LogError($"Failed to fetch status for transaction ID: {transaction.Id} ");
+                            }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            _logger.LogError($"Failed to fetch status for transaction ID: {transaction.Id}");
+                            _logger.LogError($"An error occurred while processing transaction ID {transaction.Id}: {ex.Message}");
+
                         }
                     }
+                    await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken);
                 }
-                await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken);
-                }
-            _logger.LogInformation("Transaction status updater worker stopped.");
+                _logger.LogInformation("Transaction status updater worker stopped.");
 
+            }
         }
-
 
 
 

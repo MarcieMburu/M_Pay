@@ -11,7 +11,6 @@ namespace API.Attributes
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        private readonly IUserService _userService;
        private readonly PaymentGatewayContext _context;
         private readonly IConfiguration _configuration;
         public BasicAuthenticationHandler(
@@ -20,12 +19,10 @@ namespace API.Attributes
             UrlEncoder encoder,
             ISystemClock clock,
             PaymentGatewayContext context,
-            IUserService userService,
             IConfiguration configuration)
             : base(options, logger, encoder, clock)
         {
             _context = context;
-            _userService = userService;
             _configuration = configuration;
         }
 
