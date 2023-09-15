@@ -34,9 +34,6 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\PaymentGateway.csproj": {
-                "projectPath": "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\PaymentGateway.csproj"
-              },
               "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\Shared\\Shared.csproj": {
                 "projectPath": "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\Shared\\Shared.csproj"
               }
@@ -443,11 +440,7 @@
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
-            "projectReferences": {
-              "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\PaymentGateway.csproj": {
-                "projectPath": "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\PaymentGateway.csproj"
-              }
-            }
+            "projectReferences": {}
           }
         },
         "warningProperties": {
@@ -459,6 +452,32 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
+            "Microsoft.AspNet.Mvc": {
+              "target": "Package",
+              "version": "[5.2.9, )"
+            },
+            "Microsoft.AspNetCore.Mvc.Core": {
+              "target": "Package",
+              "version": "[2.2.5, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.9, )"
+            },
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[3.1.3, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

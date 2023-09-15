@@ -4,6 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c9cddb2e-6ddb-4000-9292-afdc0016d66a</UserSecretsId>
+    <BaseOutputPath>C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

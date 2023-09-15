@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using PaymentGateway.Data;
+using Shared;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
@@ -40,8 +40,7 @@ namespace API.Attributes
                 var username = credentials[0];
                 var password = credentials[1];
 
-                // User user = _context.User.Where(user => user.Username == username && user.Password == password).FirstOrDefault();
-                // var user = await _userService.AuthenticateAsync(username, password);
+              
                 var expectedUsername = _configuration["ApiCredentials:username"];
                 var expectedPassword = _configuration["ApiCredentials:password"];
 

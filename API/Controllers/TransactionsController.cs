@@ -1,19 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PaymentGateway.Data;
-using PaymentGateway.Models;
 using AutoMapper;
 
 using Microsoft.Extensions.Options;
-using PaymentGateway.Helpers;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
-using PaymentGateway.DTOs;
 using Microsoft.Extensions.Caching.Distributed;
 using MassTransit;
-
+using Shared;
 
 namespace API.Controllers
 {
@@ -133,7 +129,14 @@ namespace API.Controllers
                         {
                             Amount = transactionViewModel.Amount,
                             SenderName = transactionViewModel.SenderName,
+                            SenderID_NO = transactionViewModel.SenderID_NO,
+                            SenderPhone_No = transactionViewModel.SenderPhone_No,
+                            SenderSrc_Account = transactionViewModel.SenderSrc_Account,
                             ReceiverName = transactionViewModel.ReceiverName,
+                            ReceiverPhone_No = transactionViewModel.ReceiverPhone_No,
+                            ReceiverDst_Account = transactionViewModel.ReceiverDst_Account,
+                            ReceiverID_NO = transactionViewModel.ReceiverID_NO,
+
                             Date = transactionViewModel.Date
 
 
@@ -171,61 +174,61 @@ namespace API.Controllers
             return BadRequest();
         }
 
-        [HttpPost("CancelTransaction")]
-        public async Task<IActionResult> CancelTransaction(string originatorConversationId)
-        {
-            var _httpClient = _httpClientFactory.CreateClient();
-              var accessToken = await _repository.GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
-               _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var cancelPaymentOrderRequest = "https://sandboxapi.zamupay.com/v1/payment-order/reject-order?OriginatorConversationId={originatorConversationId}";
-            try
-            {
+        //[HttpPost("CancelTransaction")]
+        //public async Task<IActionResult> CancelTransaction(string originatorConversationId)
+        //{
+        //    var _httpClient = _httpClientFactory.CreateClient();
+        //      var accessToken = await _repository.GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
+        //       _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        //    var cancelPaymentOrderRequest = "https://sandboxapi.zamupay.com/v1/payment-order/reject-order?OriginatorConversationId={originatorConversationId}";
+        //    try
+        //    {
                 
-                var paymentOrderlines = new List<PaymentOrderline>
-                {
-                   new PaymentOrderline
-            {
-                originatorConversationId = originatorConversationId
-            }
-                };
+        //        var paymentOrderlines = new List<PaymentOrderline>
+        //        {
+        //           new PaymentOrderline
+        //    {
+        //        originatorConversationId = originatorConversationId
+        //    }
+        //        };
 
-                var cancellationRequest = new TransactionCancellationRequest
-                {
-                    paymentOrderlines = paymentOrderlines
-                };
+        //        var cancellationRequest = new TransactionCancellationRequest
+        //        {
+        //            paymentOrderlines = paymentOrderlines
+        //        };
 
                
-                var jsonPayload = JsonConvert.SerializeObject(cancellationRequest);
+        //        var jsonPayload = JsonConvert.SerializeObject(cancellationRequest);
 
-                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+        //        var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PostAsync(cancelPaymentOrderRequest, content);
+        //        var response = await _httpClient.PostAsync(cancelPaymentOrderRequest, content);
 
-                var responseContent = await response.Content.ReadAsStringAsync();
+        //        var responseContent = await response.Content.ReadAsStringAsync();
 
-                if (response.IsSuccessStatusCode)
-                {
+        //        if (response.IsSuccessStatusCode)
+        //        {
                     
-                    var transaction = await _context.Transaction.FirstOrDefaultAsync(t => t.originatorConversationId == originatorConversationId);
+        //            var transaction = await _context.Transaction.FirstOrDefaultAsync(t => t.originatorConversationId == originatorConversationId);
 
-                    if (transaction != null)
-                    {
-                        //transaction.IsCancelled = true;
-                        await _context.SaveChangesAsync();
-                    }
+        //            if (transaction != null)
+        //            {
+        //                //transaction.IsCancelled = true;
+        //                await _context.SaveChangesAsync();
+        //            }
 
-                    return Ok(new { Message = "Transaction cancelled successfully." });
-                }
-                else
-                {
-                    return BadRequest(new { Message = "Failed to cancel the transaction." });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while processing the request." });
-            }
-        }
+        //            return Ok(new { Message = "Transaction cancelled successfully." });
+        //        }
+        //        else
+        //        {
+        //            return BadRequest(new { Message = "Failed to cancel the transaction." });
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An error occurred while processing the request." });
+        //    }
+        //}
 
 
 

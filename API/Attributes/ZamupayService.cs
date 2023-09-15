@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using PaymentGateway.DTOs;
-using PaymentGateway.Models;
+using Shared;
 using System.Text;
 
 namespace API.Attributes

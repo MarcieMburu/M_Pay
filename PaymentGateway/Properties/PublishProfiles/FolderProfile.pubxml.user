@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>D:\web_client</_PublishTargetUrl>
+    <History>True|2023-09-01T10:01:19.7300583Z;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <EFMigrations Include="PaymentGateway.Data.PaymentGatewayContext">
+      <Value>4853c739-53ac-4862-a68f-fbc4fa8b3956</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

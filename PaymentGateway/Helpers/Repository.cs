@@ -145,7 +145,9 @@ namespace PaymentGateway.Helpers
             }
         }
 
-         public async Task<bool> ProcessPaymentOrderAsync(Transaction transaction)
+
+
+        public async Task<bool> ProcessPaymentOrderAsync<TEntity>(Transaction transaction, Func<TEntity, ZamupayRequest> mapToZamupayRequest)
         {
             var _httpClient = _httpClientFactory.CreateClient();
             var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
@@ -154,67 +156,14 @@ namespace PaymentGateway.Helpers
 
             try
             {
-                ZamupayRequest orderRequest = new ZamupayRequest();
-
-                RecipientItem recipientItem = new RecipientItem();
-                RemitterItem remitterItem = new RemitterItem();
-                TransactionItem transactionItem = new TransactionItem();
-
-                remitterItem.name = transaction.Sender.Name;
-                remitterItem.idNumber = transaction.Sender.ID_NO;
-                remitterItem.phoneNumber = transaction.Sender.Phone_No;
-                remitterItem.address = "nyeri";
-                remitterItem.sourceOfFunds = transaction.Sender.Src_Account;
-                remitterItem.ccy = 404;
-                remitterItem.country = "Kenya";
-                remitterItem.nationality = "Kenyan";
-                remitterItem.principalActivity = "Business";
-                remitterItem.financialInstitution = "Bank";
-                remitterItem.dateOfBirth = "01/01/2002";
-
-                recipientItem.mccmnc = "63902";
-                recipientItem.ccy = 404;
-                recipientItem.country = "KE";
-                recipientItem.name = transaction.Receiver.Name;
-                recipientItem.idNumber = transaction.Receiver.ID_NO;
-                recipientItem.primaryAccountNumber = transaction.Receiver.Phone_No;
-                recipientItem.financialInstitution = "Mpesa";
-                recipientItem.idType = "National ID";
-                recipientItem.purpose = "TEST";
-                recipientItem.institutionIdentifier = "phone";
-
-                transactionItem.amount = transaction.Amount;
-                transactionItem.ChannelType = transaction.ChannelType;
-                transactionItem.routeId = transaction.RouteId;
-                transactionItem.reference = transaction.reference;
-                transactionItem.systemTraceAuditNumber = transaction.systemTraceAuditNumber;
-
-                PaymentOrderLine paymentOrderLines = new PaymentOrderLine();
-
-                paymentOrderLines.remitter = remitterItem;
-                paymentOrderLines.recipient = recipientItem;
-                paymentOrderLines.transaction = transactionItem;
-
-                orderRequest.paymentOrderLines = new List<PaymentOrderLine>
-                 {
-                    paymentOrderLines
-                };
-
-                orderRequest.paymentNotes = "Transactions";
-
-                orderRequest.originatorConversationId = transaction.originatorConversationId;
-
+                var orderRequest = MapTransactionToZamupayRequest(transaction);
 
                 var jsonPayload = JsonConvert.SerializeObject(orderRequest);
                 var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-
                 var response = await _httpClient.PostAsync(paymentOrderRequest, httpContent);
-                //response.EnsureSuccessStatusCode(); 
-
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-
 
                 var paymentResponse = JsonConvert.DeserializeObject<PaymentRequestResponse>(responseContent);
 
@@ -223,7 +172,6 @@ namespace PaymentGateway.Helpers
                     throw new InvalidOperationException("Received response with unexpected TransactionId.");
                 }
 
-
                 var existingTransaction = transaction;
 
                 if (existingTransaction == null)
@@ -231,32 +179,81 @@ namespace PaymentGateway.Helpers
                     throw new InvalidOperationException("Transaction not found in the database.");
                 }
 
-                var updateResult = await UpdateEntityPropertiesAsync(transaction, async entity =>
-                {
+                existingTransaction.systemConversationId = paymentResponse.message.systemConversationId;
+                existingTransaction.originatorConversationId = paymentResponse.message.originatorConversationId;
+                existingTransaction.IsPosted = true;
 
+                // Save changes to the database
+                // Assuming you have a reference to your database context (_context)
+                _context.Update(existingTransaction);
+                await _context.SaveChangesAsync();
 
-                    entity.systemConversationId = paymentResponse.message.systemConversationId;
-                    entity.originatorConversationId = paymentResponse.message.originatorConversationId;
-                    entity.IsPosted = true;
-                    return true;
-                });
-
-                if (updateResult)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
             }
             catch (Exception ex)
             {
-
+                // Handle exceptions
                 return false;
             }
         }
 
+
+        public  ZamupayRequest MapTransactionToZamupayRequest(Transaction transaction)
+        {
+            var orderRequest = new ZamupayRequest();
+
+            var remitterItem = new RemitterItem
+            {
+                name = transaction.Sender.Name,
+                idNumber = transaction.Sender.ID_NO,
+                phoneNumber = transaction.Sender.Phone_No,
+                address = "nyeri",
+                sourceOfFunds = transaction.Sender.Src_Account,
+                ccy = 404,
+                country = "Kenya",
+                nationality = "Kenyan",
+                principalActivity = "Business",
+                financialInstitution = "Bank",
+                dateOfBirth = "01/01/2002"
+            };
+
+            var recipientItem = new RecipientItem
+            {
+                mccmnc = "63902",
+                ccy = 404,
+                country = "KE",
+                name = transaction.Receiver.Name,
+                idNumber = transaction.Receiver.ID_NO,
+                primaryAccountNumber = transaction.Receiver.Phone_No,
+                financialInstitution = "Mpesa",
+                idType = "National ID",
+                purpose = "TEST",
+                institutionIdentifier = "phone"
+            };
+            var transactionItem = new TransactionItem
+            {
+                amount = transaction.Amount,
+                ChannelType = transaction.ChannelType,
+                routeId = transaction.RouteId,
+                reference = transaction.reference,
+                systemTraceAuditNumber = transaction.systemTraceAuditNumber
+            };
+            var paymentOrderLines = new PaymentOrderLine
+            {
+                remitter = remitterItem,
+                recipient = recipientItem,
+                transaction = transactionItem
+            };
+            orderRequest.paymentOrderLines = new List<PaymentOrderLine>
+             {
+               paymentOrderLines
+              };
+
+            orderRequest.paymentNotes = "Transactions";
+            orderRequest.originatorConversationId = transaction.originatorConversationId;
+
+            return orderRequest;
+        }
 
     }
 }

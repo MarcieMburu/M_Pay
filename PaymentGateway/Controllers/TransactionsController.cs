@@ -71,7 +71,7 @@ namespace PaymentGateway.Controllers
             return View();
         }
 
-     
+
         public async Task<string> GetBearerToken(string client_id, string client_secret)
         {
 
@@ -102,6 +102,7 @@ namespace PaymentGateway.Controllers
         }
         public async Task<TransactionRoute> GetTransactionRouteAsync()
         {
+
             var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
             var transactionRouteEndpoint = $"{_apiSettings.base_api_url}/v1/transaction-routes/assigned-routes";
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -114,6 +115,7 @@ namespace PaymentGateway.Controllers
             return transactionRoute;
         }
 
+        
         public async Task<JsonResult> GetTransactionRoute()
         {
             try
@@ -234,6 +236,101 @@ namespace PaymentGateway.Controllers
             return Json(transactions);
         }
 
+        //       public async Task<IActionResult> ProcessPaymentOrderAsync([FromBody] Transaction transaction)
+        //       {
+        //           try
+        //           {
+
+        //               var accessToken = await _repository.GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
+
+
+        //               bool result = await _repository.ProcessPaymentOrderAsync<Transaction>(
+        //    transaction,
+        //    entity =>
+        //    {
+
+        //        var zamupayRequest = MapTransactionToZamupayRequest(transaction);
+        //        return zamupayRequest;
+        //    }
+        //);
+
+
+        //               if (result)
+        //               {
+        //                   return Ok("Payment order processed successfully.");
+        //               }
+        //               else
+        //               {
+        //                   return BadRequest("Payment order processing failed.");
+        //               }
+        //           }
+        //           catch (Exception ex)
+        //           {
+        //               // Handle exceptions here
+        //               return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing the payment order.");
+        //           }
+        //       }
+
+        //       public async ZamupayRequest MapTransactionToZamupayRequest(Transaction transaction)
+        //       {
+
+        //           await _repository.MapTransactionToZamupayRequest(transaction);
+        //               }
+
+        //       [HttpPost]
+        //       public async Task<ActionResult> PaymentOrderRequest(int id, string originatorConversationId)
+        //       {
+        //           var transaction = await _context.Transaction.FindAsync(id);
+
+        //           if (transaction == null)
+        //           {
+        //               return NotFound();
+        //           }
+
+        //           if (transaction.IsPosted)
+        //           {
+        //               return Ok(new { isTransactionPosted = true });
+        //           }
+        //           else
+        //           {
+        //               var isPaymentOrderRequestSuccessful = await _repository.ProcessPaymentOrderAsync<Transaction>(
+        //    transaction,
+        //    entity =>
+        //    {
+
+        //        var zamupayRequest = MapTransactionToZamupayRequest(entity);
+        //        return zamupayRequest;
+        //    }
+        //);
+
+
+        //               if (isPaymentOrderRequestSuccessful)
+        //               {
+        //                   var updateResult = await _repository.UpdateEntityPropertiesAsync(
+        //                transaction,
+        //               async entity =>
+        //                {
+        //                    entity.IsPosted = true;
+        //                    return true;
+        //                }
+        //            );
+
+        //                   if (updateResult)
+        //                   {
+        //                       return Ok(new { isPosted = true });
+        //                   }
+        //                   else
+        //                   {
+        //                       return Ok(new { Message = "ERROR" });
+        //                   }
+        //               }
+        //               else
+        //               {
+        //                   return Ok(new { Message = "ERROR" });
+        //               }
+        //           }
+        //       }
+
 
         [HttpPost]
         public async Task<ActionResult> PaymentOrderRequest(int id, string originatorConversationId)
@@ -258,10 +355,10 @@ namespace PaymentGateway.Controllers
                     var updateResult = await _repository.UpdateEntityPropertiesAsync(
                  transaction,
                 async entity =>
-                 {
-                     entity.IsPosted = true;
-                     return true;
-                 }
+                {
+                    entity.IsPosted = true;
+                    return true;
+                }
              );
 
                     if (updateResult)
@@ -279,8 +376,6 @@ namespace PaymentGateway.Controllers
                 }
             }
         }
-
-
         [HttpGet]//get transaction and sends to api
         public async Task<bool> ProcessPaymentOrderAsync(Transaction transaction)
         {
@@ -419,7 +514,7 @@ namespace PaymentGateway.Controllers
         {
             try
             {
-                var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
+                var accessToken = await _repository.GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
                // var isPaymentDetailsSuccessful = await UpdateResultCodeByStatusId(originatorConversationId);
@@ -467,7 +562,7 @@ namespace PaymentGateway.Controllers
         {
             try
             {
-                var accessToken = await GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
+                var accessToken = await _repository.GetBearerToken(_apiSettings.client_id, _apiSettings.client_secret);
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
                 var apiUrl = $"{_apiSettings.base_api_url}/v1/payment-order/check-status?IdType=OriginatorConversationId&Id={originatorConversationId}";

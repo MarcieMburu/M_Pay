@@ -1,9 +1,11 @@
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using PaymentGateway.Data;
+using PaymentGateway.DTOs;
 using PaymentGateway.Helpers;
 using PaymentGateway.Models;
-using PaymentGateway.DTOs;
-using MassTransit;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PaymentGatewayContext>(options =>

@@ -1,7 +1,7 @@
 ﻿
 
 namespace Shared
-{ 
+{
     public class Receiver : ValueObject
 
     {

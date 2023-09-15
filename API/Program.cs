@@ -4,10 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using API.Attributes;
-using PaymentGateway.Data;
-using PaymentGateway.Helpers;
-using PaymentGateway.Models;
-using PaymentGateway.DTOs;
+
 using Microsoft.Extensions.Options;
 using MassTransit;
 using API;
@@ -15,6 +12,7 @@ using MassTransit.Clients;
 using RabbitMQ.Client;
 using System.Text;
 using StackExchange.Redis;
+using Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -152,14 +152,14 @@
             document.getElementById(currentPageId).style.display = 'none';
             document.getElementById(nextPageId).style.display = 'block';
             document.getElementById('currentPage').value = nextPageId;
-            updateProgressIndicator(nextPageId);
+            //updateProgressIndicator(nextPageId);
         }
 
         function previousPage(currentPageId, previousPageId) {
             document.getElementById(currentPageId).style.display = 'none';
             document.getElementById(previousPageId).style.display = 'block';
             document.getElementById('currentPage').value = previousPageId;
-            updateProgressIndicator(nextPageId);
+            //updateProgressIndicator(nextPageId);
         }
        
 
@@ -203,7 +203,7 @@
     <script>
         function LoadRoutes() {
             $.ajax({
-                url: '/transactions/gettransactionroute/',
+                url: '/transactions/GetTransactionRoute/',
                 type: 'POST',
                 error: function (xhr) {
                     console.log("An error occured: " + xhr.status + " " + xhr.statusText);

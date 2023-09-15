@@ -14,5 +14,10 @@
     <WebStackScaffolding_DbContextTypeFullName>PaymentGateway.Data.PaymentGatewayContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
     <WebStackScaffolding_IsViewGenerationSelected>True</WebStackScaffolding_IsViewGenerationSelected>
+    <ActiveDebugProfile>PaymentGateway</ActiveDebugProfile>
+    <NameOfLastUsedPublishProfile>C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

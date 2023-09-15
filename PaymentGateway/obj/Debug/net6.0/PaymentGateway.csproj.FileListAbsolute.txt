@@ -299,6 +299,9 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\In
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Intuit.Ipp.Utility.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Intuit.Ipp.WebHooksService.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\IppDotNetSdkForQuickBooksApiV3.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\MassTransit.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\MassTransit.Abstractions.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\MassTransit.RabbitMqTransport.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\MessagePack.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\MessagePack.Annotations.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Web.Mvc.dll
@@ -341,6 +344,8 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Mi
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Diagnostics.HealthChecks.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
@@ -393,6 +398,7 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Nu
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\NuGet.Protocol.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\NuGet.Versioning.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Pipelines.Sockets.Unofficial.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\RabbitMQ.Client.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Serilog.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Serilog.Enrichers.Environment.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Serilog.Enrichers.Thread.dll
@@ -412,6 +418,7 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Sy
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Composition.TypedParts.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Data.SqlClient.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Diagnostics.DiagnosticSource.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Drawing.Common.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Linq.Dynamic.Core.dll
@@ -424,6 +431,7 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Sy
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Security.Permissions.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Text.Encodings.Web.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Text.Json.dll
+C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Threading.Channels.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Windows.Extensions.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Xml.XPath.XmlDocument.dll
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\af\Humanizer.resources.dll
@@ -609,11 +617,3 @@ C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\re
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.pdb
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\PaymentGateway.genruntimeconfig.cache
 C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\obj\Debug\net6.0\ref\PaymentGateway.dll
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\MassTransit.dll
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\MassTransit.Abstractions.dll
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\MassTransit.RabbitMqTransport.dll
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Diagnostics.HealthChecks.dll
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\RabbitMQ.Client.dll
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Diagnostics.DiagnosticSource.dll
-C:\Users\Paul\source\repos\Pay\PaymentGateway\PaymentGateway\bin\Debug\net6.0\System.Threading.Channels.dll

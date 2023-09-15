@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Web.Mvc;
 
 namespace Shared
 {
-   public interface IRepository
+    public interface IRepository
+        <TEntity> where TEntity : class
     {
-        Task<bool> UpdateEntityPropertiesAsync<TEntity>(
-           TEntity existingEntity,
-           Action<TEntity> updateAction);
+        Task<string> GetBearerToken(string client_id, string client_secret);
+        Task<bool> ProcessPaymentOrderAsync<TEntity>(Transaction transaction, Func<TEntity, ZamupayRequest> mapToZamupayRequest);
+        ZamupayRequest MapTransactionToZamupayRequest(Transaction transaction);
+        Task<List<Transaction>> GetTransactionsAsync();
+       // Task<ActionResult<Transaction>> GetLatestTransaction();
+        Task<bool> UpdateEntityPropertiesAsync<TEntity>(TEntity entity, Func<TEntity, Task<bool>> updateAction);
+
     }
 }
