@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-WorkerService-06789a67-2b65-4754-b5e5-48cc15e55fe3</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="BackgroundTaskQueue.cs" />
+    <Compile Remove="IBackgroundTaskQueue.cs" />
+    <Compile Remove="PaymentConsumer.cs" />
+    <Compile Remove="QueuedHostedService.cs" />
+    <Compile Remove="RequestClient.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GreenPipes" Version="4.0.1" />
+    <PackageReference Include="MassTransit" Version="8.1.0" />
+    <!--<PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />-->
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\API\API.csproj" />
+    <ProjectReference Include="..\Consumers\Consumers.csproj" />
+    <ProjectReference Include="..\PaymentGateway\PaymentGateway.csproj" />
+  </ItemGroup>
+</Project>

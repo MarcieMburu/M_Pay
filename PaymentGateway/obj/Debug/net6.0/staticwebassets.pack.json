@@ -5,6 +5,14 @@
       "PackagePath": "staticwebassets\\PaymentGateway.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\wwwroot\\Images\\cc0f9786-d084-4cc7-9bfc-0c3f436533f9.jpg",
+      "PackagePath": "staticwebassets\\Images\\cc0f9786-d084-4cc7-9bfc-0c3f436533f9.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\wwwroot\\Images\\pexels-madison-inouye-1831234.jpg",
+      "PackagePath": "staticwebassets\\Images\\pexels-madison-inouye-1831234.jpg"
+    },
+    {
       "Id": "C:\\Users\\Paul\\source\\repos\\Pay\\PaymentGateway\\PaymentGateway\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
