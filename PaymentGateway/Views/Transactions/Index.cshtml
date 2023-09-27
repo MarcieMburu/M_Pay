@@ -4,3 +4,49 @@
     ViewData["Title"] = "Index";
 }
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thank You</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #D1E3F2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .thank-you-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+          
+        }
+
+        .thank-you-message {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .thank-you-icon {
+            font-size: 48px;
+            color: #36a832;
+        }
+    </style>
+</head>
+<body>
+    <div class="thank-you-container">
+        <div class="thank-you-message">
+            <div class="thank-you-icon">&#10003;</div>
+            <h1>Thank You!</h1>
+            <p>Your submission has been received.</p>
+            <a class="btn btn-success" style="margin-bottom:10px" href="/Transactions/Transaction"><i class="fa fa-plus"></i> Add New</a>
+
+        </div>
+    </div>
+</body>
+</html>

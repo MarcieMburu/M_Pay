@@ -7,6 +7,14 @@
 
     ViewBag.Title = "Data Table";
 }
+<style>
+    .custom-post-btn {
+        background-color: red;
+        color: white; /* Set the text color to contrast with the background */
+    }
+
+</style>
+
 
 <script>
 $(document).ready(function(){
@@ -54,10 +62,27 @@ $(document).ready(function(){
 </div>
 
 
+
 @section scripts {
     <script>
        
         $(document).ready(function () {
+            console.log('Document is ready.');
+            var postedTransactionIds = Object.keys(localStorage).filter(function (key) {
+                return key.startsWith('postedTransactionId_');
+            });
+
+
+            console.log('Posted transaction IDs:', postedTransactionIds);
+            // Loop through posted transaction IDs and update button appearance
+            postedTransactionIds.forEach(function (key) {
+                var id = key.replace('postedTransactionId_', '');
+                var postButton = $('[data-transaction-id="' + id + '"]');
+                postButton.prop('disabled', true);
+                postButton.removeClass('btn-primary').addClass('custom-post-btn');
+                postButton.text('Posted');
+            });
+
            
             $('#dataTable').DataTable({
                 "ajax": {
@@ -68,25 +93,29 @@ $(document).ready(function(){
                 },
                
                 "columns": [
-                    { data: 'id', title: 'ID' },
-                    { data: 'sender.name', title: 'Sender Name' },
-                    { data: 'sender.iD_NO', title: 'Sender ID NO' },
-                    { data: 'sender.phone_No', title: 'Sender Phone NO' },
-                    { data: 'sender.src_Account', title: 'Sender Source Account' },
-                    { data: 'receiver.name', title: 'Receiver Name' },
-                    { data: 'receiver.iD_NO', title: 'Receiver ID NO' },
-                    { data: 'receiver.phone_No', title: 'Receiver Phone NO' },
-                    { data: 'receiver.dst_Account', title: 'Receiver Destination Account' },
-                    { data: 'amount', title: 'Amount' },
-                    { data: 'routeId', title: 'Category ID' },
-                    { data: 'categoryDescription', title: 'Category Description' },
-                    { data: 'channelType', title: 'Channel ID' },
-                    { data: 'channelDescription', title: 'Channel Description' },
-                    { data: 'reference', title: 'Reference' },
-                    { data: 'date', title: 'Transaction Date' },
-                    { data: 'date', title: 'Action'},
-                    {data:'date',title: 'Status'},
-                    { data: 'isPosted', title: 'Posted' }
+                    { "targets": 0, "data": "id", "title": "ID" },
+                    { "targets": 1, "data": "sender.name", "title": "Sender Name" },
+                    { "targets": 2, "data": "sender.iD_NO", "title": "Sender ID NO" },
+                    { "targets": 3, "data": "sender.phone_No", "title": "Sender Phone NO" },
+                    { "targets": 4, "data": "sender.src_Account", "title": "Sender Source Account" },
+                    { "targets": 5, "data": "receiver.name", "title": "Receiver Name" },
+                    { "targets": 6, "data": "receiver.iD_NO", "title": "Receiver ID NO" },
+                    { "targets": 7, "data": "receiver.phone_No", "title": "Receiver Phone NO" },
+                    { "targets": 8, "data": "receiver.dst_Account", "title": "Receiver Destination Account" },
+                    { "targets": 9, "data": "amount", "title": "Amount" },
+                    { "targets": 10, "data": "routeId", "title": "Category ID" },
+                    { "targets": 11, "data": "categoryDescription", "title": "Category Description" },
+                    { "targets": 12, "data": "channelType", "title": "Channel ID" },
+                    { "targets": 13, "data": "channelDescription", "title": "Channel Description" },
+                    { "targets": 14, "data": "reference", "title": "Reference" },
+                    { "targets": 15, "data": "date", "title": "Transaction Date" },
+                    { "targets": 16, "data": "transactionStatusDescription", "title": "Status " },
+                    { "targets": 17, "data": "transactionStatus", "title": "Status ID" },
+                    { "targets": 18, "data": "createdBy", "title": "Created By" },
+                    { "targets": 19, "data": "isPosted", "title": "Posted" },
+                    { "targets": 20, "data": "date", "title": "Post" },
+                    { "targets": 21, "data": "date", "title": "View" }
+
                     
                     
                 ],
@@ -94,7 +123,13 @@ $(document).ready(function(){
 
                        
                 "columnDefs": [
-                    { "targets": [0], "visible": false } 
+                    { "targets": [0], "visible": false },
+                    { "targets": [10], "visible": false },
+                    { "targets": [12], "visible": false },
+                    { "targets": [17], "visible": false }
+
+
+
                 ],
                 "order": [[0, "desc"]],
 
@@ -102,29 +137,103 @@ $(document).ready(function(){
                    
                     var id = aData.id;
                     var originatorConversationId = aData.originatorConversationId;
+
                     var postButton = '<button class="btn btn-primary post-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">Post</button>';
-                    var viewButton = '<button class="btn btn-info view-btn" data-transaction-id="' + aData.id + '" data-originator-conversation-id="' + aData.originatorConversationId + '">View</button>';
-                   // var statusDescription = aData.orderLines[0].transactionOutcome.transactionStatusDescription;
+                
+
+                    var statusLink = '<a class="status-link" href="#" data-transaction-id="' + id + '" data-originator-conversation-id="' + originatorConversationId + '">Payment</a>';
+                    var viewLink = '<a class="view-link" href="#" data-transaction-id="' + id + '" data-originator-conversation-id="' + originatorConversationId + '">Transaction</a>';
 
 
-                    var statusLink = '<a class="status-link" href="#" data-transaction-id="' + id + '" data-originator-conversation-id="' + originatorConversationId + '">Status</a>';
 
+                    $(nRow).find('td:eq(16)').html(postButton);
+                    $(nRow).find('td:eq(17)').html(viewLink + ' ' + statusLink);
 
-                    $(nRow).find('td:eq(15)').html(postButton + ' ' + viewButton);
-                    var dateParts = aData.date.split('T');
-                    var formattedDateTime = dateParts[0] + '<br>' + dateParts[1];
+                  
                     var formattedAmount = parseFloat(aData.amount).toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
+                       minimumFractionDigits: 2,
+                       maximumFractionDigits: 2
                     });
+                   
+
+                    var dateParts = aData.date.split('T');
+                    var dateComponents = dateParts[0].split('-');
+                    var formattedDate = dateComponents[2] + '/' + dateComponents[1] + '/' + dateComponents[0];
+                    var timeParts = dateParts[1].split(':');
+                    var formattedTime = timeParts[0] + ':' + timeParts[1] + ':' + timeParts[2].substr(0, 2); // Extract HH:mm:ss format
+
+
+                    $(nRow).find('td:eq(18)').text(transactionStatus);
+                    var transactionStatus = aData.transactionStatus;
+
+                    var transactionStatusDescriptionCell = $(nRow).find('td:eq(13)');
+                    switch (transactionStatus) {
+                        case 0:
+                            transactionStatusDescriptionCell.css('background-color', '#FFCCCC');
+                            break;
+                        case 1:
+                            transactionStatusDescriptionCell.css('background-color', '#FFCCCC');
+                            break;
+
+                        case 2:
+                            transactionStatusDescriptionCell.css('background-color', 'lightblue');
+                            transactionStatusDescriptionCell.css('color', 'black');
+                            break;
+
+                        case 3:
+                            transactionStatusDescriptionCell.css('background-color', 'yellow');
+                            break;
+
+                        case 4:
+                            transactionStatusDescriptionCell.css('background-color', '#C7F6B6');
+                            transactionStatusDescriptionCell.css('color', 'black');
+                            break;
+
+                        case 5:
+                            transactionStatusDescriptionCell.css('background-color', '#FFCCCC');
+                            break;
+                        case 6:
+                            transactionStatusDescriptionCell.css('background-color', '#FF6666');
+                            transactionStatusDescriptionCell.css('color', 'black');
+                            break;
+                        case 7:
+                            transactionStatusDescriptionCell.css('background-color', '#FFCCCC');
+                            break;
+                        case 8:
+                            transactionStatusDescriptionCell.css('background-color', '#E3BC9A');
+                            transactionStatusDescriptionCell.css('color', 'black');
+                            break;
+                        default:
+                            
+                            break;
+                    }
+
+
+                    //if (transactionStatus === 0 || transactionStatus === 1) {
+                    //    transactionStatusDescriptionCell.css('background-color', '#FFCCCC');
+                    //} else if (transactionStatus === 2) {
+                    //    transactionStatusDescriptionCell.css('background-color', 'lightblue');
+                    //    transactionStatusDescriptionCell.css('color', 'white');
+                    //} else if (transactionStatus === 3) {
+                    //    transactionStatusDescriptionCell.css('background-color', 'yellow');
+                    //} else if (transactionStatus === 4) {
+                    //    transactionStatusDescriptionCell.css('background-color', '#D9E3DA');
+                    //    transactionStatusDescriptionCell.css('color', 'white');
+                    //} else if (transactionStatus >= 5 && transactionStatus <= 8) {
+                    //    transactionStatusDescriptionCell.css('background-color', '#E3BC9A');
+                    //    transactionStatusDescriptionCell.css('color', 'white');
+                    //}
+                   
+
+
 
                     $(nRow).find('td:eq(8)').text(formattedAmount);
-                    $(nRow).find('td:eq(14)').html(formattedDateTime);
-                   // $(nRow).find('td:eq(18)').text(statusDescription);
+                    $(nRow).find('td:eq(12)').html(formattedTime + '<br>' + formattedDate);
 
-                    $(nRow).find('td:eq(16)').html(statusLink);
 
-                    var isPostedCell = $(nRow).find('td:eq(17)');
+                   // $(nRow).find('td:eq(16)').html(statusLink);
+
+                    var isPostedCell = $(nRow).find('td:eq(15)');
                     if (aData.isPosted) {
                         isPostedCell.text('Posted');
                     } else {
@@ -153,22 +262,28 @@ $(document).ready(function(){
 
                            
                             postButton.prop('disabled', true);
-                            postButton.removeClass('btn-primary').addClass('btn-secondary');
+                            postButton.removeClass('btn-primary').addClass('custom-post-btn');
                             postButton.text('Post');
-                            postButton.css('background-color', 'yellow');
+                           // postButton.css('background-color', 'grey');
                             console.log('Button class and text changed.');
 
                            
                             alert('Transaction already posted.');
+
+                            localStorage.setItem('postedTransactionId_' + id, 'posted');
+
                         } else if (response.isPosted) {
                           
 
                             postButton.prop('disabled', true);
-                            postButton.removeClass('btn-primary').addClass('btn-secondary');
-                            postButton.text('Post');
-                            postButton.css('background-color', 'yellow');
+                            postButton.removeClass('btn-primary').addClass('custom-post-btn');
+                            postButton.text('Posted');
+                          //  postButton.css('background-color', 'grey');
                             console.log('Button class and text changed.');
                             alert('Transaction posted successfully!');
+
+                            localStorage.setItem('postedTransactionId_' + id, 'posted');
+
                         } else {
                             alert('Failed to post the transaction. Please try again.');
                         }
@@ -182,10 +297,10 @@ $(document).ready(function(){
                 });
             });
 
-            $('#dataTable').on('click', '.view-btn', function () {
+            $('#dataTable').on('click', '.view-link', function () {
               console.log('Button Clicked');
-                var viewButton = $(this);
-                var id = viewButton.data('transaction-id');
+                var viewLink = $(this);
+                var id = viewLink.data('transaction-id');
 
                 $.ajax({
                     url: '/Transactions/ViewPaymentDetails',
@@ -224,18 +339,24 @@ $(document).ready(function(){
                     data: { originatorConversationId: originatorConversationId },
                     success: function (paymentDetails) {
 
+                        if (paymentDetails.includes('Transaction is not posted')) {
+                            alert('Transaction not is posted.');
+                        } else {
+
                         $('#paymentDetailsModalBody').html(paymentDetails);
                         $('#paymentDetailsModal').modal('show');
 
                         $('#closeButton').on('click', function () {
                             $('#paymentDetailsModal').modal('hide');
                         });
+                        }
                     },
                     error: function (error) {
                         alert('Failed to fetch payment details. Please try again.');
                     }
                 });
             });
+        
 
           
     });
